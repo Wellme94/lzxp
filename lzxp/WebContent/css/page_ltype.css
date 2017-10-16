@@ -1,0 +1,130 @@
+/*header logo*/
+#head_logo{
+	display: inline-block;
+	float: left;
+	margin-top: 2%;
+	margin-left: -30%;
+	}
+/**********头部搜索模块*************************/
+.head-main .hd-search{
+	display: inline-block;
+	margin-top: 2%;
+}
+
+/*******************购物车***************************/
+.hd-user{
+	
+	display: inline-block;
+	margin-top: 4%;
+	/*margin-top: -30px;*/
+	margin-right: -5%;
+}
+/***************分类************************/
+.top-sort{
+	margin-top: -12%;
+	font-size: 18px;
+}
+
+.sub-sort-list a{
+	color: #666666;
+	display: inline-block;
+}
+.sub-sort-list a:hover{
+	color: #E61F19;
+}
+
+/*****************幻灯***********************/
+.idx-slider{
+	
+}
+
+/***************活动********************/
+.index-main .idx-activity h3,.star-sku .star-tit h2,.stor-title h2{
+	font-weight: bold;
+}
+/*活动精选*/
+.star-tabs a{
+	color: #333333;
+}
+
+/*更多商品*/
+.sct-hot .more{
+	color: #333333;
+}
+.sct-hot .more:hover{
+	color: #E61F19;
+}
+
+/***********************图形字体******************************/
+@font-face {
+  font-family: 'icomoon';
+  src:  url('../fonts/icomoon.eot?ba39hl');
+  src:  url('../fonts/icomoon.eot?ba39hl#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf?ba39hl') format('truetype'),
+    url('../fonts/icomoon.woff?ba39hl') format('woff'),
+    url('../fonts/icomoon.svg?ba39hl#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: bold;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/*糕点糖果*/
+.icon-search:before {
+  content: "\e900";
+}
+/*花茶饮品*/
+.icon-cup:before {
+  content: "\e901";
+}
+/*进口食品*/
+.icon-paperplane:before {
+  content: "\e902";
+}
+/*素食山珍*/
+.icon-data:before {
+  content: "\e903";
+}
+/*果干果脯*/
+.icon-lab:before {
+  content: "\e904";
+}
+/*肉干鱼脯*/
+.icon-food:before {
+  content: "\e905";
+}
+/*坚果炒货*/
+.icon-fire:before {
+  content: "\e906";
+}
+/*精选礼盒*/
+.icon-shop:before {
+  content: "\e907";
+}
+.font-color{
+	font-size: 18px;
+  	color: #E61F19;
+  	}
+ .top-sort a:hover,.font-color:hover{
+ 	font-size: 18px;
+  	color: white;
+ }
+ 
+ 
+ .fn-list i:hover{
+ 	font-size: 18px;
+ 	color: #E61F19;
+ }
+
+/********************************************************/
