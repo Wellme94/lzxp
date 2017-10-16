@@ -1,11 +1,17 @@
-<!DOCTYPE html>
-<html>
-	<!--
+<%@page import="com.etc.lzxp.entity.Users"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<!--
     	作者：offline
     	时间：2017-10-12
     	描述：个人中心
    -->
-	<head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 		<title>个人中心</title>
 		<link rel="stylesheet" href="css/lp_member.css">
@@ -14,9 +20,9 @@
 		<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
 
 	</head>
-
-	<body>
-		<!-- header -->
+</head>
+<body>
+<!-- header -->
 
 		<script type="text/javascript">
 			var username;
@@ -73,9 +79,21 @@
 			<div class="toolbar-cont wrap">
 				<ul class="fl">
 					<li id="headerUsername" class="headerUsername"></li>
-					<li>欢迎来到零嘴小铺官方商城！</li>
+					<% 
+						if(request.getSession().getAttribute("user")!=null){
+							//如果有传递过来用户信息
+							Users user = (Users)request.getSession().getAttribute("user");
+							%>
+								<li>欢迎<span class="log"><%=user.getUSERNAME() %></span>来到零嘴小铺官方商城！</li>
+							<%
+						}else{
+							%>
+							<li>欢迎来到零嘴小铺官方商城！</li>
+							<%
+						}
+					%>
 					<li id="headerLogin" class="headerLogin none">
-						<a class="log" href="login.html">[登录]</a>
+						<a class="log" href="login.jsp">[登录]</a>
 					</li>
 					<li id="headerRegister" class="headerRegister none">
 						<a class="reg" href="register.html">[注册]</a>
@@ -677,5 +695,4 @@
 				});
 			</script>
 		</body>
-
 </html>

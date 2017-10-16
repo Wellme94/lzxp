@@ -1,6 +1,7 @@
 <%@page import="com.etc.lzxp.entity.Users"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -149,7 +150,16 @@
 									</div>
 									<!--<div class="m-phone" id="mobile"></div>-->
 									<div class="m-name" id="divnologin">
-										<a href="login.html">您好，请登录</a>
+									<!-- 判断用户是否已登录 -->
+										<c:if test="${sessionScope.user != null }">
+										<!-- 如果用户不为空 -->
+											<a href="#">${sessionScope.user.USERNAME}已登录</a>
+										</c:if>
+										<c:if test="${sessionScope.user == null }">
+										<!-- 如果用户为空 -->
+											<a href="login.jsp">您还未登录</a>
+										</c:if>
+										
 									</div>
 								</div>
 								<div class="menu-list">

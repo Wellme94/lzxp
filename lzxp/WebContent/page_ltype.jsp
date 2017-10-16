@@ -99,13 +99,21 @@
 									</div>
 									<!--<div class="m-phone" id="mobile"></div>-->
 									<div class="m-name" id="divnologin">
-										<a href="login.jsp">您好，请登录</a>
+										<c:if test="${sessionScope.user != null }">
+										<!-- 如果用户不为空 -->
+											<a href="#">${sessionScope.user.USERNAME}已登录</a>
+										</c:if>
+										<c:if test="${sessionScope.user == null }">
+										<!-- 如果用户为空 -->
+											<a href="login.jsp">您还未登录</a>
+										</c:if>
+										
 									</div>
 								</div>
 								<div class="menu-list">
 									<div class="m-nav">
 										<div class="item">
-											<a target="_blank" href="myorder.html">我的订单</a>
+											<a target="_blank" href="myorder.jsp">我的订单</a>
 										</div>
 										<div class="item">
 											<a target="_blank" href="#">我的关注</a>
