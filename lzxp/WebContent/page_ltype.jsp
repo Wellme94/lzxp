@@ -566,12 +566,12 @@
 								</li>
 								<li>
 									<div class="p-img">
-										<a title="伊朗开心果190g" href="detail.html" target="_blank">
+										<a title="伊朗开心果190g" href="detail.jsp" target="_blank">
 											<img class="lazy" data-original="" src="img/jianguo/013.jpg" alt="伊朗开心果190g" style="display: block;"></a>
 									</div>
 									<div class="p-bg"></div>
 									<div class="p-info">
-										<a class="name" href="detail.html" target="_blank" title="伊朗开心果190g">
+										<a class="name" href="detail.jsp" target="_blank" title="伊朗开心果190g">
 											伊朗开心果190g
 										</a>
 										<span class="price">

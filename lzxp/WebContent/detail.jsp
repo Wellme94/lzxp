@@ -30,6 +30,12 @@
 				$("#_btnsubmit").click(function() {
 					$("#_articleContent").prepend("<h6>" + $("#_nickname").val() + new Date().toLocaleString() + "</h6><p>" + $("#_mycontent").val() + "</p>");
 				});
+				
+				/* 结算点击事件 */
+				$("#countOrder").click(function () {
+					location.href="http://localhost:8080/lzxp/UsersServlet?op=countOrder";
+					
+				});
 
 			});
 		</script>
@@ -209,7 +215,7 @@
 							</div>
 							<div class="total">
 								<p>共<span class="red">0</span>件商品，共计<span class="sum">￥0.00</span></p>
-								<a class="settle" href="myorder.html">去购物车结算</a>
+								<a class="settle" href="#" id="countOrder">去购物车结算</a>
 							</div>
 						</div>
 					</div>

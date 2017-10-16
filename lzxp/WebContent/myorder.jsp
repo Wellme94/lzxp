@@ -1,27 +1,40 @@
-<!DOCTYPE html>
-<html>
-    <!--
+<%@page import="com.etc.lzxp.entity.Users"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+      <!--
     	作者：offline
     	时间：2017-10-12
     	描述：我的订单
     -->
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>零嘴小铺</title>
 		<link href="css/public.css" type="text/css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="css/base.css" />
 		<script type="text/javascript" src="js/jquery_cart.js"></script>
 		<link rel="stylesheet" type="text/css" href="css/checkOut.css" />
-	</head>
-
-	<body>
-		<!--顶部快捷菜单-->
+		
+</head>
+<body>
+	<!--顶部快捷菜单-->
 		<div class="shortcut_v2013 alink_v2013">
 			<div class="w">
 				<ul class="fl 1h">
-					<li class="fl">
-						<div class="menu_hd">您好，欢迎来到零嘴小铺！</div>
-					</li>
+					<% 
+						if(request.getSession().getAttribute("user")!=null){
+							//如果有传递过来用户信息
+							Users user = (Users)request.getSession().getAttribute("user");
+							%>
+								<li>欢迎<span style="color:#E61F19;"><%=user.getUSERNAME() %></span>来到零嘴小铺官方商城！</li>
+							<%
+						}else{
+							%>
+							<li>欢迎来到零嘴小铺官方商城！</li>
+							<%
+						}
+					%>
 					<li class="fl">
 						<div class="menu_hd">
 							<a href="login.html">请登录</a>
@@ -478,7 +491,5 @@
 		<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
 		<script src="js/unslider.min.js" type="text/javascript"></script>
 		<script src="js/index.js" type="text/javascript"></script>
-
-	</body>
-
+</body>
 </html>

@@ -133,7 +133,7 @@ public class UsersServlet extends HttpServlet {
 				System.out.println(session.getAttribute("user"));*/
 				if (session.getAttribute("user")!=null) {
 					//如果已经登录了，直接跳转到结算页面
-					response.sendRedirect("myorder.html");
+					response.sendRedirect("myorder.jsp");
 				}else{
 					//跳转到用户登录页面
 					response.sendRedirect("login.jsp");
