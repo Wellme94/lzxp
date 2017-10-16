@@ -30,6 +30,7 @@
 			$(function () {
 				/* 退出点击事件 */
 				$("#exit").click(function () {
+					
 					location.href="http://localhost:8080/lzxp/UsersServlet?op=exit&isExit=true";
 				});
 				

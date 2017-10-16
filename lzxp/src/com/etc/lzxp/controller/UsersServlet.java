@@ -96,12 +96,12 @@ public class UsersServlet extends HttpServlet {
 					//判断是否注册成功
 					if (us.isRegister(user, userTel)) {
 						//如果成功
-						/*//设置cookie
+						//设置cookie
 						Cookie cookie1 = new Cookie("userName", userName);
 						Cookie cookie2 = new Cookie("userPwd", userPwd);
 						//设置cookie
 						response.addCookie(cookie1);
-						response.addCookie(cookie2);*/
+						response.addCookie(cookie2);
 						//跳转到分类页
 						response.sendRedirect("login.jsp");
 					}else{
@@ -117,9 +117,12 @@ public class UsersServlet extends HttpServlet {
 			}else if ("exit".equals(op)) {
 				//退出用户
 				//如果退出
-				if (request.getParameter("isExit")!=null) {			
+				System.out.println(request.getParameter("isExit"));
+				if (request.getParameter("isExit")!=null) {	
+					System.out.println("进入");
 					//移除会话中的用户消息
-					session.invalidate();
+					session.removeAttribute("user");
+					System.out.println("成功");
 					//退出到首页
 					response.sendRedirect("index.html");
 				}
@@ -128,7 +131,8 @@ public class UsersServlet extends HttpServlet {
 			}else if("countOrder".equals(op)){
 				//结算订单
 				//判断是否已经登录了
-				System.out.println(session.getAttribute("user"));
+				/*System.out.println(11111);
+				System.out.println(session.getAttribute("user"));*/
 				if (session.getAttribute("user")!=null) {
 					//如果已经登录了，直接跳转到结算页面
 					response.sendRedirect("myorder.html");
