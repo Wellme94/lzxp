@@ -1,14 +1,23 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-
-	<head>
-		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<%@page import="com.etc.lzxp.entity.Users"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<!--
+    	作者：offline
+    	时间：2017-10-12
+    	描述：小类页
+    -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>零嘴小铺</title>
 		<link rel="stylesheet" href="css/layout-style.css">
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/common.js"></script>
 		<script type="text/javascript" src="js/jquery.cookie.js"></script>
-
+		
+		
+		
 		<script type="text/javascript">
 			//是否显示有货
 			var hasStock = false;
@@ -74,78 +83,13 @@
 				}
 			});
 
-			function addCart(sku) {
-				$.ajax({
-					url: "http://www.lppz.com/cart/add.jhtml",
-					type: "POST",
-					data: {
-						sku: sku,
-						quantity: 1
-					},
-					dataType: 'jsonp',
-					jsonp: 'callback',
-					cache: false,
-					success: function(message) {
-						$.message(message);
-						refreshCart();
-					}
-				});
-			}
-
-			function addFavorite(id) {
-				if(username) {
-					$.ajax({
-						url: "http://www.lppz.com/member/favorite/add.jhtml",
-						type: "GET",
-						data: {
-							skucode: id
-						},
-						dataType: 'jsonp',
-						jsonp: 'callback',
-						cache: false,
-						success: function(message) {
-							$.message(message);
-							relist(strvalue, sort, true, hasStock);
-						}
-					});
-				} else {
-					$.loginIframe({
-						id: id,
-						operation: 'favor'
-					}); // 调用登录方式
-				}
-			}
-
-			function addFavor(id) {
-				$.ajax({
-					url: "http://www.lppz.com/member/favorite/add.jhtml",
-					type: "GET",
-					data: {
-						skucode: id
-					},
-					dataType: 'jsonp',
-					jsonp: 'callback',
-					cache: false,
-					success: function(message) {
-						$.message(message);
-						relist(strvalue, sort, true, hasStock);
-					}
-				});
-			}
-
-			function subprice(price) {
-				var arr = new Array();
-				arr = price.split(".");
-				return arr[1];
-			}
-
-			function toSubmit() {
-				var word = $("#word").val();
-				$("#keyword1").val(word);
-				$("#productForm").submit();
-			}
+			/* 结算点击事件 */
+			$("#countOrder").click(function () {
+				location.href="http://localhost:8080/lzxp/UsersServlet?op=countOrder";
+				
+			});
 		</script>
-	</head>
+</head>
 
 	<body class="listpage">
 		<!-- header include -->
@@ -153,124 +97,7 @@
 		<script type="text/javascript" src="js/base.js"></script>
 		<!--页面初始化-->
 		<script type="text/javascript">
-			var username;
-			$().ready(initPage);
-
-			function initPage() {
-				/*检查用户是否登录*/
-				$.ajax({
-
-					url: "#",
-					type: "GET",
-					cache: false,
-					dataType: 'jsonp',
-					jsonp: 'callback',
-					success: function(message) {
-						if(message == '#') {
-							window.location.href = "https://reg.lppz.com/bind/index.jhtml";
-						}
-						username = message;
-						/*用户已经登录*/
-						if(username) {
-							$headerUsername.html("您好 <a href=\"http://home.lppz.com/member/index.jhtml\" class=\"user\">" + username + "</a>，").show();
-							$headerLogout.show();
-							$headerLogin.hide();
-							$headerRegister.hide();
-							$('.alipay').parent().hide();
-							$('.qq').parent().hide();
-							$('.weibo').parent().hide();
-						} else { /*用户未登录*/
-							$headerLogout.hide();
-							$headerLogin.show();
-							$headerRegister.show();
-							$('.alipay').parent().show();
-							$('.qq').parent().show();
-							$('.weibo').parent().show();
-						}
-						if(window.afterloadmember) {
-							window.afterloadmember();
-						}
-						$(document).trigger('afterloadmember', username);
-					}
-				});
-
-				$.ajax({
-					/*url: "http://www.lppz.com/sso/b2cIndexMem.jhtml",*/
-					url: "#",
-					type: "GET",
-					cache: false,
-					dataType: 'jsonp',
-					jsonp: "callback",
-					success: function(data) {
-						var d = eval("(" + decodeURIComponent(data.replace(/\+/g, '%20')) + ")");
-						if(d.uid != '') {
-							if('' != d.headImgPath) {
-								$("#avatarImg").attr("src", d.headImgPath);
-							}
-							$("#username").text(d.username);
-							$("#levelName").attr("title", d.levelName);
-							//$("#mobile").text(d.mobile);
-							$("#couponCount").text(d.couponCount);
-							$("#divlogin").show();
-							$("#divnologin").hide();
-							$("#spancouponcount").show();
-							$("#ulHistory").append(decodeURIComponent(d.history));
-						} else {
-							$("#divlogin").hide();
-							$("#divnologin").show();
-							$("#spancouponcount").hide();
-						}
-					}
-				});
-				/*判断用户是否登录*/
-				$.ajax({
-					/*检查用户是否已经登录*/
-					/*url: "http://www.lppz.com/sso/checkname.jhtml",*/
-					url: "#",
-					type: "GET",
-					cache: false,
-					dataType: 'jsonp',
-					jsonp: 'callback',
-					success: function(message) {
-						if(message == '#') {
-							/*跳转到用户登录页面*/
-							window.location.href = "https://reg.lppz.com/bind/index.jhtml";
-						}
-						username = message;
-						/*如果用户已经登录*/
-						if(username) {
-							$headerUsername.html("您好 <a href=\"http://home.lppz.com/member/index.jhtml\" class=\"user\">" + username + "</a>，").show();
-							$headerLogout.show();
-							$headerLogin.hide();
-							$headerRegister.hide();
-							$('.alipay').parent().hide();
-							$('.qq').parent().hide();
-							$('.weibo').parent().hide();
-						} else { /*如果用户未登录*/
-							$headerLogout.hide();
-							$headerLogin.show();
-							$headerRegister.show();
-							$('.alipay').parent().show();
-							$('.qq').parent().show();
-							$('.weibo').parent().show();
-						}
-
-						if(window.afterloadmember) {
-							window.afterloadmember();
-						}
-
-						$(document).trigger('afterloadmember', username);
-					}
-				});
-
-				var $headerLogin = $("#headerLogin");
-				var $headerRegister = $("#headerRegister");
-				var $headerUsername = $("#headerUsername");
-				var $headerLogout = $("#headerLogout");
-				var $productSearchForm = $("#productSearchForm");
-				var $keyword = $("#productSearchForm input");
-				var defaultKeyword = "商品搜索";
-			}
+			
 		</script>
 
 		<!-- header -->
@@ -278,7 +105,19 @@
 			<div class="toolbar-cont wrap">
 				<ul class="fl">
 					<li id="headerUsername" class="headerUsername"></li>
-					<li>欢迎来到零嘴小铺官方商城！</li>
+					<% 
+						if(request.getSession().getAttribute("user")!=null){
+							//如果有传递过来用户信息
+							Users user = (Users)request.getSession().getAttribute("user");
+							%>
+								<li>欢迎<span class="log"><%=user.getUSERNAME() %></span>来到零嘴小铺官方商城！</li>
+							<%
+						}else{
+							%>
+							<li>欢迎来到零嘴小铺官方商城！</li>
+							<%
+						}
+					%>
 					<li id="headerLogin" class="headerLogin none">
 						<a class="log" href="#">[登录]</a>
 					</li>
@@ -369,7 +208,7 @@
 					<div class="search-area">
 						<!--<form id="productSearchForm" action="#" method="get" target="_blank">-->
 						<input class="sch-key" type="text" name="keyword" id="keyword" value="商品搜索">
-						<input class="sch-btn" type="submit" value="搜 索">
+						<input class="sch-btn" type="submit" placeholder="商品搜索">
 						<!--</form>-->
 					</div>
 				</div>
@@ -385,94 +224,14 @@
 							</div>
 							<div class="total">
 								<p>共<span class="red">0</span>件商品，共计<span class="sum">￥0.00</span></p>
-								<a class="settle" href="#">去购物车结算</a>
+								<a class="settle" href="#" id="countOrder">去购物车结算</a>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<!--刷新head里面的购物车-->
-			<script type="text/javascript">
-				function refreshCart() {
-					$.ajax({
-						/*	url: "http://www.lppz.com/cart/cartHeadData.jhtml",*/
-						url: "#",
-						type: "GET",
-						cache: false,
-						dataType: 'jsonp',
-						jsonp: 'callback',
-						success: function(message) {
-							message = decodeURI(decodeURIComponent(message));
-							message = message.replace(/\+/g, ' ');
-							$(".cart-list-body").html(message);
-							var cartCacheNum = $.cookie('cart-cache-num');
-							$('.cart-cache-num').html('<b>' + (!!cartCacheNum ? cartCacheNum : 0) + '</b>');
-							$('#cartcount').html(!!cartCacheNum ? cartCacheNum : 0);
-						}
-					});
-				}
-				$(function() {
-					var $keyword = $("#productSearchForm input");
-					var defaultKeyword = "商品搜索";
-					//搜索框进入
-					$keyword.focus(function() {
-						if($keyword.val() == defaultKeyword) {
-							$keyword.val("");
-						}
-					});
-					//搜索框离开
-					$keyword.blur(function() {
-						if($keyword.val() == "") {
-							$keyword.val(defaultKeyword);
-						}
-					});
-
-					//页面购物车数量
-					var cartCacheNum = $.cookie('cart-cache-num');
-					$('.cart-cache-num').html('<b>' + (!!cartCacheNum ? cartCacheNum : 0) + '</b>');
-					$('#cartcount').html(!!cartCacheNum ? cartCacheNum : 0);
-
-					//显示购物车详情
-					var getcartdelay;
-					$('.indexcart').mouseenter(function() {
-						clearTimeout(getcartdelay);
-						getcartdelay = setTimeout(function() {
-							refreshCart();
-						}, 500);
-					});
-					//删除购物车
-					$('.delete-header-cart-item').die().live('click', function() {
-						var catItemId = $(this).attr('cart-item-id')
-						deleteHeadCart(catItemId);
-					});
-
-					//删除购物车的方法
-					function deleteHeadCart(itemId) {
-						if(!confirm("您确定要删除吗？")) {
-							return false;
-						}
-
-						$.ajax({
-							url: "http://www.lppz.com/cart/delete.jhtml",
-							type: "GET",
-							data: {
-								id: itemId
-							},
-							dataType: 'jsonp',
-							jsonp: 'callback',
-							cache: false,
-							success: function(data) {
-								if(data.type == "success") {
-									refreshCart();
-								} else {
-									$.message(data);
-								}
-							}
-						});
-					}
-				});
-			</script>
+			
 			<div class="menu">
 				<div class="menu-main wrap">
 					<ul class="menu-list">
@@ -1379,5 +1138,4 @@
 		</script>
 		<script type="text/javascript" src="js/o_code.js"></script>
 	</body>
-
 </html>

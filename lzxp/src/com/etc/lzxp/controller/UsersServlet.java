@@ -35,109 +35,107 @@ public class UsersServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//¾ø¶ÔÂ·¾¶
+		//ç»å¯¹è·¯å¾„
 		String path = request.getScheme() + "://" + request.getServerName() + ":" + request.getLocalPort()
 				+ request.getContextPath() + "/";
-		//ÉèÖÃÇëÇóÏìÓ¦±àÂë
+		//è®¾ç½®è¯·æ±‚å“åº”ç¼–ç 
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
-		//ÉèÖÃ»á»°
+		//è®¾ç½®ä¼šè¯
 		HttpSession session = request.getSession();
-		//ÉèÖÃjason¸ñÊ½±àÂë
+		//è®¾ç½®jasonæ ¼å¼ç¼–ç 
 		response.setContentType("application/json");
 		PrintWriter out= response.getWriter();
 		if (request.getParameter("op")!=null) {
-			//Èç¹ûop²»Îª¿Õ
+			//å¦‚æœopä¸ä¸ºç©º
 			String op = request.getParameter("op");
 			if ("isLogin".equals(op)) {
-				//ÅĞ¶ÏÊÇ·ñµÇÂ¼³É¹¦
-				//»ñÈ¡ÓÃ»§ĞÅÏ¢
+				//åˆ¤æ–­æ˜¯å¦ç™»å½•æˆåŠŸ
+				//è·å–ç”¨æˆ·ä¿¡æ¯
 				String userName = request.getParameter("userName");
 				String userPwd = request.getParameter("userPwd");
-				//´´½¨ÓÃ»§
+				//åˆ›å»ºç”¨æˆ·
 				Users user = new Users(0, userName, userPwd);
-				//µ÷ÓÃUsersService·½·¨
+				//è°ƒç”¨UsersServiceæ–¹æ³•
 				if (us.isLogin(user)) {
-					//Èç¹ûµÇÂ¼³É¹¦£¬´«µİÓÃ»§»á»°ĞÅÏ¢
+					//å¦‚æœç™»å½•æˆåŠŸï¼Œä¼ é€’ç”¨æˆ·ä¼šè¯ä¿¡æ¯
 					session.setAttribute("user", user);
-					//ÉèÖÃCookie
+					//è®¾ç½®Cookie
 					Cookie cookie1 = new Cookie("userName", userName);
 					Cookie cookie2 = new Cookie("userPwd", userPwd);
-					//ÉèÖÃcookie
+					//è®¾ç½®cookie
 					response.addCookie(cookie1);
 					response.addCookie(cookie2);
 					
 				}
-				//´òÓ¡json
+				//æ‰“å°json
 				printJson(out, us.isLogin(user));
 				
 				
 				
 			}else if ("judgeUserName".equals(op)) {
-				//ÅĞ¶ÏÓÃ»§ÊÇ·ñÒÑ¾­ÖØ¸´
-				//»ñÈ¡ÓÃ»§Ãû
+				//åˆ¤æ–­ç”¨æˆ·æ˜¯å¦å·²ç»é‡å¤
+				//è·å–ç”¨æˆ·å
 				String userName = request.getParameter("userName");
-				//ÅĞ¶ÏÓÃ»§ÊÇ·ñ´æÔÚ
+				//åˆ¤æ–­ç”¨æˆ·æ˜¯å¦å­˜åœ¨
 				printJson(out, us.judgeUserName(userName));
 				
 				
 				
 			}else if ("register".equals(op)) {
-				//×¢²á
-				//»ñÈ¡±íµ¥ĞÅÏ¢
+				//æ³¨å†Œ
+				//è·å–è¡¨å•ä¿¡æ¯
 				if ((request.getParameter("username")!="")&&(request.getParameter("username")!="")
 						&&(request.getParameter("mobile")!="")) {
-					//Èç¹û¾ù²»Îª¿ÕµÄÇé¿ö
+					//å¦‚æœå‡ä¸ä¸ºç©ºçš„æƒ…å†µ
 					String userName = request.getParameter("username");
 					String userPwd = request.getParameter("password");
 					String userTel = request.getParameter("mobile");
-					//´´½¨ÓÃ»§
+					//åˆ›å»ºç”¨æˆ·
 					Users user = new Users(0, userName, userPwd);
-					//ÅĞ¶ÏÊÇ·ñ×¢²á³É¹¦
+					//åˆ¤æ–­æ˜¯å¦æ³¨å†ŒæˆåŠŸ
 					if (us.isRegister(user, userTel)) {
-						//Èç¹û³É¹¦
-						//ÉèÖÃcookie
+						//å¦‚æœæˆåŠŸ
+						//è®¾ç½®cookie
 						Cookie cookie1 = new Cookie("userName", userName);
 						Cookie cookie2 = new Cookie("userPwd", userPwd);
-						//ÉèÖÃcookie
+						//è®¾ç½®cookie
 						response.addCookie(cookie1);
 						response.addCookie(cookie2);
-						//Ìø×ªµ½·ÖÀàÒ³
+						//è·³è½¬åˆ°åˆ†ç±»é¡µ
 						response.sendRedirect("login.jsp");
 					}else{
-						//¼ÌĞø·µ»Ø×¢²áÒ³Ãæ
+						//ç»§ç»­è¿”å›æ³¨å†Œé¡µé¢
 						response.sendRedirect("register.html");
 					}
 				}else{
-					//¼ÌĞø·µ»Ø×¢²áÒ³Ãæ
+					//ç»§ç»­è¿”å›æ³¨å†Œé¡µé¢
 					response.sendRedirect("register.html");
 				}
 				
 				
 			}else if ("exit".equals(op)) {
-				//ÍË³öÓÃ»§
-				//Èç¹ûÍË³ö
-				System.out.println(request.getParameter("isExit"));
+				//é€€å‡ºç”¨æˆ·
+				//å¦‚æœé€€å‡º
+				
 				if (request.getParameter("isExit")!=null) {	
-					System.out.println("½øÈë");
-					//ÒÆ³ı»á»°ÖĞµÄÓÃ»§ÏûÏ¢
+					//ç§»é™¤ä¼šè¯ä¸­çš„ç”¨æˆ·æ¶ˆæ¯
 					session.removeAttribute("user");
-					System.out.println("³É¹¦");
-					//ÍË³öµ½Ê×Ò³
+					//é€€å‡ºåˆ°é¦–é¡µ
 					response.sendRedirect("index.html");
 				}
 				
 				
 			}else if("countOrder".equals(op)){
-				//½áËã¶©µ¥
-				//ÅĞ¶ÏÊÇ·ñÒÑ¾­µÇÂ¼ÁË
+				//ç»“ç®—è®¢å•
+				//åˆ¤æ–­æ˜¯å¦å·²ç»ç™»å½•äº†
 				/*System.out.println(11111);
 				System.out.println(session.getAttribute("user"));*/
 				if (session.getAttribute("user")!=null) {
-					//Èç¹ûÒÑ¾­µÇÂ¼ÁË£¬Ö±½ÓÌø×ªµ½½áËãÒ³Ãæ
+					//å¦‚æœå·²ç»ç™»å½•äº†ï¼Œç›´æ¥è·³è½¬åˆ°ç»“ç®—é¡µé¢
 					response.sendRedirect("myorder.html");
 				}else{
-					//Ìø×ªµ½ÓÃ»§µÇÂ¼Ò³Ãæ
+					//è·³è½¬åˆ°ç”¨æˆ·ç™»å½•é¡µé¢
 					response.sendRedirect("login.jsp");
 				}
 			}
@@ -148,15 +146,15 @@ public class UsersServlet extends HttpServlet {
 		
 		
 	}
-	//ajax´òÓ¡
+	//ajaxæ‰“å°
 	private void printJson(PrintWriter out,Object result){
-		//´´½¨Json
+		//åˆ›å»ºJson
 		Gson gson = new Gson();
-		//×ª»¯³ÉJson¸ñÊ½
+		//è½¬åŒ–æˆJsonæ ¼å¼
 		String str = gson.toJson(result);
-		//´òÓ¡
+		//æ‰“å°
 		out.print(str);
-		//ÊÍ·Å×ÊÔ´
+		//é‡Šæ”¾èµ„æº
 		out.close();
 	}
 

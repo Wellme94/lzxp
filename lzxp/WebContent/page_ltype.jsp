@@ -65,6 +65,10 @@
 							%>
 								<li>欢迎<span class="log"><%=user.getUSERNAME() %></span>来到零嘴小铺官方商城！</li>
 							<%
+						}else{
+							%>
+							<li>欢迎来到零嘴小铺官方商城！</li>
+							<%
 						}
 					%>
 					
@@ -212,13 +216,13 @@
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
 										<li>
-											<a target="_blank" href="style.html">嗑壳坚果</a>
+											<a target="_blank" href="style.jsp">嗑壳坚果</a>
 										</li>
 										<li>
-											<a target="_blank" href="style.html">果果仁仁</a>
+											<a target="_blank" href="style.jsp">果果仁仁</a>
 										</li>
 										<li>
-											<a target="_blank" href="style.html">特惠炒货</a>
+											<a target="_blank" href="style.jsp">特惠炒货</a>
 										</li>
 									</ul>
 								</div>
@@ -397,7 +401,7 @@
 					<li>
 						<h3>先领券再购物</h3>
 						<div class="act-list-cont">
-							<a title="主推" href="${requestScope.path }detail.html"><img class="lazy" data-original="" src="img/idx-activity/1.jpg" alt="主推"></a>
+							<a title="主推" href="${requestScope.path }detail.jsp"><img class="lazy" data-original="" src="img/idx-activity/1.jpg" alt="主推"></a>
 						</div>
 					</li>
 					<li> 

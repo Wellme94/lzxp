@@ -1,13 +1,15 @@
-<!DOCTYPE html>
+<%@page import="com.etc.lzxp.entity.Users"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-	<!--
+<head>
+<!--
     	作者：offline
     	时间：2017-10-12
     	描述：商品详细页
     -->
-
-	<head>
-		<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Pragma" content="no-cache">
 		<meta http-equiv="Cache-Control" content="no-cache">
 		<meta http-equiv="Expires" content="0">
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
@@ -18,10 +20,8 @@
 		<script src="js/jquery.min.js"></script>
 		<script src="js/common.js"></script>
 		<script src="js/jquery.cookie.js"></script>
-
-	</head>
-
-	<body class="product-detail">
+</head>
+<body class="product-detail">
 		<!-- header include -->
 		<script type="text/javascript" src="js/jquery.cookie.js"></script>
 		<!--商品评价-->
@@ -104,7 +104,19 @@
 			<div class="toolbar-cont wrap">
 				<ul class="fl">
 					<li id="headerUsername" class="headerUsername"></li>
-					<li>欢迎来到零嘴小铺官方商城！</li>
+					<% 
+						if(request.getSession().getAttribute("user")!=null){
+							//如果有传递过来用户信息
+							Users user = (Users)request.getSession().getAttribute("user");
+							%>
+								<li>欢迎<span class="log"><%=user.getUSERNAME() %></span>来到零嘴小铺官方商城！</li>
+							<%
+						}else{
+							%>
+							<li>欢迎来到零嘴小铺官方商城！</li>
+							<%
+						}
+					%>
 					<li id="headerLogin" class="headerLogin none">
 						<a class="log" href="login.html">[登录]</a>
 					</li>
@@ -1636,5 +1648,4 @@
 		</script>
 		<script src="js/base.js"></script>
 	</body>
-
 </html>

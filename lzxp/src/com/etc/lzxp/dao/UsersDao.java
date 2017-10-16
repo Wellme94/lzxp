@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.etc.lzxp.entity.Users;
-import com.etc.lzxp.entity.UsersData;
 import com.etc.lzxp.entity.Users_info;
 import com.etc.util.BaseDao;
 
