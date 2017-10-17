@@ -11,12 +11,14 @@ import com.etc.util.PageData;
 public class GoodsOrderDao {
 	
 	/**
-	 * 显示订单
+	 * 根据用户名和状态显示订单
 	 * @param page
 	 * @param pageSize
+	 * @param userName
+	 * @param userState
 	 * @return
 	 */
-	public PageData<Goods_order> getOrder(int page,int pageSize){
-		return BaseDao.getOraclePage("select * from goods_order", page, pageSize, Goods_order.class, null);
+	public PageData<Goods_order> getOrder(int page,int pageSize,String userName,String userState){
+		return BaseDao.getOraclePage("select * from goods_order where username=? and userstate like ?", page, pageSize, Goods_order.class, userName,userState);
 	}
 }

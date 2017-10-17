@@ -165,12 +165,11 @@ public class UsersServlet extends HttpServlet {
 				/**
 				 * 修改用户详细信息表
 				 */
-				System.out.println(1111);
+				
 				//获取用户信息
 				String infoId = request.getParameter("infoId");
 				String userSex =  request.getParameter("userSex");
 				String userTel = request.getParameter("userTel");
-				System.out.println(userTel);
 				//创建用户信息对象
 				Users_info userInfo = new Users_info(Integer.parseInt(infoId), 0, userSex, userTel);
 				//修改信息

@@ -10,13 +10,17 @@ import com.etc.util.PageData;
  */
 public class GoodsOrderService {
 	GoodsOrderDao god = new GoodsOrderDao();
+	
+	
 	/**
-	 * 显示订单
+	 * 根据用户名和状态显示订单
 	 * @param page
 	 * @param pageSize
+	 * @param userName
+	 * @param userState
 	 * @return
 	 */
-	public PageData<Goods_order> getOrder(int page,int pageSize){
-		return god.getOrder(page, pageSize);
+	public PageData<Goods_order> getOrder(int page,int pageSize,String userName,String userState){
+		return god.getOrder(page, pageSize, userName, userState);
 	}
 }

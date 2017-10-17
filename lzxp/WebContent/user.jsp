@@ -18,7 +18,135 @@
 		<link rel="stylesheet" href="css/bootstrap.min.css" />
 		<script src="js/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(function () {
+				
+				/* 结算点击事件 */
+				$("#countOrder").click(function () {
+					location.href="http://localhost:8080/lzxp/UsersServlet?op=countOrder";
+					
+				});
+				
+				
+				/* 显示订单表格点击事件 */
+				$("#myOrder").click(function () {
+					//ajax
+					$.post("GoodsOrderServlet",{"op":"showAll","userName":$("#userName").val(),"userState":"all"},function(pd,status){
+						showContent(pd);
+					});				
+				});
+				
+				
+				/* 绑定分页点击事件 */
+				$(document).on("click",".pageNo",function(){
+					//获取该页数
+					var $page = $(this).text();
+					//ajax事件
+					$.post("GoodsOrderServlet",{"op":"showAll","userName":$("#userName").val(),"page":$page},function(pd,status){
+						showContent(pd);
+					});			
+				});
+				
+				
+				/* 上一页点击事件 */
+				$(document).on("click","#prevPage",function(){
+					//获取当前页数
+					var $nowPage = 0;
+					var $li = $(".pagination").find("li");
+					 for(var i = 0;i<$li.size();i++){ 
+						 if($li.eq(i).attr("class") =="active"){
+							//如果页面被触发,获取该页面的页数
+							$nowPage = $li.eq(i).text();
+							break;
+						} 
+					}
+					//ajax事件
+					$.post("GoodsOrderServlet",{"op":"showAll","userName":$("#userName").val(),"prevPage":$nowPage},function(pd,status){
+						showContent(pd);
+					});
+				});
+				
+				
+				/* 下一页点击事件 */
+				$(document).on("click","#nextPage",function(){
+					//获取当前页数
+					var $nowPage = 0;
+					var $li = $(".pagination").find("li");
+					 for(var i = 0;i<$li.size();i++){ 
+						 if($li.eq(i).attr("class") =="active"){
+							//如果页面被触发,获取该页面的页数
+							$nowPage = $li.eq(i).text();
+							break;
+						} 
+					}
+					//ajax事件
+					$.post("GoodsOrderServlet",{"op":"showAll","userName":$("#userName").val(),"nextPage":$nowPage},function(pd,status){
+						showContent(pd);
+					});
+				});
+				
+				
+				/* 我的订单 $$$$$$$未付款点击事件 */
+				$("#noPay").click(function(){
+					//ajax事件
+					$.post("GoodsOrderServlet",{"op":"showAll","userName":$("#userName").val(),"userState":"noPay"},function(pd,status){
+						showContent(pd);
+					});
+				});
+				
+				
+				/* 我的订单 $$$$$待收货点击事件 */
+				$("#noReceive").click(function () {
+					//ajax事件
+					$.post("GoodsOrderServlet",{"op":"showAll","userName":$("#userName").val(),"userState":"noReceive"},function(pd,status){
+						showContent(pd);
+					});
+				});
+				
+				
+				/* 我的订单 $$$$$$已完成点击事件 */
+				$("#hasReceive").click(function () {
+					//ajax事件
+					$.post("GoodsOrderServlet",{"op":"showAll","userName":$("#userName").val(),"userState":"hasReceive"},function(pd,status){
+						showContent(pd);
+					});
+				});
+				
+					/* 页面内容和分页的显示 */
+				function showContent(pd){
+					//获取订单信息
+					if (pd != null) {
+						//如果有订单信息
+						//清空订单表控件，分页
+						$("#tableContent").find("tr").remove();
+						$(".pagination").find("li").remove()
+						//显示信息
+						 $.each(pd.data,function(index,order){
+							$("#tableContent").append("<tr><td>"+order.ORDERDATE+"</td>"+
+								"<td>"+order.ORDERCONTENT+"</td>"+
+								"<td>"+order.ORDERBALANCE+"</td>"+
+								"<td>"+order.USERNAME+"</td>"+
+								"<td>"+order.USERSTATE+"</td>"+
+								"<td><button class='btn btn-default btn-danger'>删除</button></td></tr>");
+						});
+						
+						//显示分页
+						$(".pagination").append('<li><a href="#" id="prevPage">Prev</a></li>');
+						for(var index=1;index<=pd.totalPage;index++){
+							if(pd.page==index){
+								//如果当前页面与显示页面一样
+								$(".pagination").append('<li class="active"><a href="#" class="pageNo">'+index+'</a></li>');
+							}else{
+								$(".pagination").append('<li><a href="#" class="pageNo">'+index+'</a></li>');
+							}	
+						}
+						$(".pagination").append('<li><a href="#" id="nextPage">Next</a></li>'); 
+					}		
+				}
+				
+			});
 		
+		</script>		
 	</head>
 </head>
 <body>
@@ -72,7 +200,7 @@
 							</div>
 							<div class="total">
 								<p>共<span class="red">0</span>件商品，共计<span class="sum">￥0.00</span></p>
-								<a class="settle" href="cartlist.html">去购物车结算</a>
+								<a class="settle" href="cartlist.html" id="countOrder">去购物车结算</a>
 							</div>
 						</div>
 					</div>
@@ -125,7 +253,6 @@
 																<span class="mask"><a class="edit member-image" href="#">编辑头像</a></span>
 															</div>
 															<div class="ui-mate">
-																<!-- <div class="u-name"><span>威猛先生</span></div> -->
 															</div>
 														</div>
 													</div>
@@ -175,51 +302,70 @@
 										<h3>我的订单</h3></div>
 									<div class="uc-recently-box">
 										<div class="recent-type">
-											<a class="current" href="#">待付款（0）</a>
-											<a class="no-pay" href="#">待收货（0）</a>
-											<a class="no-pay" href="#">已完成（0）</a>
+											<a class="current" href="#" id="noPay">待付款</a>
+											<a class="no-pay" href="#" id="noReceive">待收货</a>
+											<a class="no-pay" href="#" id="hasReceive">已完成</a>
+											
 										</div>
 										<form action="#" name="form1" id="form1" mothed="get">
-											<table class="order-list my-order">
-												<tbody>
-													<tr class="ol-select">
-														<td>&nbsp;</td>
-														<td>&nbsp;</td>
-														<td>&nbsp;</td>
-														<td>
-															<select class="slt-opt" name="orderDate" id="orderDate" onchange="selectValue();">
-																<option value="1">最近一个月</option>
-																<option value="3">最近三个月</option>
-																<option value="12">最近一年</option>
-															</select>
-														</td>
-														<td>
-															<select class="slt-opt" name="orderType" id="orderType" onchange="selectValue();">
-																<option value="waitPay" selected="selected">待付款</option>
-																<option value="tobeReceipt">待收货</option>
-																<option value="completed">已完成</option>
-																<option value="cancelled">已取消</option>
-															</select>
-														</td>
+											
+	
+	<!-- 表单内容 -->									
+	<div class="container">
+	<div class="row clearfix">		<div class="col-md-9 column">
+			<table class="table table-hover table-striped">
+				<thead>
+					<tr>
+						<th>订单时间</th>
+						<th>订单内容</th>
+						<th>订单金额</th>
+						<th>收货人</th>
+						<th>状态</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody id="tableContent">
+					<tr>
+						<td colspan="5">
+							<div class="uc-no-result">
+								<span>您暂时没有符合条件的订单哦！</span>
+							</div>
+						</td>
+					</tr>
+					
+				</tbody>
+			</table>
+		</div>
+		<div class="col-md-5 column">
+		</div>
+	</div>
+</div>
 
-													</tr>
-													<tr>
-														<th width="240">订单时间</th>
-														<th>订单内容</th>
-														<th>订单金额</th>
-														<th>收货人</th>
-														<th>状态</th>
-														<th>操作</th>
-													</tr>
-													<tr>
-														<td colspan="7">
-															<div class="uc-no-result">
-																<span>您暂时没有符合条件的订单哦！</span>
-															</div>
-														</td>
-													</tr>
-												</tbody>
-											</table>
+	<!--  分页开始 -->
+<div class="row">
+<div class="col-md-4"></div>
+<div class="col-md-4">
+			<ul class="pagination">
+				<li><a href="#" id="prevPage">Prev</a></li>
+					<!-- 由jQuery进行处理 -->
+					
+					<%-- <%-- <c:forEach begin="1" end="${pageData.totalPage}" var="index">
+			       <c:if test="${pageData.page ==index}"> --%>
+			         <%--   <li class="active"> <a href="#" class="pageNo">1</a></li>
+			       </c:if>
+			       <c:if test="${pageData.page !=index}">
+				       <li> <a href="#" class="pageNo">2</a></li>
+				  </c:if>
+				</c:forEach> --%>
+					
+				<!-- <li><a href="#">Next</a></li> -->
+			</ul>
+		</div>
+	<div class="col-md-4"></div>	
+</div>
+<!--  分页结束 -->
+											
+											
 										</form>
 									</div>
 								</div>
