@@ -18,7 +18,7 @@
 		<link rel="stylesheet" href="css/bootstrap.min.css" />
 		<script src="js/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
-
+		
 	</head>
 </head>
 <body>
@@ -92,7 +92,7 @@
 									<a href="#panel-1" data-toggle="tab">个人资料</a>
 								</li>
 								<li data-tab="My_order" style="border: 0;">
-									<a href="#panel-2" data-toggle="tab">我的订单</a>
+									<a href="#panel-2" data-toggle="tab" id="myOrder">我的订单</a>
 								</li>
 								<li data-tab="Security_Center" style="border: 0;">
 									<a href="#panel-3" data-toggle="tab">安全中心</a>
@@ -132,9 +132,8 @@
 													<div class="user-data-cont">
 							
 														<ul class="data-form-list">
-														<form method="post" action="${path }UsersServlet?op=updateUserInfo">
 															<li>
-																<input  type="hidden" name="infoId" id="" value="${requestScope.userInfo.INFOID }" />
+																<input  type="hidden" name="infoId" id="infoId" value="${requestScope.userInfo.INFOID }" />
 																<div class="lab-txt">昵称：</div>
 																<div class="lab-for"><input class="tx-ipt" type="text" name="userName" id="userName" value="${sessionScope.user.USERNAME }" readonly="readonly"/></div>
 															</li>
@@ -142,21 +141,11 @@
 															<li>
 																<div class="lab-txt"><span>*</span>性别：</div>
 																<div class="lab-for">
-																	<!-- 性别为男 -->
-																	<c:if test="${requestScope.userInfo.USERSEX.equals('男') }">
-																		<label><input class="rd-ipt" type="radio" name="gender"  value="男" checked="checked"/>男</label>
-																		<label><input class="rd-ipt" type="radio" name="gender"  value="女"/>女</label>
-																	</c:if>
-																	<!-- 性别为女 -->
-																	<c:if test="${requestScope.userInfo.USERSEX.equals('女') }">
-																		<label><input class="rd-ipt" type="radio" name="gender"  value="男" checked="checked"/>男</label>
-																		<label><input class="rd-ipt" type="radio" name="gender"  value="女" checked="checked"/>女</label>
-																	</c:if>
-																	<!-- 未设置性别 -->
-																	<c:if test="${requestScope.userInfo.USERSEX==null }">
-																		<label><input class="rd-ipt" type="radio" name="gender"  value="男"/>男</label>
-																		<label><input class="rd-ipt" type="radio" name="gender"  value="女" />女</label>
-																	</c:if>
+																	<!-- 性别 -->
+																	
+																		<label><input class="rd-ipt gender" type="radio" name="gender"  value="男" id="nan"/>男</label>
+																		<label><input class="rd-ipt gender" type="radio" name="gender"  value="女" id="nv"/>女</label>
+																	
 																</div>
 															</li>
 
@@ -168,11 +157,10 @@
 															<li>
 
 																<div class="data-submit-btn">
-																	<button class="save" type="submit" onclick="">保存</button>
+																	<button class="save" onclick="" id="save">保存</button>
 
 																</div>
 															</li>
-														</form>
 														</ul>
 													</div>
 												</div>
@@ -190,7 +178,6 @@
 											<a class="current" href="#">待付款（0）</a>
 											<a class="no-pay" href="#">待收货（0）</a>
 											<a class="no-pay" href="#">已完成（0）</a>
-											<a class="no-pay" href="#">已取消（0）</a>
 										</div>
 										<form action="#" name="form1" id="form1" mothed="get">
 											<table class="order-list my-order">
@@ -217,12 +204,11 @@
 
 													</tr>
 													<tr>
-														<th width="240">订单信息</th>
-														<th>收货人</th>
+														<th width="240">订单时间</th>
+														<th>订单内容</th>
 														<th>订单金额</th>
-														<th>订单时间</th>
+														<th>收货人</th>
 														<th>状态</th>
-														<th>平台</th>
 														<th>操作</th>
 													</tr>
 													<tr>
@@ -476,6 +462,49 @@
 			</div>
 			
 			<input id="fileupload" type="file" style="display:none;" name="file" data-url="http://home.lppz.com/member/editMemberImage.jhtml" multiple>
-			
+		
+		
+			<script type="text/javascript">
+			$(function () {
+				/* 初始化性别 */
+				if(${requestScope.userInfo.USERSEX.equals("男")}){
+					$("#nan").prop("checked",true);
+				}
+				
+				if(${requestScope.userInfo.USERSEX.equals("女")}){
+					$("#nv").prop("checked",true);
+				} 
+				
+				/* 保存点击事件 */
+				$("#save").click(function () {
+					
+					//获取文本框信息,并传递，ajax
+					var $infoId = $("#infoId").val();
+					//获取性别
+					var $userSex = $("input[name='gender']");
+					
+					if($userSex.eq(0).prop("checked")){
+						$userSex=$("#nan").val();
+					}else{
+						$userSex=$("#nv").val();
+					}
+					var $userTel = $("#userTel").val();
+					alert($userSex);
+					//传递数据，ajax
+					$.post("UsersServlet",{"op":"updateUserInfo","infoId":$infoId,"userSex":$userSex,"userTel":$userTel},function(data,status){
+						//个人资料选项卡,选中
+						$("#panel-1").click();
+						if(data == true){
+							//保存成功
+							alert("保存成功！！");
+						}else{
+							alert("保存失败！！");
+						}
+						
+					});
+					
+				});
+			});
+		</script>
 		</body>
 </html>
