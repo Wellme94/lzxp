@@ -90,4 +90,25 @@ public class UsersDao {
 		
 	}
 	
+	/**
+	 * 获取用户详细信息
+	 * @param user用户
+	 * @return 用户详细信息
+	 */
+	public List<Users_info> getUserInfo(Users user){
+		//获取用户ID
+		list = (List<Users>) BaseDao.select("select userid from users where username=? and userpwd=?", Users.class, user.getUSERNAME(),user.getUSERPWD());
+		//获取用户详细信息
+		return (List<Users_info>) BaseDao.select("select * from users_info where userid=?", Users_info.class, list.get(0).getUSERID());
+	}
+	
+	/**
+	 * 根据用户详情ID修改用户详情信息表
+	 * @param userInfo 用户详情信息
+	 * @return true false
+	 */
+	public boolean updateUserInfoById(Users_info userInfo){
+		return BaseDao.execute("update users_info set usersex=?,usertel=? where infoid=?", userInfo.getUSERSEX(),userInfo.getUSERTEL(),userInfo.getINFOID())>0;
+	}
+	
 }

@@ -22,57 +22,6 @@
 	</head>
 </head>
 <body>
-<!-- header -->
-
-		<script type="text/javascript">
-			var username;
-			$().ready(function() {
-				$.ajax({
-					url: "http://www.lppz.com/sso/checkname.jhtml",
-					type: "GET",
-					cache: false,
-					dataType: 'jsonp',
-					jsonp: 'callback',
-					success: function(message) {
-						if(message == '#') {
-							window.location.href = "https://reg.lppz.com/bind/index.jhtml";
-						}
-						username = message;
-						if(username) {
-							$headerUsername.html("您好 <a href=\"http://home.lppz.com/member/index.jhtml\" class=\"user\">" + username + "</a>，").show();
-							$headerLogout.show();
-							$headerLogin.hide();
-							$headerRegister.hide();
-							$('.alipay').parent().hide();
-							$('.qq').parent().hide();
-							$('.weibo').parent().hide();
-						} else {
-							$headerLogout.hide();
-							$headerLogin.show();
-							$headerRegister.show();
-							$('.alipay').parent().show();
-							$('.qq').parent().show();
-							$('.weibo').parent().show();
-						}
-
-						if(window.afterloadmember) {
-							window.afterloadmember();
-						}
-
-						$(document).trigger('afterloadmember', username);
-					}
-				});
-
-				var $headerLogin = $("#headerLogin");
-				var $headerRegister = $("#headerRegister");
-				var $headerUsername = $("#headerUsername");
-				var $headerLogout = $("#headerLogout");
-				var $productSearchForm = $("#productSearchForm");
-				var $keyword = $("#productSearchForm input");
-				var defaultKeyword = "商品搜索";
-
-			});
-		</script>
 
 		<!-- header -->
 		<div class="toolbar">
@@ -131,108 +80,7 @@
 			</div>
 		</div>
 		
-		<script type="text/javascript">
-			$(function() {
-				var $keyword = $("#productSearchForm input");
-				var defaultKeyword = "商品搜索";
-				//搜索框进入
-				$keyword.focus(function() {
-					if($keyword.val() == defaultKeyword) {
-						$keyword.val("");
-					}
-				});
-				//搜索框离开
-				$keyword.blur(function() {
-					if($keyword.val() == "") {
-						$keyword.val(defaultKeyword);
-					}
-				});
-
-				//页面购物车数量
-				var cartCacheNum = $.cookie('cart-cache-num');
-				$('.cart-cache-num').html('<b>' + (!!cartCacheNum ? cartCacheNum : 0) + '</b>');
-
-				//显示购物车详情
-				var getcartdelay;
-				$('.indexcart').mouseenter(function() {
-					clearTimeout(getcartdelay);
-					getcartdelay = setTimeout(function() {
-						refreshCart();
-					}, 500);
-				});
-				//删除购物车
-				$('.delete-header-cart-item').die().live('click', function() {
-					var catItemId = $(this).attr('cart-item-id')
-					deleteHeadCart(catItemId);
-				});
-				//刷新head里面的购物车
-				function refreshCart() {
-					$.ajax({
-						url: "http://www.lppz.com/cart/cartHeadData.jhtml",
-						type: "GET",
-						cache: false,
-						dataType: "jsonp",
-						jsonp: "callback",
-						success: function(message) {
-							message = decodeURI(decodeURIComponent(message));
-							message = message.replace(/\+/g, ' ');
-							$(".cart-list-body").html(message);
-							var cartCacheNum = $.cookie('cart-cache-num');
-							$('.cart-cache-num').html('<b>' + (!!cartCacheNum ? cartCacheNum : 0) + '</b>');
-						}
-					});
-				}
-				//删除购物车的方法
-				function deleteHeadCart(itemId) {
-					if(!confirm("您确定要删除吗？")) {
-						return false;
-					}
-
-					$.ajax({
-						url: "http://www.lppz.com/cart/delete.jhtml",
-						type: "POST",
-						data: {
-							id: itemId
-						},
-						dataType: "jsonp",
-						jsonp: "callback",
-						cache: false,
-						success: function(data) {
-							if(data.type == "success") {
-								refreshCart();
-							} else {
-								$.message(data);
-							}
-						}
-					});
-				}
-			});
-
-			$.fn.tabs_users = function(control) {
-				var element = $(this);
-				control = $(control);
-				element.delegate("li", "click", function() {
-					var tabName = $(this).attr("data-tab");
-					//点击li的时候触发change.tabs自定义事件 
-					element.trigger("change.tabs", tabName);
-				});
-
-				//给element绑定一个change.tabs自定义事件
-				element.bind("change.tabs", function(e, tabName) {
-					element.find("li").removeClass("active");
-					element.find(">[data-tab='" + tabName + "']").addClass("active");
-				});
-				element.bind("change.tabs", function(e, tabName) {
-					control.find(">[data-tab]").removeClass("active");
-					control.find(">[data-tab='" + tabName + "']").addClass("active");
-				});
-				//激活第一个选项卡 
-				var firstName = element.find("li:first").attr("data-tab");
-				element.trigger("change.tabs", firstName);
-				return this;
-
-			};
-		</script>
+		
 
 		<body class="product-detail">
 			<div class="container">
@@ -277,48 +125,54 @@
 																<span class="mask"><a class="edit member-image" href="#">编辑头像</a></span>
 															</div>
 															<div class="ui-mate">
-																<div class="u-name"><span>威猛先生</span></div>
+																<!-- <div class="u-name"><span>威猛先生</span></div> -->
 															</div>
 														</div>
 													</div>
 													<div class="user-data-cont">
-
+							
 														<ul class="data-form-list">
+														<form method="post" action="${path }UsersServlet?op=updateUserInfo">
 															<li>
+																<input  type="hidden" name="infoId" id="" value="${requestScope.userInfo.INFOID }" />
 																<div class="lab-txt">昵称：</div>
-																<div class="lab-for"><input class="tx-ipt" type="text" name="lpNickName" id="lpNickName" value="" /></div>
+																<div class="lab-for"><input class="tx-ipt" type="text" name="userName" id="userName" value="${sessionScope.user.USERNAME }" readonly="readonly"/></div>
 															</li>
-															<li>
-																<div class="lab-txt"><span>*</span>真实姓名：</div>
-																<div class="lab-for email"><input class="tx-ipt" type="text" name="name" id="name" value="" /></div>
-															</li>
+															
 															<li>
 																<div class="lab-txt"><span>*</span>性别：</div>
 																<div class="lab-for">
-																	<label><input class="rd-ipt" type="radio" name="gender"  value="_2"/>男</label>
-																	<label><input class="rd-ipt" type="radio" name="gender"  value="_1"/>女</label>
-																	<label><input class="rd-ipt" type="radio" name="gender"  value="_0"/>保密</label>
+																	<!-- 性别为男 -->
+																	<c:if test="${requestScope.userInfo.USERSEX.equals('男') }">
+																		<label><input class="rd-ipt" type="radio" name="gender"  value="男" checked="checked"/>男</label>
+																		<label><input class="rd-ipt" type="radio" name="gender"  value="女"/>女</label>
+																	</c:if>
+																	<!-- 性别为女 -->
+																	<c:if test="${requestScope.userInfo.USERSEX.equals('女') }">
+																		<label><input class="rd-ipt" type="radio" name="gender"  value="男" checked="checked"/>男</label>
+																		<label><input class="rd-ipt" type="radio" name="gender"  value="女" checked="checked"/>女</label>
+																	</c:if>
+																	<!-- 未设置性别 -->
+																	<c:if test="${requestScope.userInfo.USERSEX==null }">
+																		<label><input class="rd-ipt" type="radio" name="gender"  value="男"/>男</label>
+																		<label><input class="rd-ipt" type="radio" name="gender"  value="女" />女</label>
+																	</c:if>
 																</div>
 															</li>
 
 															<li>
 																<div class="lab-txt">手机号：</div>
-																<div class="lab-for email">
-																	180××××3375
-																</div>
+																<div class="lab-for"><input class="tx-ipt" type="text" name="userTel" id="userTel" value="${requestScope.userInfo.USERTEL }" /></div>
 															</li>
 
 															<li>
 
-																<div class="submit-btn">
-																	<a class="save" href="#">提交</a>
-																</div>
-
 																<div class="data-submit-btn">
-																	<button class="save" type="button" onclick="submitPro()">保存</button>
+																	<button class="save" type="submit" onclick="">保存</button>
 
 																</div>
 															</li>
+														</form>
 														</ul>
 													</div>
 												</div>
@@ -620,79 +474,8 @@
 					</div>
 				</div>
 			</div>
-			<!--<script src="//configch2.veinteractive.com/tags/B105FE22/510E/4163/911D/0A070929DD44/tag.js" type="text/javascript" async></script>
-			<script type="text/javascript" src="http://www.lppz.com/resources/shop/js/lp_public.js"></script>
-			<script type="text/javascript" src="http://track.blueview.cc/lppz?pid=1&cid=1047&cha=85&clientId=c68c0a5c5b016f241a3dc9ea512698c4"></script>
-
 			
-			<script src="http://www.lppz.com/resources/shop/js/basic.js"></script>
-			<script src="http://www.lppz.com/resources/shop/js/flexslider.js"></script>
-
-			
-			<script src="http://www.lppz.com/resources/shop/js/upload/vendor/jquery.ui.widget.js"></script>
-			<script src="http://www.lppz.com/resources/shop/js/upload/jquery.iframe-transport.js"></script>
-			<script src="http://www.lppz.com/resources/shop/js/upload/jquery.fileupload.js"></script>
-			<script src="http://www.lppz.com/resources/shop/js/upload/jquery.cookie.js"></script>-->
-
 			<input id="fileupload" type="file" style="display:none;" name="file" data-url="http://home.lppz.com/member/editMemberImage.jhtml" multiple>
-			<script type="text/javascript">
-				$(function() {
-					$('#fileupload').fileupload({
-						headers: {
-							token: $.cookie('token')
-						},
-						done: function(e, data) {
-							var resultStrint = data.result;
-							var result = eval('(' + resultStrint + ')');
-							if(result.success) {
-								$('#avatarImg').attr('src', result.path);
-							} else {
-								alert(result.msg);
-							}
-						}
-					});
-
-					$('.member-image').click(function() {
-						$('#fileupload').trigger('click');
-					});
-
-					//签到
-					$('.do-sign-in').die().live('click', function() {
-						$.ajax('http://home.lppz.com/member/signIn.jhtml', {
-							type: 'get',
-							success: function(message) {
-								message = eval('(' + message + ')');
-								if(message.type == 'success') {
-									alertModal(
-										"签到成功！恭喜您获得" + message.content + "积分",
-										"",
-										function() {
-											var thisModal = ".alert-modal";
-											$(thisModal).css({
-												"width": "400px"
-											});
-											$(thisModal + " .am-cont-icon").addClass("am-ok-icon");
-											$(thisModal + " .am-btn").html('<a href="javascript:;" class="confirm" onclick="alertModalClose()">我知道了</a>')
-										});
-									var mpb = $('.my-point-balance');
-									mpb.html((mpb.html() - 0) + (message.content - 0));
-								} else {
-									alertModal(
-										message.content,
-										"",
-										function() {
-											var thisModal = ".alert-modal";
-											$(thisModal).css({
-												"width": "400px"
-											});
-											$(thisModal + " .am-cont-icon").removeClass("am-ok-icon");
-											$(thisModal + " .am-btn").html('<a href="javascript:;" class="confirm" onclick="alertModalClose()">我知道了</a>')
-										});
-								}
-							}
-						});
-					});
-				});
-			</script>
+			
 		</body>
 </html>

@@ -153,7 +153,7 @@
 									<!-- 判断用户是否已登录 -->
 										<c:if test="${sessionScope.user != null }">
 										<!-- 如果用户不为空 -->
-											<a href="#">${sessionScope.user.USERNAME}已登录</a>
+											<a href="user.jsp">${sessionScope.user.USERNAME}已登录</a>
 										</c:if>
 										<c:if test="${sessionScope.user == null }">
 										<!-- 如果用户为空 -->

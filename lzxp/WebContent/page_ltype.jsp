@@ -101,7 +101,7 @@
 									<div class="m-name" id="divnologin">
 										<c:if test="${sessionScope.user != null }">
 										<!-- 如果用户不为空 -->
-											<a href="#">${sessionScope.user.USERNAME}已登录</a>
+											<a href="${path }UsersServlet?op=userInfo">${sessionScope.user.USERNAME}已登录</a>
 										</c:if>
 										<c:if test="${sessionScope.user == null }">
 										<!-- 如果用户为空 -->
