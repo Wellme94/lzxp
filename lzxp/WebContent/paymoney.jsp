@@ -137,13 +137,6 @@ $(function () {
 			<a href="javascript:;" id="other">选择其它支付方式</a>
 		</div>
 		<div class="span24">
-			<div class="step step3">
-				<ul>
-					<li>查看购物车</li>
-					<li>确认订单信息</li>
-					<li class="current">完成订单</li>
-				</ul>
-			</div>
 			<div class="result">
 						<div class="title">您的订单已提交成功，正在等待您的付款！</div>
 					
