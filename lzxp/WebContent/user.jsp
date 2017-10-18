@@ -18,6 +18,8 @@
 		<link rel="stylesheet" href="css/bootstrap.min.css" />
 		<script src="js/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		
+		
 		<script type="text/javascript">
 			$(function () {
 				
@@ -256,7 +258,6 @@
 							<div data-tab="Personal_data" class="tab-pane" id="panel-1">
 								<div class="user-main clearfix">
 									<div class="user-content">
-										<form action="#" name="form1" id="form1" method="post">
 											<div class="uc-recently">
 												<div class="uc-recently-top">
 													<h3>基本信息</h3></div>
@@ -308,7 +309,6 @@
 													</div>
 												</div>
 											</div>
-										</form>
 									</div>
 								</div>
 							</div>
@@ -576,7 +576,13 @@
 			
 			<input id="fileupload" type="file" style="display:none;" name="file" data-url="http://home.lppz.com/member/editMemberImage.jhtml" multiple>
 		
-		
+			<!-- lay外置插件 -->
+			<script src="js/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+			<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+			<link rel="stylesheet" href="layui/layer.css">
+			<script src="layui/layer.js" type="text/javascript"></script>
+			
+			<!-- lay外置插件 -->
 			<script type="text/javascript">
 			$(function () {
 				/* 初始化性别 */
@@ -602,22 +608,36 @@
 						$userSex=$("#nv").val();
 					}
 					var $userTel = $("#userTel").val();
-					alert($userSex);
 					//传递数据，ajax
 					$.post("UsersServlet",{"op":"updateUserInfo","infoId":$infoId,"userSex":$userSex,"userTel":$userTel},function(data,status){
 						//个人资料选项卡,选中
 						$("#panel-1").click();
 						if(data == true){
 							//保存成功
-							alert("保存成功！！");
+							console.log("1");
+							  layer.msg('保存成功',{
+								  time: 3000
+								  
+							  });
+								
 						}else{
-							alert("保存失败！！");
+							console.log("2");
+							 layer.msg('保存成功',{
+								  time: 3000
+								  
+							  });
 						}
-						
 					});
 					
 				});
+				
+				
 			});
+			
+			
+			
+			
+			
 		</script>
 		</body>
 </html>
