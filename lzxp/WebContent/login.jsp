@@ -44,7 +44,7 @@
 					$.post("UsersServlet",{"op":"isLogin","userName":$("#username").val(),"userPwd":$("#password").val()},function(result,status){
 						if(result == true){
 							//如果登录成功,页面跳转
-							location.href="http://localhost:8080/lzxp/page_ltype.jsp";
+							location.href="http://localhost:8080/lzxp/ltype.jsp";
 						}else{
 							//如果失败
 							$('#userNameError').show();

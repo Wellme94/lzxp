@@ -2694,7 +2694,7 @@
 				</div>
 			</div>
 
-		<!-- 	<script language="javascript">
+			<script language="javascript">
 				function doBind() {
 					var chkBoxes = document.getElementsByName("chkBind");
 					var x = '[';
@@ -2737,7 +2737,7 @@
 
 			<script src="//configch2.veinteractive.com/tags/B105FE22/510E/4163/911D/0A070929DD44/tag.js" type="text/javascript" async></script>
 			<script type="text/javascript" src="http://www.lppz.com/resources/shop/js/lp_public.js"></script>
-			公用JS
+			<!-- 公用JS -->
 			<script src="http://www.lppz.com/resources/shop/js/base.js"></script>
 			<script type="text/javascript" src="http://www.lppz.com/resources/shop/js/o_code.js"></script>
 
@@ -2798,7 +2798,7 @@
 						}
 					});
 				});
-			</script> -->
+			</script>
 
 
 </body>
