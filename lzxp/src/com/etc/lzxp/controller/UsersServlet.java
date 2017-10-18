@@ -108,11 +108,11 @@ public class UsersServlet extends HttpServlet {
 						response.sendRedirect("login.jsp");
 					}else{
 						//继续返回注册页面
-						response.sendRedirect("register.html");
+						response.sendRedirect("register.jsp");
 					}
 				}else{
 					//继续返回注册页面
-					response.sendRedirect("register.html");
+					response.sendRedirect("register.jsp");
 				}
 				
 				
@@ -124,7 +124,7 @@ public class UsersServlet extends HttpServlet {
 					//移除会话中的用户消息
 					session.removeAttribute("user");
 					//退出到首页
-					response.sendRedirect("index.html");
+					response.sendRedirect("index.jsp");
 				}
 				
 				

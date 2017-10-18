@@ -1,8 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-
-	<head>
-		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 		<title>零嘴小铺商城 - 用户注册</title>
 		<link href="css/global.css" rel="stylesheet">
 		<link href="css/layout.css" rel="stylesheet">
@@ -243,17 +244,15 @@
 			
 		
 		</script>
-	</head>
-
-	<body>
-
-		<!-- header -->
+</head>
+<body>
+	<!-- header -->
 		<div class="toolbar">
 			<div class="toolbar-cont wrap">
 				<ul class="fl">
 					<li>欢迎来到零嘴小铺官方商城！</li>
 					<li>
-						<a class="reg" href="login.html">[登录]</a>
+						<a class="reg" href="login.jsp">[登录]</a>
 					</li>
 				</ul>
 			</div>
@@ -328,5 +327,5 @@
 			<!--底部-->
 
 	</body>
-
+</body>
 </html>

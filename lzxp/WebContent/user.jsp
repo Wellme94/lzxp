@@ -194,7 +194,7 @@
 						<a class="log" href="login.jsp">[登录]</a>
 					</li>
 					<li id="headerRegister" class="headerRegister none">
-						<a class="reg" href="register.html">[注册]</a>
+						<a class="reg" href="register.jsp">[注册]</a>
 					</li>
 				</ul>
 			</div>

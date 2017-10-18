@@ -1,14 +1,14 @@
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-	<!--
+<!--
     	作者：offline
     	时间：2017-10-12
     	描述：首页
-    -->
-
-	<head>
-
-		<title>零嘴小铺</title>
+-->
+<head>
+<title>零嘴小铺</title>
 
 		<!-- Meta-Tags -->
 		<meta charset="utf-8">
@@ -44,11 +44,9 @@
 		<!-- Font-Awesome -->
 		<link rel="stylesheet" href="fonts/fontawesome-webfont.ttf" type="text/css" media="all">
 		<!-- //Fonts -->
-	</head>
-	<!-- //Head -->
-	<!-- Body -->
-	<body>
-		<!-- Header -->
+</head>
+<body>
+	<!-- Header -->
 		<div class="header w3layouts agileits" id="home">
 
 			<div class="logo">
@@ -72,10 +70,10 @@
 					<div id="navbar" class="navbar-collapse w3layouts agileits navbar-right collapse">
 						<ul class="nav w3layouts agileits navbar-nav">
 							<li>
-								<a href="index.html">首页</a>
+								<a href="index.jsp">首页</a>
 							</li>
 							<li>
-								<a target="_blank" href="page_ltype.jsp">所有商品</a>
+								<a target="_blank" href="ltype.jsp">所有商品</a>
 							</li>
 							<li>
 								<a href="#portfolio">关于我们</a>
@@ -611,8 +609,5 @@
 		<!-- //Smooth-Scrolling-JavaScript -->
 
 		<!-- //Custom-JavaScript-File-Links -->
-
-	</body>
-	<!-- //Body -->
-
+</body>
 </html>

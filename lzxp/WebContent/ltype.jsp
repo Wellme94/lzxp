@@ -76,7 +76,7 @@
 						<a class="log" href="login.jsp">[登录]</a>
 					</li>
 					<li>
-						<a class="reg" href="register.html">[注册]</a>
+						<a class="reg" href="register.jsp">[注册]</a>
 					</li>
 					<li>
 						<a class="log" href="#" id="exit">[退出]</a>
@@ -224,13 +224,13 @@
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
 										<li>
-											<a target="_blank" href="style.jsp">嗑壳坚果</a>
+											<a target="_blank" href="stype.jsp">嗑壳坚果</a>
 										</li>
 										<li>
-											<a target="_blank" href="style.jsp">果果仁仁</a>
+											<a target="_blank" href="stype.jsp">果果仁仁</a>
 										</li>
 										<li>
-											<a target="_blank" href="style.jsp">特惠炒货</a>
+											<a target="_blank" href="stype.jsp">特惠炒货</a>
 										</li>
 									</ul>
 								</div>
