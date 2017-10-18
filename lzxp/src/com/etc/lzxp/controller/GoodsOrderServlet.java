@@ -125,29 +125,16 @@ public class GoodsOrderServlet extends HttpServlet {
 				printJson(out, pd);
 				
 			
-			}/*else if ("noPay".equals(op)) {*/
-				/**
-				 * 根据订单的用户状态搜索
-				 */
-				/*String userName = null;
-				if (request.getParameter("userName")!=null) {
-					//如果用户名不为空
-					userName = request.getParameter("userName");
-				}
-				if (request.getParameter("userState")!=null) {
-					//如果订单的用户状态不为空
-					if ("noPay".equals(request.getParameter("userState"))) {
-						System.out.println(11111);
-						//如果为未付款状态
-						userState = "未付款";
-						//根据状态查询
-						pd = gos.getOrderByNoPay(page, pageSize, userName, userState);
-					}
-				}
-				//ajax打印
-				printJson(out, pd);*/
 			
-			/*}*/
+			}else if ("myOrder".equals(op)) {
+				/***
+				 * 去付款点击事件
+				 */
+				//获取传递过来的订单编号
+				String orderId = request.getParameter("orderId");
+				//查询对应的订单以及地址
+				
+			}
 		
 		
 		

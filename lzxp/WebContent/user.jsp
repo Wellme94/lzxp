@@ -112,6 +112,15 @@
 					});
 				});
 				
+				
+				/* 我的订单$$$$$$$$$去付款点击事件 */
+				$(document).on("click",".goPay",function(){
+					//获取订单编号
+					var $orderId = $(this).parents("tr").find("input").val();
+					//页面跳转
+					location.href="http://localhost:8080/lzxp/GoodsOrderServlet?op=myOrder&orderId="+$orderId;
+				});
+				
 					/* 页面内容和分页的显示 */
 				function showContent(pd){
 					//获取订单信息
@@ -122,12 +131,22 @@
 						$(".pagination").find("li").remove()
 						//显示信息
 						 $.each(pd.data,function(index,order){
-							$("#tableContent").append("<tr><td>"+order.ORDERDATE+"</td>"+
-								"<td>"+order.ORDERCONTENT+"</td>"+
-								"<td>"+order.ORDERBALANCE+"</td>"+
-								"<td>"+order.USERNAME+"</td>"+
-								"<td>"+order.USERSTATE+"</td>"+
-								"<td><button class='btn btn-default btn-danger'>删除</button></td></tr>");
+							  if (order.USERSTATE=="待付款") {
+								  $("#tableContent").append("<tr><td>"+order.ORDERDATE+"<input type='hidden' value='"+order.ORDERID+"'/></td>"+
+											"<td>"+order.ORDERCONTENT+"</td>"+
+											"<td>"+order.ORDERBALANCE+"</td>"+
+											"<td>"+order.USERNAME+"</td>"+
+											"<td>"+order.USERSTATE+"</td>"+
+											"<td><button class='btn btn-default btn-danger' class='goPay'>去付款</button></td></tr>");
+							}else{
+								 $("#tableContent").append("<tr><td>"+order.ORDERDATE+"<input type='hidden' value='"+order.ORDERID+"'/></td>"+
+											"<td>"+order.ORDERCONTENT+"</td>"+
+											"<td>"+order.ORDERBALANCE+"</td>"+
+											"<td>"+order.USERNAME+"</td>"+
+											"<td>"+order.USERSTATE+"</td>"+
+											"<td></td></tr>");
+							} 
+							
 						});
 						
 						//显示分页
@@ -224,9 +243,6 @@
 								</li>
 								<li data-tab="Security_Center" style="border: 0;">
 									<a href="#panel-3" data-toggle="tab">安全中心</a>
-								</li>
-								<li data-tab="Receiving_address" style="border: 0;">
-									<a href="#panel-4" data-toggle="tab">收货地址</a>
 								</li>
 								<li data-tab="My_comments" style="border: 0;">
 									<a href="#panel-5" data-toggle="tab">我的评论</a>
@@ -407,55 +423,6 @@
 									</div>
 								</div>
 							</div>
-							<div data-tab="Receiving_address" class="tab-pane" id="panel-4">
-								<div class="uc-recently">
-									<div class="uc-recently-top">
-										<h3>收货地址</h3></div>
-									<div class="uc-recently-box">
-										<div class="recent-wrap receive-addr-top clearfix">
-											<a class="view-btn add-new-receiver" href="javascript:;">新增收货地址</a>
-											<span class="desc mlt">您已创建<em class="red receiver-nums">1</em>个收货地址，最多可创建<em class="red">5</em>个</span>
-										</div>
-										<div class="receive-addr-list">
-
-											<div class="addr-item" id="0c500d1c6a804694853bbc17c8806117">
-												<div class="addr-info">
-													<dl>
-														<dt>威猛先生<span class="default">默认地址</span></dt>
-														<dd>
-															<div class="lab">收&nbsp;&nbsp;货&nbsp;&nbsp;人：</div>
-															<div class="intr">威猛先生</div>
-														</dd>
-														<dd>
-															<div class="lab">所在地区：</div>
-															<div class="intr">福建省厦门市思明区</div>
-														</dd>
-														<dd>
-															<div class="lab">地　　址：</div>
-															<div class="intr">海怡大厦</div>
-														</dd>
-														<dd>
-															<div class="lab">邮政编码：</div>
-															<div class="intr">350700</div>
-														</dd>
-														<dd>
-															<div class="lab">手　　机：</div>
-															<div class="intr">18039023375</div>
-														</dd>
-													</dl>
-												</div>
-												<div class="addr-op">
-													<a class="view-btn receiver-edit" receiverid="0c500d1c6a804694853bbc17c8806117" href="javascript:;">编辑</a>
-												</div>
-												<a href="javascript:;" receiverid="0c500d1c6a804694853bbc17c8806117" class="addr-del">删除</a>
-											</div>
-
-										</div>
-
-									</div>
-								</div>
-							</div>
-
 							<div data-tab="My_comments" class="tab-pane" id="panel-5">
 
 								<div class="uc-recently">
