@@ -204,10 +204,10 @@
 
 				<div class="hd-user">
 					<div class="user-search">
-						<!--<form id="productSearchForm" action="#" method="get" target="_blank">-->
+						<form id="productSearchForm" action="GoodsServlet?op=searchGoods" method="post">
 							<input class="sch-key" type="text" name="keyword" id="keyword" value="商品搜索" onfocus="if (value =='商品搜索'){value =''}" onblur="if (value ==''){value='商品搜索'}">
 							<input class="sch-btn" type="submit" value="">
-					    <!--</form>-->
+					    </form>
 					</div>
 					<div class="user-shoping">
 						<a class="us-btn indexcart" href="cartlist.html">购物车</a>
