@@ -198,8 +198,8 @@ a:hover {
 	src: url('../images/iconfont/iconfont.eot');
 	/* IE9*/
 	src: url('../images/iconfont/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-	url('../images/iconfont/iconfont.woff') format('woff'), /* chrome、firefox */
-	url('../images/iconfont/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+	url('../images/iconfont/iconfont.woff') format('woff'), /* chrome銆乫irefox */
+	url('../images/iconfont/iconfont.ttf') format('truetype'), /* chrome銆乫irefox銆乷pera銆丼afari, Android, iOS 4.2+*/
 	url('../images/iconfont/iconfont.svg#iconfont') format('svg');
 	/* iOS 4.1- */
 }
@@ -431,7 +431,7 @@ a:hover {
 }
 
 
-/*我的良品*/
+/*鎴戠殑鑹搧*/
 
 .top-user-info {
 	position: relative;
@@ -832,7 +832,7 @@ a:hover {
 }
 
 
-/* 商品分类 */
+/* 鍟嗗搧鍒嗙被 */
 
 .goods-sort {
 	position: relative;
@@ -1050,7 +1050,7 @@ a:hover {
 }
 
 
-/* 列表页 */
+/* 鍒楄〃椤� */
 
 .listpage {
 	background: #fff;
@@ -1058,7 +1058,7 @@ a:hover {
 }
 
 
-/* 子分类 */
+/* 瀛愬垎绫� */
 
 .subclass {
 	line-height: 24px;
@@ -1092,7 +1092,7 @@ a:hover {
 }
 
 
-/* 筛选条件 */
+/* 绛涢�夋潯浠� */
 
 .filtrate {
 	margin: 0 auto 20px;
@@ -1392,7 +1392,7 @@ a:hover {
 }
 
 
-/* 列表AD */
+/* 鍒楄〃AD */
 
 .lp-top-ad {
 	position: relative;
@@ -1450,7 +1450,7 @@ a:hover {
 }
 
 
-/* 列表 */
+/* 鍒楄〃 */
 
 .producrt-list {
 	overflow: hidden;
@@ -2201,7 +2201,7 @@ body.product-detail {
 }
 
 
-/* 商品详情 */
+/* 鍟嗗搧璇︽儏 */
 
 .introduce {
 	position: relative;
@@ -2305,7 +2305,7 @@ body.product-detail {
 }
 
 
-/*推荐广告位*/
+/*鎺ㄨ崘骞垮憡浣�*/
 
 .introduce .related-ad {
 	padding: 10px;
@@ -2316,7 +2316,7 @@ body.product-detail {
 }
 
 
-/* 商品简介 */
+/* 鍟嗗搧绠�浠� */
 
 .intro-area .param {
 	padding: 15px;
@@ -2354,7 +2354,7 @@ body.product-detail {
 }
 
 
-/* 星级 */
+/* 鏄熺骇 */
 
 .score-star {
 	display: block;
@@ -2391,7 +2391,7 @@ body.product-detail {
 }
 
 
-/* 评论 */
+/* 璇勮 */
 
 .comment-top {
 	padding: 15px;
@@ -2497,7 +2497,7 @@ body.product-detail {
 }
 
 
-/* 评论列表 */
+/* 璇勮鍒楄〃 */
 
 .comment-list {
 	padding: 15px;
@@ -2642,7 +2642,7 @@ body.product-detail {
 }
 
 
-/* 咨询 */
+/* 鍜ㄨ */
 
 .consult {
 	padding: 15px;
@@ -2733,7 +2733,7 @@ body.product-detail {
 }
 
 
-/* 商品侧栏推荐 */
+/* 鍟嗗搧渚ф爮鎺ㄨ崘 */
 
 .recbar {
 	float: right;
@@ -2811,7 +2811,7 @@ body.product-detail {
 }
 
 
-/* 猜你喜欢 */
+/* 鐚滀綘鍠滄 */
 
 .give-like .gl-tit {
 	height: 40px;
@@ -2992,7 +2992,7 @@ body.product-detail {
 }
 
 
-/* 推荐 */
+/* 鎺ㄨ崘 */
 
 .give-rec .rec-tit {
 	height: 40px;
@@ -3075,7 +3075,7 @@ body.product-detail {
 }
 
 
-/* 商品下架 */
+/* 鍟嗗搧涓嬫灦 */
 
 .sold-out {
 	padding: 40px 20px;
@@ -3124,7 +3124,7 @@ body.product-detail {
 }
 
 
-/* 搜索NO结果 */
+/* 鎼滅储NO缁撴灉 */
 
 .no-result {
 	padding: 40px 20px;
@@ -3209,7 +3209,7 @@ body.product-detail {
 }
 
 
-/* 组合商品 */
+/* 缁勫悎鍟嗗搧 */
 
 .fitting-suit {
 	margin-top: 15px;
@@ -3404,7 +3404,7 @@ body.product-detail {
 }
 
 
-/* 分页 */
+/* 鍒嗛〉 */
 
 .pages {
 	text-align: center;
@@ -3442,7 +3442,7 @@ body.product-detail {
 }
 
 .pages .page-num li a {
-	color: #005aa0;
+	color: #ADADAD;
 }
 
 .pages .page-num li span {
@@ -4251,7 +4251,7 @@ div.xxMessage .messageIframe {
 }
 
 
-/*领取优惠券*/
+/*棰嗗彇浼樻儬鍒�*/
 
 .get-coupon {
 	padding-bottom: 30px;
@@ -4470,7 +4470,7 @@ div.xxMessage .messageIframe {
 }
 
 
-/*登录框*/
+/*鐧诲綍妗�*/
 
 .lp-login-overlay {
 	position: fixed;
@@ -4656,4 +4656,7 @@ div.xxMessage .messageIframe {
 .lld-coagent .weibo {
 	width: 85px;
 	background-position: -160px 0;
+}
+.pages .page-num .on{
+	background-color:#005aa0;
 }

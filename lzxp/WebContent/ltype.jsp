@@ -224,13 +224,13 @@
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
 										<li>
-											<a target="_blank" href="stype.jsp">嗑壳坚果</a>
+											<a target="_blank" href="stype.jsp?stypeId=1">嗑壳坚果</a>
 										</li>
 										<li>
-											<a target="_blank" href="stype.jsp">果果仁仁</a>
+											<a target="_blank" href="stype.jsp?stypeId=2">果果仁仁</a>
 										</li>
 										<li>
-											<a target="_blank" href="stype.jsp">特惠炒货</a>
+											<a target="_blank" href="stype.jsp?stypeId=3">特惠炒货</a>
 										</li>
 									</ul>
 								</div>
@@ -2693,7 +2693,8 @@
 					</div>
 				</div>
 			</div>
-
+			
+			<!--  我的零嘴-->
 			<script language="javascript">
 				function doBind() {
 					var chkBoxes = document.getElementsByName("chkBind");

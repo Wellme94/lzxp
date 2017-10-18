@@ -1,7 +1,9 @@
 <%@page import="com.etc.lzxp.entity.Users"%>
+<%@page import="com.etc.lzxp.entity.Goods"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -12,15 +14,162 @@
     -->
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>零嘴小铺</title>
-		<link rel="stylesheet" href="css/layout-style.css">
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/common.js"></script>
-		<script type="text/javascript" src="js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="js/jquery.cookie.js"></script>	
+		<link rel="stylesheet" href="css/layout-style.css">
+		<style>
+			.pages .page-num .on{
+				background-color:#005aa0;
+				color:white;
+			}
+			
+		</style>
 		
+<script type="text/javascript"> 
+	//页面加载的时候  调用函数onload() 
+	$().ready(function(){		
+   		 onload();	
+	});
+  /* 函数的定义
+     function  函数名(){
+	  
+  }
+  */
+  //函数中使用Ajax局部刷新页面
+   function onload(){	 
+	  //先获取从大类传递过来的小类 类型Id
+	  var stypeId = <%=request.getParameter("stypeId")%> 
+	  alert(stypeId);
+	  /* var stypeId = ${sessionScope.stypeId} */
+	  /* alert("函数调用成功！");   */
+		 $.post("GetAllGoodsServlet",{"op":"queryAll","stypeId":stypeId},function(pd,status){
+			 //调用显示商品数据的方法
+			 Showgoods(pd,status);		 
 		
+		 }); /* $.post */
+  
+  } /* function onload() */
+
+  //分页查询
+   $(function(){
+	   //先获取从大类传递过来的小类 类型Id
+		 var stypeId = <%=request.getParameter("stypeId")%> 
+	   //获取动态标签的点击事件
+	   $(document).on('click','.pageNoAjax',function(){		  
+		  //获取当前标签的值
+		  var page = $(this).text();
+		 /*  alert(page); */
+		  /* alert("动态事件"); */
+		  //Ajax请求
+		  $.post("GetAllGoodsServlet",{"op":"queryAll","stypeId":stypeId,"page":page},function(pd,status){
+			  
+			//调用显示商品数据的方法
+			Showgoods(pd,status);	
+		 
+		  });			  
+	  }); 
+	  //点击确定按钮进行分页页面跳转
+	  $(document).on('click','.pg_btn',function(){
+		 var page = $(".pg_txt").val();
+		/*  alert("点击确定后："+page); */
+		 $.post("GetAllGoodsServlet",{"op":"queryAll","stypeId":stypeId,"page":page},function(pd,status){
+			
+				//调用显示商品数据的方法
+				Showgoods(pd,status);
+			 
+		 });
+		 
+	  });
+	  
+	  //点击上一页或者下一页按钮进行分页跳转
+	 $(document).on('click','.pg_prev',function(){
+		var pageStr = $("#page-num li a.on").text();
+		var page = parseInt(pageStr)-1;
+		if(page!=0){
 		
-		<script type="text/javascript">
-			//是否显示有货
+		/* alert("当前页："+page); */
+		 $.post("GetAllGoodsServlet",{"op":"queryAll","stypeId":stypeId,"page":page},function(pd,status){				
+				//调用显示商品数据的方法
+				Showgoods(pd,status);			 
+		 });
+		}else{
+			alert("已经是首页了");
+		}
+	 });
+	  //下一页
+	 $(document).on('click','.pg_next',function(){
+		 var pageStr = $("#page-num li a.on").text();	 
+			var page = parseInt(pageStr)+1;	
+			/* alert(pageStr); */
+			 $.post("GetAllGoodsServlet",{"op":"queryAll","stypeId":stypeId,"page":page},function(pd,status){					
+				   
+				 if(page<=pd.totalPage){
+				    //调用显示商品数据的方法
+					Showgoods(pd,status);
+				   }else{
+					   alert("已经是最后一页了");
+				   }
+			 });	
+		 }); 
+	  //点击搜索按钮进行模糊查询
+	  $(".sch-btn").click(function(){
+		  /* alert("模糊查询"); */
+		   var keyword = $(".sch-key").val();
+		 /*   alert(keyword); */
+		   $.post("GetAllGoodsServlet",{"op":"queryAll","stypeId":stypeId,"goodsName":keyword},function(pd,status){
+				
+				//调用显示商品数据的方法
+				Showgoods(pd,status);
+			 
+		 });
+	  });
+	  //跳转商品的详情页面
+	  $(document).on('click','.goodsId',function(){
+		  var goodsId = $("#goodsId").val();
+		  alert(goodsId);
+		  location.href = "detail.jsp?goodsId=goodsId";	  
+	  });
+  }); 
+  
+ //封装Ajax请求返回的数据显示的方法  
+   function Showgoods(pd,status){
+	 //先将原先的样式删除掉
+		 $('#content_ul').find('li').remove();
+		 $('#page-num').find('li').remove();
+		//遍历pd中的data
+		 $.each(pd.data,function(index,showgoods){			
+			 $("#content_ul").append('<li><div class="pt">'
+		    		 +'<a href="#" title="'+showgoods.GOODSNAME+'" class="pic goodsId"> <img src="'+showgoods.PICTUREADDRESS+'"></a>'
+		    		 +'<a href="#" title="'+showgoods.GOODSNAME+'" class="tit goodsId">'+showgoods.GOODSNAME+'</a>'
+		    		 +'<p class="prom" title="'+showgoods.GOODSCONTENT+'">'+showgoods.GOODSCONTENT+'</p>'
+		    		 +'</div><div class="price"><span>￥<i>'+showgoods.GOODSPRICE+'</i></span> </div>'
+					 +'<div class="part"><div class="cart">	<a class="add" href="#">加购物车</a>'
+					 +'<a class="atte" href="#">加关注</a></div><div class="meta"> <span class="sale">已售：<i>356</i></span>'
+					 +'<div class="comm"> <span class="tx">评分：</span> <span class="score-star"><i class="star05"></i></span></div>	</div>'
+					 +'</div><input type="hidden" value="'+showgoods.GOODSID+'" id="goodsId"></li>');  
+		 });/*$.each  */
+		 //显示分页
+		 $("#page-num").append('<li><a  class="pg_prev">上页</a></li>');
+		 for(var curPage = 1;curPage<=pd.totalPage;curPage++){   		 
+	    		 if(pd.page==curPage){
+	    			 
+	    			 $("#page-num").append('<li ><a  class=" on pageNoAjax">'+curPage+'</a></li>');
+	    			 
+	    		 }else{
+	    			 
+	    			 $("#page-num").append('<li><a class="pageNoAjax">'+curPage+'</a></li>');
+	    	   }
+	    	 }
+		 $("#page-num").append('<li><a class="pg_next">下页</a></li>');
+		
+		 $("#page-num").append('<li><small class="sum">共<b>'+pd.totalPage+'</b>页</small><i>到第</i><input class="pg_txt" type="text" value="1" name="curPage" id="turnPage"><i>页</i><input class="pg_btn" type="button" value="确定" id="pg_btn"></li>');
+	
+ }
+
+</script>
+<script type="text/javascript">	
+		 //是否显示有货
 			var hasStock = false;
 			$().ready(function() {
 				var $productForm = $("#productForm");
@@ -83,13 +232,9 @@
 					return false;
 				}
 			});
-
-			/* 结算点击事件 */
-			$("#countOrder").click(function () {
-				location.href="http://localhost:8080/lzxp/UsersServlet?op=countOrder";
-				
-			});
+			
 		</script>
+		
 </head>
 
 	<body class="listpage">
@@ -151,7 +296,7 @@
 										
 										<c:if test="${sessionScope.user != null }">
 										<!-- 如果用户不为空 -->
-											<a href="user.jsp">${sessionScope.user.USERNAME}已登录</a>
+											<a href="${path }UsersServlet?op=userInfo">${sessionScope.user.USERNAME}已登录</a>
 										</c:if>
 										<c:if test="${sessionScope.user == null }">
 										<!-- 如果用户为空 -->
@@ -217,7 +362,7 @@
 					<div class="search-area">
 						<!--<form id="productSearchForm" action="#" method="get" target="_blank">-->
 						<input class="sch-key" type="text" name="keyword" id="keyword" value="商品搜索">
-						<input class="sch-btn" type="submit" placeholder="商品搜索">
+						<input class="sch-btn"  id = "sch-btn" type="button" placeholder="商品搜索">
 						<!--</form>-->
 					</div>
 				</div>
@@ -399,163 +544,23 @@
 			</form>
 			<!--商品展示层-->
 			<div class="content">
-
+  
 				<!-- 异步分页 -->
 				<div id="showControlPage">
 					<ul class="producrt-list clearfix" id="content_ul">
-						<li>
-							<div class="pt">
-								<a href="#" title="欢乐套餐716g" class="pic"> <img src="img/style/欢乐套餐716g.jpg"> </a>
-								<a href="#" title="欢乐套餐716g" class="tit">欢乐套餐716g</a>
-								<p class="prom" title="美味伴出行 坚果大放价">美味伴出行 坚果大放价</p>
-							</div>
-							<div class="price"><span>￥<i>66</i>.90</span>
-							</div>
-							<div class="part">
-								<div class="cart">
-									<a class="add" href="#">加购物车</a>
-									<a class="atte" href="#">加关注</a>
-								</div>
-								<div class="meta"> <span class="sale">已售：<i>0</i></span>
-									<div class="comm"> <span class="tx">评分：</span> <span class="score-star"><i class="star05"></i></span>
-									</div>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="pt">
-								<a href="#" title="黑美人葵花籽（奶油味）" class="pic"> <img src="img/style/黑美人葵花籽（奶油味）.jpg"> </a>
-								<a href="#" title="黑美人葵花籽（奶油味）" class="tit">黑美人葵花籽（奶油味）</a>
-								<p class="prom" title="美味伴出行 坚果大放价">美味伴出行 坚果大放价</p>
-							</div>
-							<div class="price"><span>￥<i>66</i>.90</span>
-							</div>
-							<div class="part">
-								<div class="cart">
-									<a class="add" href="#">加购物车</a>
-									<a class="atte" href="#">加关注</a>
-								</div>
-								<div class="meta"> <span class="sale">已售：<i>0</i></span>
-									<div class="comm"> <span class="tx">评分：</span> <span class="score-star"><i class="star05"></i></span>
-									</div>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="pt">
-								<a href="#" title="南瓜子110g" class="pic"> <img src="img/style/南瓜子110g.jpg"> </a>
-								<a href="#" title="南瓜子110g" class="tit">南瓜子110g</a>
-								<p class="prom" title="焙烤风情 非油炸更健康">焙烤风情 非油炸更健康</p>
-							</div>
-							<div class="price"><span>￥<i>9</i>.90</span> </div>
-							<div class="part">
-								<div class="cart">
-									<a class="add" href="#">加购物车</a>
-									<a class="atte" href="#">加关注</a>
-								</div>
-								<div class="meta"> <span class="sale">已售：<i>356</i></span>
-									<div class="comm"> <span class="tx">评分：</span> <span class="score-star"><i class="star05"></i></span>
-									</div>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="pt">
-								<a href="#" title="伊朗开心果190g" class="pic"> <img src="img/style/伊朗开心果190g.jpg"> </a>
-								<a href="#" title="伊朗开心果190g" class="tit">伊朗开心果190g</a>
-								<p class="prom" title="焙烤风情 非油炸更健康">焙烤风情 非油炸更健康</p>
-							</div>
-							<div class="price"><span>￥<i>9</i>.90</span> </div>
-							<div class="part">
-								<div class="cart">
-									<a class="add" href="#">加购物车</a>
-									<a class="atte" href="#">加关注</a>
-								</div>
-								<div class="meta"> <span class="sale">已售：<i>356</i></span>
-									<div class="comm"> <span class="tx">评分：</span> <span class="score-star"><i class="star05"></i></span>
-									</div>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="pt">
-								<a href="#" title="甘栗80g" class="pic"> <img src="img/style/甘栗80g.jpg"> </a>
-								<a href="#" title="甘栗80g" class="tit">甘栗80g98g</a>
-								<p class="prom" title="焙烤风情 非油炸更健康">焙烤风情 非油炸更健康</p>
-							</div>
-							<div class="price"><span>￥<i>9</i>.90</span> </div>
-							<div class="part">
-								<div class="cart">
-									<a class="add" href="#">加购物车</a>
-									<a class="atte" href="#">加关注</a>
-								</div>
-								<div class="meta"> <span class="sale">已售：<i>356</i></span>
-									<div class="comm"> <span class="tx">评分：</span> <span class="score-star"><i class="star05"></i></span>
-									</div>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="pt">
-								<a href="#" title="烘烤薯片原味" class="pic"> <img src="img/style/烘烤薯片原味.jpg"> </a>
-								<a href="#" title="烘烤薯片原味" class="tit">烘烤薯片原味98g</a>
-								<p class="prom" title="焙烤风情 非油炸更健康">焙烤风情 非油炸更健康</p>
-							</div>
-							<div class="price"><span>￥<i>9</i>.90</span> </div>
-							<div class="part">
-								<div class="cart">
-									<a class="add" href="#">加购物车</a>
-									<a class="atte" href="#">加关注</a>
-								</div>
-								<div class="meta"> <span class="sale">已售：<i>356</i></span>
-									<div class="comm"> <span class="tx">评分：</span> <span class="score-star"><i class="star05"></i></span>
-									</div>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="pt">
-								<a href="#" title="小老板烤海苔卷盒装32.4g" class="pic"> <img src="img/style/小老板烤海苔卷盒装32.4g.jpg"> </a>
-								<a href="#" title="小老板烤海苔卷盒装32.4g" class="tit">小老板烤海苔卷盒装32.4g</a>
-								<p class="prom" title="焙烤风情 非油炸更健康">焙烤风情 非油炸更健康</p>
-							</div>
-							<div class="price"><span>￥<i>9</i>.90</span> </div>
-							<div class="part">
-								<div class="cart">
-									<a class="add" href="#">加购物车</a>
-									<a class="atte" href="#">加关注</a>
-								</div>
-								<div class="meta"> <span class="sale">已售：<i>356</i></span>
-									<div class="comm"> <span class="tx">评分：</span> <span class="score-star"><i class="star05"></i></span>
-									</div>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="pt">
-								<a href="#" title="杰克牌牛奶味方形威化饼干100g" class="pic"> <img src="img/style/杰克牌牛奶味方形威化饼干100g.jpg"> </a>
-								<a href="#" title="杰克牌牛奶味方形威化饼干100g" class="tit">杰克牌牛奶味方形威化饼干100g</a>
-								<p class="prom" title="焙烤风情 非油炸更健康">焙烤风情 非油炸更健康</p>
-							</div>
-							<div class="price"><span>￥<i>9</i>.90</span> </div>
-							<div class="part">
-								<div class="cart">
-									<a class="add" href="#">加购物车</a>
-									<a class="atte" href="#">加关注</a>
-								</div>
-								<div class="meta"> <span class="sale">已售：<i>356</i></span>
-									<div class="comm"> <span class="tx">评分：</span> <span class="score-star"><i class="star05"></i></span>
-									</div>
-								</div>
-							</div>
-						</li>
+						
+                    </ul>
+				</div><!-- showControlPage -->		
+			<!-- <div id="loadingMessage"></div> -->
+				<!-- 分页层 -->
+				<div id="pageBar" class="pages"><!--pages  -->
+					<ul class="page-num" id = "page-num" >
+						
+					</ul>
+				</div><!--pages  -->
+			</div><!-- content -->
+		</div><!--container wrap  -->
 
-				</div>
-				<div id="loadingMessage"></div>
-				<div id="pageBar" class="pages"></div>
-			</div>
-
-		</div>
 		<!-- list page left ad -->
 		<!--广告图片位置-->
 		<div class="lp-lft-ad">
