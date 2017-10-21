@@ -40,6 +40,39 @@
 .form-group {
 	margin-bottom: 20px;
 }
+/* 上传文件样式 */
+#fileInput {
+    padding: 4px 10px;
+    height: 35px;
+    line-height: 25px;
+    position: relative;
+    cursor: pointer;
+    color: #888;
+    background: #fafafa;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    overflow: hidden;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1
+}
+
+#fileInput  input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    cursor: pointer
+}
+
+#fileInput:hover {
+    color: #444;
+    background: #eee;
+    border-color: #ccc;
+    text-decoration: none
+}
 </style>
 
 <!--弹框的外部包-->
@@ -59,32 +92,17 @@ employee.property = {
     tableId:"example",//显示数据的容器表格的id
     
 };
+
+
+
+
 	$(function() {
 		
 		
 		
 		 
 		
-		/*$( "#example").dataTable().fnDraw(false); */
-		/* start = $("#targetTable").dataTable().fnSettings()._iDisplayStart;  
-		total = $("#targetTable").dataTable().fnSettings().fnRecordsDisplay();  
-		window.location.reload();  
-		if ((total - start) == 1) {  
-		   if (start > 0) {  
-		       $("#sorting-advanced").dataTable().fnPageChange('previous', true);  
-		   }  
-		} */
 		
-		/* this.table.dataTable().fnDraw(false); */
-		 
-		/* if (${requestScope.nowPage != null}) {
-			//如果当前页面不为空
-			//重绘
-			$('#example').dataTable().page(currentPage).draw( '${requestScope.nowPage}' );
-		}  */
-		/* $('#tab2DealTable').dataTable().page(); //静态刷新不跳转  */
-		
-
 		/* 订单消息提醒 */
 		setInterval(message, 1000);
 		function message() {
@@ -110,12 +128,7 @@ employee.property = {
 		
 
 		/* 删除商品 */
-		$(".delete")
-				.click(
-						function() {
-							
-							//获取当前页面
-							 var $nowPage = $('#example').dataTable().page();
+		$(".delete").click(function() {
 							
 							//提示用户
 							$
@@ -152,7 +165,7 @@ employee.property = {
 														}
 													}
 													location.href = "GoodsServlet?op=deleteGoods&goodsIdStr="
-															+ goodsIdStr +"&nowPage="+$nowPage ;
+															+ goodsIdStr;
 												}
 											},
 											cancel : {
@@ -175,6 +188,9 @@ employee.property = {
 
 <script type="text/javascript">
 	/* 增加商品lay窗口 */
+	
+	
+	
 	$(function() {
 		
 		/* 增、删、改操作结果 */
@@ -196,7 +212,7 @@ employee.property = {
 									.open({
 										type : 1,
 										title : "新增商品",
-										area : [ '650px', '500px' ],
+										area : [ '650px', '550px' ],
 										shadeClose : true,
 										closeBtn : 1,//关闭按钮
 										shade : [ 0.8, '#393D49' ],//颜色
@@ -228,9 +244,10 @@ employee.property = {
 												+ '商品库存：<input type="text" class="form-control" id="goodsStock"'+
 															'name="goodsStock" style="width:300px;height:35px;" />'
 												+ '</div>'
-												+ '<div class="form-group"  style="text-align:center">'
-												+ '上传图片：<input type="file"  id="goodsStock"'+
-															'name="goodsImg" style="width:300px;height:35px;" />'
+												+ '<div class="form-group"  style="margin-left:140px">'
+												+ '上传图片：<a href="#" id="fileInput"><input type="file"  id="goodsImg"'+
+															'name="goodsImg" style="width:300px;height:35px;" onchange="showPicture()"/>点这里上传图片</a>'+
+															'<img src="" id="img" width="80" height="80" style="display:inline-block;margin-left:10px; ">'
 												+ '</div>'
 												
 												+'<div class="form-group" style="text-align:center">'
@@ -240,11 +257,14 @@ employee.property = {
 												'</form>'
 									});
 						});
-
+		
+		
+		
 		/* 修改商品layer窗口 */
 		$("#update")
 				.click(
 						function() {
+							
 							//获取选中的复选框
 							var $checkedBox = $("input[type='checkbox']");
 							var $checked = 0;
@@ -264,22 +284,26 @@ employee.property = {
 									.eq(1).text();
 							var $goodsStype = $checked.parents("tr").find("td")
 									.eq(2).text();
+							//获取图片路径
+							var $pictureAddress = $checked.parents("tr").find("img")
+							.attr("src");
 							var $goodsPrice = $checked.parents("tr").find("td")
 									.eq(4).text();
 							var $goodsContent = $checked.parents("tr").find(
 									"td").eq(5).text();
 							var $goodsStock = $checked.parents("tr").find("td")
 									.eq(6).text();
+							alert($pictureAddress);
 							/* 修改窗口 */
 							layer
 									.open({
 										type : 1,
 										title : "修改商品",
-										area : [ '650px', '450px' ],
+										area : [ '650px', '550px' ],
 										shadeClose : true,
 										closeBtn : 1,//关闭按钮
 										shade : [ 0.8, '#393D49' ],//颜色
-										content : '<form class="form-horizontal"  method="post" action="${path}GoodsServlet?op=updateGoods">'
+										content : '<form class="form-horizontal"  method="post" action="${path}GoodsServlet?op=updateGoods" enctype="multipart/form-data">'
 												+ '<div class="form-group" style="text-align:center"><input type="hidden"  name="goodsId" value="'+$goodsId+'">'
 												+ '商品名：<input type="text" class="form-control" id="goodsName"'+
 														'name="goodsName"  style="width:300px;height:35px" value="'+$goodsName+'" readonly="readonly"/>'
@@ -309,6 +333,11 @@ employee.property = {
 												+ '商品库存：<input type="text" class="form-control" id="goodsStock"'+
 														'name="goodsStock" style="width:300px;height:35px" value="'+$goodsStock+'"/>'
 												+ '</div>'
+												+ '<div class="form-group"  style="margin-left:140px"">'
+												+ '修改图片：<a href="#" id="fileInput"><input type="file"  id="changeImg"'+
+															'name="goodsImg" style="width:300px;height:35px;" onchange="changePicture()"/>点击这里修改图片</a>'+
+															'<img src="'+$pictureAddress+'" id="newImg" width="80" height="80" style="display:inline-block;margin-left:10px; ">'
+												+ '</div>'
 												+
 
 												'<div class="form-group" style="text-align:center">'
@@ -323,6 +352,29 @@ employee.property = {
 						});
 
 	});
+	
+	/* 添加图片预览显示 */
+	function showPicture () {
+		  var r= new FileReader();
+		  f=document.getElementById('goodsImg').files[0];
+		   
+		  r.readAsDataURL(f);
+		  r.onload=function (e) {
+		    document.getElementById('img').src=this.result;
+		  };
+		}
+	
+	/* 修改图片预览 */
+	function changePicture () {
+		  var r= new FileReader();
+		  f=document.getElementById('changeImg').files[0];
+		   
+		  r.readAsDataURL(f);
+		  r.onload=function (e) {
+		    document.getElementById('newImg').src=this.result;
+		  };
+		}
+	
 </script>
 
 </head>

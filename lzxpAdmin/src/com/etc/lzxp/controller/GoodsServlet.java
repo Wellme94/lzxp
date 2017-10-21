@@ -57,6 +57,18 @@ public class GoodsServlet extends HttpServlet {
 		
 		GoodsService gs= new GoodsService();
 		
+		String goodsName = null;
+		String stypeName = null;
+		double goodsPrice =1;
+		String goodsContent = null;
+		int goodsStock = 0;
+		String fileName = "";//文件名
+		String path ="";//存储路径
+		//上传文件
+		DiskFileItemFactory factory = new DiskFileItemFactory();
+		 
+		ServletFileUpload upload = new ServletFileUpload(factory);
+		
 		if (request.getParameter("op") != null) {
 
 			// 将op的值取出来 判断这个值
@@ -71,19 +83,6 @@ public class GoodsServlet extends HttpServlet {
 				 * 增加商品
 				 */
 				
-				String goodsName = null;
-				String stypeName = null;
-				double goodsPrice =1;
-				String goodsContent = null;
-				int goodsStock = 0;
-				
-				DiskFileItemFactory factory = new DiskFileItemFactory();
-				 
-				ServletFileUpload upload = new ServletFileUpload(factory);
-				String tableName = "";
-				Integer month = 0;
-				String fileName = "";//文件名
-				String path ="";//存储路径
 				try {
 				    List items = upload.parseRequest(request);
 				    InputStream is = null;
@@ -95,10 +94,10 @@ public class GoodsServlet extends HttpServlet {
 				        	//获取文件名
 							fileName = item.getName();
 							//存储路径
-							/*path =request.getRealPath("/img/"+fileName);*/
-							File uploadedFile = new File("E://git/lzxp/WebContent/img/jianguo/"+fileName);//存到前台
-							/*File myFile = new File(path);//存到后台
-*/							//写数据
+							/*String path =request.getRealPath("/img/"+fileName);*/
+							File uploadedFile = new File("D://Tomcat/apache-tomcat-9.0.0.M26-windows-x64/apache-tomcat-9.0.0.M26/webapps/lzxp/img/"+fileName);//存到前台
+							
+							//写数据
 							item.write(uploadedFile);
 				         } else {
 				            // 不是file类型的话，就利用getFieldName判断name属性获取相应的值
@@ -140,14 +139,13 @@ public class GoodsServlet extends HttpServlet {
 				Goods goods = new Goods(0, goodsName, 0, goodsPrice, goodsContent, goodsStock, 0);
 				
 				// 调用service的add方法
-				boolean updateSucess = gs.addGoods(goods, stypeName,"img/jianguo/"+fileName);
+				boolean updateSucess = gs.addGoods(goods, stypeName,"img/"+fileName);
 				//获取所有商品
 				list = gs.getAllGoods();
 				//设置操作结果参数
 				request.setAttribute("updateSucess", updateSucess);
 		        
 			}  else if (op.equals("deleteGoods")) {
-
 				// 删除操作
 				String goodsIdStr = request.getParameter("goodsIdStr");
 				
@@ -159,38 +157,85 @@ public class GoodsServlet extends HttpServlet {
 					
 					request.setAttribute("updateSucess", updateSucess);
 				}
-				
-				/*System.out.println(request.getParameter("nowPage"));
-				if (request.getParameter("nowPage")!=null) {
-					//如果当前不为空
-					//获取当前页面
-					int nowPage = Integer.parseInt(request.getParameter("nowPage"));
-					//设置传递参数
-//					request.setAttribute("nowPage", nowPage);
-//				}*/
-
+			
 				list = gs.getAllGoods();
 
+			
+			
 			}else if (op.equals("updateGoods")) {
 
 				/**
 				 * 修改商品
 				 */
-				int goodsId = Integer.parseInt(request.getParameter("goodsId"));
 				
-				String goodsName = request.getParameter("goodsName");
+				int goodsId = 0;
 				String goodsStype = "坚果炒货";
-				if (!"default".equals(request.getParameter("goodsStype"))) {
-					//如果商品小类不为空
-					goodsStype = request.getParameter("goodsStype");
+				try {
+				    List items = upload.parseRequest(request);
+				    InputStream is = null;
+				    Iterator iter = items.iterator();
+				    while(iter.hasNext()) {
+				        FileItem item = (FileItem)iter.next();
+				        // 判断该属性是否是file类型
+				        if (!item.isFormField()) {
+				        	//获取文件名
+							fileName = item.getName();
+							//存储路径
+							File uploadedFile = new File("D://Tomcat/apache-tomcat-9.0.0.M26-windows-x64/apache-tomcat-9.0.0.M26/webapps/lzxp/img/"+fileName);//存到前台
+							
+							//写数据
+							item.write(uploadedFile);
+				         } else {
+				            // 不是file类型的话，就利用getFieldName判断name属性获取相应的值
+				        	 String name = item.getFieldName();
+				        	 String value = item.getString("utf-8");
+				             
+				        	 if ("goodsId".equals(name)) {
+								//商品ID
+				        		 goodsId = Integer.parseInt(value);
+							}else if("goodsName".equals(name)) {
+								//商品名
+				                 goodsName = value;  
+							}else if("goodsStype".equals(name)){
+				        	  //商品小类型
+				        	  if (!"default".equals(value)) {
+									//如果商品小类不为空
+									goodsStype = value;
+								}
+							}else if (name.equals("stype")) {
+							//商品小类型
+							stypeName = value;
+							if ("default".equals(stypeName)) {
+								stypeName = null;
+									}
+							}else if (name.equals("goodsPrice")) {
+									//价格
+									
+									if (!"".equals(value)) {
+										//如果价格不为空值
+										goodsPrice= Double.parseDouble(value);
+									}
+							}else if (name.equals("goodsContent")) {
+									//内容
+									goodsContent = value;
+							}else{
+									//库存
+									if (!"".equals(name)) {
+										//如果库存不为空值
+										goodsStock = Integer.parseInt(value);
+									}
+								}
+				         }
+				    }
+				} catch(Exception e) {
+				    e.printStackTrace();
 				}
-				double goodsPrice = Double.parseDouble(request.getParameter("goodsPrice"));
-				String goodsContent = request.getParameter("goodsContent");
-				int stypeStock = Integer.parseInt(request.getParameter("goodsStock"));
 				
-				Goods goods=new Goods(goodsId,goodsName, 0,goodsPrice,goodsContent,stypeStock,0);
-				//增加商品
-				boolean updateSucess =gs.updateGoods(goods, goodsStype);
+				
+				Goods goods=new Goods(goodsId,goodsName, 0,goodsPrice,goodsContent,goodsStock,0);
+				//修改商品
+				boolean updateSucess =gs.updateGoods(goods, goodsStype,"img/"+fileName);
+				//修改商品地址
 				
 				list = gs.getAllGoods();
 				request.setAttribute("updateSucess", updateSucess);

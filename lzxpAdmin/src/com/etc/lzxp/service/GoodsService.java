@@ -46,8 +46,8 @@ public class GoodsService {
 	 * @param goods
 	 * @return
 	 */
-	public boolean updateGoods(Goods goods, String goodsStypeName) {
-		return gd.updateGoods(goods, goodsStypeName);
+	public boolean updateGoods(Goods goods, String goodsStypeName,String goodsAddress) {
+		return gd.updateGoods(goods, goodsStypeName,goodsAddress);
 	}
 
 	/**
