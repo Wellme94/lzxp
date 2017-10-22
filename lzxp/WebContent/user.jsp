@@ -163,8 +163,17 @@
 						}
 						$(".pagination").append('<li><a href="#" id="nextPage">Next</a></li>'); 
 					}		
-				}
+				}/* function showContent(pd) */
 				
+				 $(".sch-btn").click(function(){
+					   alert("模糊查询"); 		   
+					   var keyword = $(".sch-key").val();  
+					 if(keyword!="商品搜索"||keyword=""){
+						 alert("请输入关键字！");			
+					  }else{
+						  location.href = "GetAllGoodsServlet?op=qureyAll&keyword="+keyword;
+					  }
+				  });
 			});
 		
 		</script>		
@@ -202,14 +211,14 @@
 		<div class="header">
 			<div class="head-main wrap clearfix">
 				<div class="logo">
-					<a href="#">零嘴小铺</a><span>官方商城</span></div>
+					<a href="index.jsp">零嘴小铺</a><span>官方商城</span></div>
 
 				<div class="hd-user">
 					<div class="user-search">
-						<form id="productSearchForm" action="GoodsServlet?op=searchGoods" method="post">
-							<input class="sch-key" type="text" name="keyword" id="keyword" value="商品搜索" onfocus="if (value =='商品搜索'){value =''}" onblur="if (value ==''){value='商品搜索'}">
+						
+							<input class="sch-key" type="text" name="keyword" id="keyword" value="" onfocus="if (value =='商品搜索'){value =''}" onblur="if (value ==''){value='商品搜索'}">
 							<input class="sch-btn" type="submit" value="">
-					    </form>
+					   
 					</div>
 					<div class="user-shoping">
 						<a class="us-btn indexcart" href="cartlist.html">购物车</a>
@@ -633,10 +642,7 @@
 				
 				
 			});
-			
-			
-			
-			
+		
 			
 		</script>
 		</body>

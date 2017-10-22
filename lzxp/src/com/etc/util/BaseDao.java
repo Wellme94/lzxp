@@ -11,19 +11,19 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 
 /**
- * Êý¾Ý¿â²Ù×÷µÄ¸¨ÖúÀà
+ * ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½
  */
 public class BaseDao {
 
 	private static final String DRIVER = "oracle.jdbc.driver.OracleDriver";
 	private static final String URL = "jdbc:oracle:thin:@192.168.9.202:1521:orcl";
-	private static final String USER = "wmxs"; // ÓÃ»§Ãû
-	private static final String PASSWORD = "wmxs";// ÃÜÂë
+	private static final String USER = "wmxs"; // ï¿½Ã»ï¿½ï¿½ï¿½
+	private static final String PASSWORD = "wmxs";// ï¿½ï¿½ï¿½ï¿½
 
 	/**
-	 * »ñÈ¡Á¬½Ó¶ÔÏó
+	 * ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ó¶ï¿½ï¿½ï¿½
 	 * 
-	 * @return Á¬½Ó¶ÔÏó
+	 * @return ï¿½ï¿½ï¿½Ó¶ï¿½ï¿½ï¿½
 	 */
 	public static Connection getConn() {
 
@@ -31,23 +31,23 @@ public class BaseDao {
 		try {
 
 			Class.forName(DRIVER);
-			// µÃµ½Á¬½Ó¶ÔÏó
+			// ï¿½Ãµï¿½ï¿½ï¿½ï¿½Ó¶ï¿½ï¿½ï¿½
 			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 		} catch (Exception e) {
-			throw new RuntimeException("Êý¾Ý¿âÁ¬½ÓÊ§°Ü!", e);
+			throw new RuntimeException("ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½!", e);
 		}
 		return conn;
 	}
 
 	/**
-	 * ÊÍ·Å×ÊÔ´
+	 * ï¿½Í·ï¿½ï¿½ï¿½Ô´
 	 * 
 	 * @param rs
-	 *            ½á¹û¼¯
+	 *            ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * @param pstmt
-	 *            ÃüÁî´¦Àí¶ÔÏó
+	 *            ï¿½ï¿½ï¿½î´¦ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * @param conn
-	 *            Á¬½Ó¶ÔÏó
+	 *            ï¿½ï¿½ï¿½Ó¶ï¿½ï¿½ï¿½
 	 */
 	public static void close(ResultSet rs, PreparedStatement pstmt, Connection conn) {
 		try {
@@ -61,12 +61,12 @@ public class BaseDao {
 				conn.close();
 			}
 		} catch (SQLException e) {
-			throw new RuntimeException("ÊÍ·Å×ÊÔ´Ê§°Ü!", e);
+			throw new RuntimeException("ï¿½Í·ï¿½ï¿½ï¿½Ô´Ê§ï¿½ï¿½!", e);
 		}
 	}
 
 	/**
-	 * ÉèÖÃ²ÎÊý
+	 * ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½
 	 * 
 	 * @param sql
 	 * @param conn
@@ -87,13 +87,13 @@ public class BaseDao {
 	}
 
 	/**
-	 * Í¨ÓÃµÄÊý¾Ý¿â(Ôö,É¾,¸Ä)²Ù×÷·½·¨
+	 * Í¨ï¿½Ãµï¿½ï¿½ï¿½ï¿½Ý¿ï¿½(ï¿½ï¿½,É¾,ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param sql
-	 *            sqlÓï¾ä
+	 *            sqlï¿½ï¿½ï¿½
 	 * @param param
-	 *            sqlÓï¾ä²ÎÊý
-	 * @return ÊÜÓ°ÏìÐÐÊý
+	 *            sqlï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	 * @return ï¿½ï¿½Ó°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	public static int execute(String sql, Object... param) {
 		Connection conn = getConn();
@@ -105,7 +105,7 @@ public class BaseDao {
 	}
 
 	/**
-	 * Í¨ÓÃµÄÔöÉ¾¸Ä²Ù×÷(ÊÂÎñ·ÃÎÊ)
+	 * Í¨ï¿½Ãµï¿½ï¿½ï¿½É¾ï¿½Ä²ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 	 * 
 	 * @param sql
 	 * @param conn
@@ -118,23 +118,23 @@ public class BaseDao {
 			pstmt = setPstmt(sql, conn, pstmt, param);
 			return pstmt.executeUpdate();
 		} catch (SQLException e) {
-			// ÕâÀï×îºÃµÃµ½Òì³£ÐÅÏ¢
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÃµÃµï¿½ï¿½ì³£ï¿½ï¿½Ï¢
 			e.printStackTrace();
-			throw new RuntimeException("Êý¾Ý¿â²Ù×÷Ê§°Ü!", e);
+			throw new RuntimeException("ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½!", e);
 		} finally {
 			close(null, pstmt, null);
 		}
 	}
 
 	/**
-	 * Í¨ÓÃ²éÑ¯·½·¨
+	 * Í¨ï¿½Ã²ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param sql
-	 *            Òª²éÑ¯µÄsqlÓï¾ä
+	 *            Òªï¿½ï¿½Ñ¯ï¿½ï¿½sqlï¿½ï¿½ï¿½
 	 * @param cla
-	 *            Class¶ÔÏó
+	 *            Classï¿½ï¿½ï¿½ï¿½
 	 * @param param
-	 *            ²ÎÊý
+	 *            ï¿½ï¿½ï¿½ï¿½
 	 * @return
 	 */
 	public static Object select(String sql, Class cla, Object... param) {
@@ -147,7 +147,7 @@ public class BaseDao {
 	}
 
 	/**
-	 * ´øÊÂÎñµÄ²éÑ¯·½·¨
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä²ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param sql
 	 * @param conn
@@ -163,22 +163,22 @@ public class BaseDao {
 			pstmt = setPstmt(sql, conn, pstmt, param);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				// ?rs ½á¹û¼¯ cla Class¶ÔÏó
-				// objectÆäÊµ¾ÍÊÇÊý¾Ý±í½á¹¹¶ÔÓ¦µÄÒ»ÌõÊµÌå¼ÇÂ¼,object¾ÍÊÇÄÇ¸öÊµÌåÀà¶ÔÏó
-				// Õâ¸ö·½·¨convertÊÇ½«½á¹û¼¯ºÍcla¶ÔÏó½øÐÐ×ª»»
+				// ?rs ï¿½ï¿½ï¿½ï¿½ï¿½ cla Classï¿½ï¿½ï¿½ï¿½
+				// objectï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý±ï¿½á¹¹ï¿½ï¿½Ó¦ï¿½ï¿½Ò»ï¿½ï¿½Êµï¿½ï¿½ï¿½Â¼,objectï¿½ï¿½ï¿½ï¿½ï¿½Ç¸ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½convertï¿½Ç½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½claï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½
 				Object object = convert(rs, cla);
 				list.add(object);
 			}
 			return list;
 		} catch (SQLException e) {
-			throw new RuntimeException("Êý¾Ý¿â²éÑ¯Ê§°Ü!", e);
+			throw new RuntimeException("ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½Ñ¯Ê§ï¿½ï¿½!", e);
 		} finally {
 			close(rs, pstmt, null);
 		}
 	}
 
 	/**
-	 * »ñÈ¡µ¥¸ö¼ÇÂ¼Öµ,ÊÇµ¥¸ö¼ÇÂ¼×¢Òâ,ÀàËÆcount(1)
+	 * ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼Öµ,ï¿½Çµï¿½ï¿½ï¿½ï¿½ï¿½Â¼×¢ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½count(1)
 	 * 
 	 * @param sql
 	 * @param param
@@ -194,7 +194,7 @@ public class BaseDao {
 	}
 
 	/**
-	 * »ñÈ¡µ¥¸ö¼ÇÂ¼ ÊÂÎñ
+	 * ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param sql
 	 * @param conn
@@ -210,7 +210,7 @@ public class BaseDao {
 	}
 
 	/**
-	 * ÊÂÎñ´¦Àí²Ù×÷
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param tran
 	 * @return
@@ -226,16 +226,16 @@ public class BaseDao {
 			try {
 				conn.rollback();
 			} catch (SQLException e1) {
-				throw new RuntimeException("»Ø¹öÊ§°Ü!", e);
+				throw new RuntimeException("ï¿½Ø¹ï¿½Ê§ï¿½ï¿½!", e);
 			}
-			throw new RuntimeException("ÊÂÎñÖ´ÐÐÊ§°Ü", e);
+			throw new RuntimeException("ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½Ê§ï¿½ï¿½", e);
 		} finally {
 			close(null, null, conn);
 		}
 	}
 
 	/**
-	 * ²éÑ¯½á¹ûµÄ×ª»»
+	 * ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½
 	 * 
 	 * @param rs
 	 * @param cla
@@ -246,42 +246,42 @@ public class BaseDao {
 			if (cla.getName().equals("java.lang.Object")) {
 				return rs.getObject(1);
 			}
-			// ´´½¨ÊµÌåÀàµÄÊµÀý ClassÀà¶ÔÏóµÄ·½·¨£¬´´½¨Ö¸¶¨¶ÔÏóµÄÊµÀý
+			// ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ Classï¿½ï¿½ï¿½ï¿½ï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½
 			// new Goods(); new News(); new person(); new Users();
 			Object object = cla.newInstance();
-			//// ½á¹û¼¯Í·ÐÅÏ¢¶ÔÏó
+			//// ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
 			ResultSetMetaData metaData = rs.getMetaData();
-			// Ñ­»·ÎªÊµÌåÀàµÄÊµÀýµÄÊôÐÔ¸³Öµ getColumnCountµÃµ½ÁÐµÄ¸öÊý
+			// Ñ­ï¿½ï¿½ÎªÊµï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¸ï¿½Öµ getColumnCountï¿½Ãµï¿½ï¿½ÐµÄ¸ï¿½ï¿½ï¿½
 			for (int i = 1; i <= metaData.getColumnCount(); i++) {
-				// »ñÈ¡ÁÐÃû
+				// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 				String name = metaData.getColumnLabel(i);
-				//// ×¢£ºÁÐÃûÓëÊôÐÔÃû±ØÐëÒ»ÖÂ¡£×îºÃ×ñÑ­ÂæÍÕÃüÃû·½·¨. rs.getObject(i) ½á¹û¼¯ÖÐµÄ²éÑ¯½á¹ûºÍ¶ÔÏóÆ¥Åä
+				//// ×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Â¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½. rs.getObject(i) ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÐµÄ²ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½Í¶ï¿½ï¿½ï¿½Æ¥ï¿½ï¿½
 				BeanUtils.setProperty(object, name, rs.getObject(i));
 			}
 			return object;
 		} catch (Exception e) {
-			throw new RuntimeException("ÊôÐÔÉèÖÃÊ§°Ü!", e);
+			throw new RuntimeException("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½!", e);
 		}
 	}
 
 	/**
-	 * ·ÖÒ³²Ù×÷ mysql;
+	 * ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ mysql;
 	 * 
 	 * @param sql
-	 *            ²éÑ¯µÄsqlÓï¾ä
+	 *            ï¿½ï¿½Ñ¯ï¿½ï¿½sqlï¿½ï¿½ï¿½
 	 * @param page
-	 *            µ±Ç°Ò³Âë
+	 *            ï¿½ï¿½Ç°Ò³ï¿½ï¿½
 	 * @param pageSize
-	 *            Ã¿Ò³ÏÔÊ¾µÄ¼ÇÂ¼Êý
+	 *            Ã¿Ò³ï¿½ï¿½Ê¾ï¿½Ä¼ï¿½Â¼ï¿½ï¿½
 	 * @param cla
-	 *            ClassÀà¶ÔÏó
+	 *            Classï¿½ï¿½ï¿½ï¿½ï¿½
 	 * @param param
-	 *            sqlÓÐ¹ØµÄ²ÎÊýÁÐ±í
-	 * @return PageData ¶ÔÏó
+	 *            sqlï¿½Ð¹ØµÄ²ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+	 * @return PageData ï¿½ï¿½ï¿½ï¿½
 	 */
 	public static PageData getPage(String sql, Integer page, Integer pageSize, Class cla, Object... param) {
 		// sql select * from news
-		// select count(1) from (select * from news) t --µÃµ½¼ÇÂ¼×ÜÊý
+		// select count(1) from (select * from news) t --ï¿½Ãµï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½
 		String selSql = "select count(1) from (" + sql + ") t";
 		if (page == null) {
 			page = 1;
@@ -289,24 +289,24 @@ public class BaseDao {
 		if (pageSize == null) {
 			pageSize = 10;
 		}
-		// ²éÑ¯µÃµ½×Ü¼ÇÂ¼Êý
+		// ï¿½ï¿½Ñ¯ï¿½Ãµï¿½ï¿½Ü¼ï¿½Â¼ï¿½ï¿½
 		Integer count = Integer.parseInt(getFirst(selSql, param).toString());
-		// ÊµÏÖ¼òµ¥µÄ·ÖÒ³Óï¾ä
-		// select * from news limit ÆðÊ¼Î»ÖÃ,Ã¿Ò³ÏÔÊ¾µÄ¼ÇÂ¼Êý
-		// select * from news limit ÆðÊ¼Î»ÖÃ,pageSize
-		// select * from news limit 10,5 Ã¿Ò³5Ìõ¼ÇÂ¼ £¬ÏÔÊ¾µÚ3Ò³
-		int start = (page - 1) * pageSize; // ÆðÊ¼Î»ÖÃËã·¨
-		// + ÆäÊµ²»Ì«ºÃ ×îºÃÓÃstringBuffer stringBuilder append
+		// Êµï¿½Ö¼òµ¥µÄ·ï¿½Ò³ï¿½ï¿½ï¿½
+		// select * from news limit ï¿½ï¿½Ê¼Î»ï¿½ï¿½,Ã¿Ò³ï¿½ï¿½Ê¾ï¿½Ä¼ï¿½Â¼ï¿½ï¿½
+		// select * from news limit ï¿½ï¿½Ê¼Î»ï¿½ï¿½,pageSize
+		// select * from news limit 10,5 Ã¿Ò³5ï¿½ï¿½ï¿½ï¿½Â¼ ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½3Ò³
+		int start = (page - 1) * pageSize; // ï¿½ï¿½Ê¼Î»ï¿½ï¿½ï¿½ã·¨
+		// + ï¿½ï¿½Êµï¿½ï¿½Ì«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½stringBuffer stringBuilder append
 		sql = sql + " limit " + start + "," + pageSize;
 		List list = (List) select(sql, cla, param);
-		// ´´½¨Ò»¸öPageData¶ÔÏó
+		// ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½PageDataï¿½ï¿½ï¿½ï¿½
 		PageData data = new PageData(list, count, pageSize, page);
 		return data;
 	}
 
 	public static PageData getPage1(String sql, Integer page, Integer pageSize, Class cla, Object... param) {
 		// sql select * from news
-		// select count(1) from (select * from news) t --µÃµ½¼ÇÂ¼×ÜÊý
+		// select count(1) from (select * from news) t --ï¿½Ãµï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½
 		String selSql = "select count(1) from (" + sql + ") t";
 		if (page == null) {
 			page = 1;
@@ -314,23 +314,23 @@ public class BaseDao {
 		if (pageSize == null) {
 			pageSize = 10;
 		}
-		// ²éÑ¯µÃµ½×Ü¼ÇÂ¼Êý
+		// ï¿½ï¿½Ñ¯ï¿½Ãµï¿½ï¿½Ü¼ï¿½Â¼ï¿½ï¿½
 		Integer count = Integer.parseInt(getFirst(selSql, param).toString());
-		// ÊµÏÖ¼òµ¥µÄ·ÖÒ³Óï¾ä
-		// select * from news limit ÆðÊ¼Î»ÖÃ,Ã¿Ò³ÏÔÊ¾µÄ¼ÇÂ¼Êý
-		// select * from news limit ÆðÊ¼Î»ÖÃ,pageSize
-		// select * from news limit 10,5 Ã¿Ò³5Ìõ¼ÇÂ¼ £¬ÏÔÊ¾µÚ3Ò³
-		int start = (page - 1) * pageSize; // ÆðÊ¼Î»ÖÃËã·¨
-		// + ÆäÊµ²»Ì«ºÃ ×îºÃÓÃstringBuffer stringBuilder append
+		// Êµï¿½Ö¼òµ¥µÄ·ï¿½Ò³ï¿½ï¿½ï¿½
+		// select * from news limit ï¿½ï¿½Ê¼Î»ï¿½ï¿½,Ã¿Ò³ï¿½ï¿½Ê¾ï¿½Ä¼ï¿½Â¼ï¿½ï¿½
+		// select * from news limit ï¿½ï¿½Ê¼Î»ï¿½ï¿½,pageSize
+		// select * from news limit 10,5 Ã¿Ò³5ï¿½ï¿½ï¿½ï¿½Â¼ ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½3Ò³
+		int start = (page - 1) * pageSize; // ï¿½ï¿½Ê¼Î»ï¿½ï¿½ï¿½ã·¨
+		// + ï¿½ï¿½Êµï¿½ï¿½Ì«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½stringBuffer stringBuilder append
 		sql = sql + " limit " + start + "," + pageSize;
 		List list = (List) select(sql, cla, param);
-		// ´´½¨Ò»¸öPageData¶ÔÏó
+		// ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½PageDataï¿½ï¿½ï¿½ï¿½
 		PageData data = new PageData(list, count, pageSize, page);
 		return data;
 	}
 
 	/**
-	 * ·ÖÒ³²Ù×÷ sqlserver
+	 * ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ sqlserver
 	 * 
 	 * @param page
 	 * @param pageSize
@@ -339,8 +339,8 @@ public class BaseDao {
 	 * @return
 	 */
 	public static PageData getPage(Integer page, Integer pageSize, Class cla, String identity) {
-		String name = cla.getName().substring(cla.getName().lastIndexOf(".") + 1);// ¸ù¾ÝÃüÃû¹æÔò´ÓÀàÃû»ñÈ¡Êý¾Ý¿â±íÃû
-		String selSql = "select count(1) from " + name;// »ñÈ¡×ÜÊý
+		String name = cla.getName().substring(cla.getName().lastIndexOf(".") + 1);// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½
+		String selSql = "select count(1) from " + name;// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 		if (page == null) {
 			page = 1;
 		}
@@ -350,29 +350,29 @@ public class BaseDao {
 		int start = (page - 1) * pageSize;
 		Integer count = Integer.parseInt(getFirst(selSql, null).toString());
 		selSql = "select top " + pageSize + " * from " + name + " where " + identity + " not in (select top " + start
-				+ " " + identity + " from " + name + " )"; // Æ´½Ó²éÑ¯Óï¾ä
+				+ " " + identity + " from " + name + " )"; // Æ´ï¿½Ó²ï¿½Ñ¯ï¿½ï¿½ï¿½
 		List list = (List) select(selSql, cla, null);
 		PageData data = new PageData(list, count, pageSize, page);
 		return data;
 	}
 
 	/**
-	 * ·ÖÒ³²Ù×÷oracle;
+	 * ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½oracle;
 	 * 
 	 * @param sql
- 	 *			     ²éÑ¯µÄsqlÓï¾ä
+ 	 *			     ï¿½ï¿½Ñ¯ï¿½ï¿½sqlï¿½ï¿½ï¿½
 	 * @param page
-	 *            µ±Ç°Ò³Âë
+	 *            ï¿½ï¿½Ç°Ò³ï¿½ï¿½
 	 * @param pageSize
-	 *            Ã¿Ò³ÏÔÊ¾µÄ¼ÇÂ¼Êý
+	 *            Ã¿Ò³ï¿½ï¿½Ê¾ï¿½Ä¼ï¿½Â¼ï¿½ï¿½
 	 * @param cla
-	 *            ClassÀà¶ÔÏó
+	 *            Classï¿½ï¿½ï¿½ï¿½ï¿½
 	 * @param param
-	 *            sqlÓÐ¹ØµÄ²ÎÊýÁÐ±í
-	 * @return PageData ¶ÔÏó
+	 *            sqlï¿½Ð¹ØµÄ²ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+	 * @return PageData ï¿½ï¿½ï¿½ï¿½
 	 */
 	public static PageData getOraclePage(String sql, Integer page, Integer pageSize, Class cla, Object... param) {
-		// µÃµ½¼ÇÂ¼×ÜÊý
+		// ï¿½Ãµï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½
 		String selSql = "select count(1) from (" + sql + ") t";
 		if (page == null) {
 			page = 1;
@@ -381,18 +381,18 @@ public class BaseDao {
 			pageSize = 5;
 		}
 		
-		int start = (page - 1) * pageSize;//ÆðÊ¼Ò³
+		int start = (page - 1) * pageSize;//ï¿½ï¿½Ê¼Ò³
 		int end = pageSize * page;
-		// µÃµ½·ÖÒ³Êý¾Ý
+		// ï¿½Ãµï¿½ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½
 		sql = "select * from (select rownum as r,t.* from (" + sql + ") t where  rownum<=(" + end
 				+ ")) where r>" + start + "";
 		
-		// ²éÑ¯µÃµ½×Ü¼ÇÂ¼Êý
+		// ï¿½ï¿½Ñ¯ï¿½Ãµï¿½ï¿½Ü¼ï¿½Â¼ï¿½ï¿½
 		Integer count = Integer.parseInt(getFirst(selSql, param).toString());
-		// µÃµ½Ö¸¶¨Ò³ÊýµÄÊý¾Ý
+		// ï¿½Ãµï¿½Ö¸ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		List list = (List) select(sql, cla, param);
 
-		// ´´½¨Ò»¸öPageData¶ÔÏó
+		// ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½PageDataï¿½ï¿½ï¿½ï¿½
 		PageData data = new PageData(list, count, pageSize, page);
 		return data;
 	}
