@@ -37,144 +37,144 @@ public class UsersServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//¾ø¶ÔÂ·¾¶
+		//ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
 		String path = request.getScheme() + "://" + request.getServerName() + ":" + request.getLocalPort()
 				+ request.getContextPath() + "/";
-		//ÉèÖÃÇëÇóÏìÓ¦±àÂë
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
-		//ÉèÖÃ»á»°
+		//ï¿½ï¿½ï¿½Ã»á»°
 		HttpSession session = request.getSession();
-		//ÉèÖÃjason¸ñÊ½±àÂë
+		//ï¿½ï¿½ï¿½ï¿½jasonï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½
 		response.setContentType("application/json");
 		PrintWriter out= response.getWriter();
 		if (request.getParameter("op")!=null) {
-			//Èç¹ûop²»Îª¿Õ
+			//ï¿½ï¿½ï¿½opï¿½ï¿½Îªï¿½ï¿½
 			String op = request.getParameter("op");
 			if ("isLogin".equals(op)) {
-				//ÅÐ¶ÏÊÇ·ñµÇÂ¼³É¹¦
-				//»ñÈ¡ÓÃ»§ÐÅÏ¢
+				//ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½Â¼ï¿½É¹ï¿½
+				//ï¿½ï¿½È¡ï¿½Ã»ï¿½ï¿½ï¿½Ï¢
 				String userName = request.getParameter("userName");
 				String userPwd = request.getParameter("userPwd");
-				//´´½¨ÓÃ»§
+				//ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½
 				Users user = new Users(0, userName, userPwd);
-				//µ÷ÓÃUsersService·½·¨
+				//ï¿½ï¿½ï¿½ï¿½UsersServiceï¿½ï¿½ï¿½ï¿½
 				if (us.isLogin(user)) {
-					//Èç¹ûµÇÂ¼³É¹¦£¬´«µÝÓÃ»§»á»°ÐÅÏ¢
+					//ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½á»°ï¿½ï¿½Ï¢
 					session.setAttribute("user", user);
-					//ÉèÖÃCookie
+					//ï¿½ï¿½ï¿½ï¿½Cookie
 					Cookie cookie1 = new Cookie("userName", userName);
 					Cookie cookie2 = new Cookie("userPwd", userPwd);
-					//ÉèÖÃcookie
+					//ï¿½ï¿½ï¿½ï¿½cookie
 					response.addCookie(cookie1);
 					response.addCookie(cookie2);
 					
 				}
-				//´òÓ¡json
+				//ï¿½ï¿½Ó¡json
 				printJson(out, us.isLogin(user));
 				
 				
 				
 			}else if ("judgeUserName".equals(op)) {
-				//ÅÐ¶ÏÓÃ»§ÊÇ·ñÒÑ¾­ÖØ¸´
-				//»ñÈ¡ÓÃ»§Ãû
+				//ï¿½Ð¶ï¿½ï¿½Ã»ï¿½ï¿½Ç·ï¿½ï¿½Ñ¾ï¿½ï¿½Ø¸ï¿½
+				//ï¿½ï¿½È¡ï¿½Ã»ï¿½ï¿½ï¿½
 				String userName = request.getParameter("userName");
-				//ÅÐ¶ÏÓÃ»§ÊÇ·ñ´æÔÚ
+				//ï¿½Ð¶ï¿½ï¿½Ã»ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½
 				printJson(out, us.judgeUserName(userName));
 				
 				
 				
 			}else if ("register".equals(op)) {
-				//×¢²á
-				//»ñÈ¡±íµ¥ÐÅÏ¢
+				//×¢ï¿½ï¿½
+				//ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Ï¢
 				if ((request.getParameter("username")!="")&&(request.getParameter("username")!="")
 						&&(request.getParameter("mobile")!="")) {
-					//Èç¹û¾ù²»Îª¿ÕµÄÇé¿ö
+					//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½Õµï¿½ï¿½ï¿½ï¿½
 					String userName = request.getParameter("username");
 					String userPwd = request.getParameter("password");
 					String userTel = request.getParameter("mobile");
-					//´´½¨ÓÃ»§
+					//ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½
 					Users user = new Users(0, userName, userPwd);
-					//ÅÐ¶ÏÊÇ·ñ×¢²á³É¹¦
+					//ï¿½Ð¶ï¿½ï¿½Ç·ï¿½×¢ï¿½ï¿½É¹ï¿½
 					if (us.isRegister(user, userTel)) {
-						//Èç¹û³É¹¦
-						//ÉèÖÃcookie
+						//ï¿½ï¿½ï¿½ï¿½É¹ï¿½
+						//ï¿½ï¿½ï¿½ï¿½cookie
 						Cookie cookie1 = new Cookie("userName", userName);
 						Cookie cookie2 = new Cookie("userPwd", userPwd);
-						//ÉèÖÃcookie
+						//ï¿½ï¿½ï¿½ï¿½cookie
 						response.addCookie(cookie1);
 						response.addCookie(cookie2);
-						//Ìø×ªµ½·ÖÀàÒ³
+						//ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³
 						response.sendRedirect("login.jsp");
 					}else{
-						//¼ÌÐø·µ»Ø×¢²áÒ³Ãæ
+						//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½Ò³ï¿½ï¿½
 						response.sendRedirect("register.jsp");
 					}
 				}else{
-					//¼ÌÐø·µ»Ø×¢²áÒ³Ãæ
+					//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½Ò³ï¿½ï¿½
 					response.sendRedirect("register.jsp");
 				}
 				
 				
 			}else if ("exit".equals(op)) {
-				//ÍË³öÓÃ»§
-				//Èç¹ûÍË³ö
+				//ï¿½Ë³ï¿½ï¿½Ã»ï¿½
+				//ï¿½ï¿½ï¿½ï¿½Ë³ï¿½
 				
 				if (request.getParameter("isExit")!=null) {	
-					//ÒÆ³ý»á»°ÖÐµÄÓÃ»§ÏûÏ¢
+					//ï¿½Æ³ï¿½ï¿½á»°ï¿½Ðµï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ï¢
 					session.removeAttribute("user");
-					//ÍË³öµ½Ê×Ò³
+					//ï¿½Ë³ï¿½ï¿½ï¿½ï¿½ï¿½Ò³
 					response.sendRedirect("index.jsp");
 				}
 				
 				
 			}else if("countOrder".equals(op)){
-				//½áËã¶©µ¥,ÅÐ¶ÏÊÇ·ñÒÑ¾­µÇÂ¼
-				//ÅÐ¶ÏÊÇ·ñÒÑ¾­µÇÂ¼ÁË
+				//ï¿½ï¿½ï¿½ã¶©ï¿½ï¿½,ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½Â¼
+				//ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½Â¼ï¿½ï¿½
 				/*System.out.println(11111);
 				System.out.println(session.getAttribute("user"));*/
 				if (session.getAttribute("user")!=null) {
-					//Èç¹ûÒÑ¾­µÇÂ¼ÁË£¬Ö±½ÓÌø×ªµ½½áËãÒ³Ãæ
+					//ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½Â¼ï¿½Ë£ï¿½Ö±ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½
 					response.sendRedirect("myorder.jsp");
 				}else{
-					//Ìø×ªµ½ÓÃ»§µÇÂ¼Ò³Ãæ
+					//ï¿½ï¿½×ªï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Â¼Ò³ï¿½ï¿½
 					response.sendRedirect("login.jsp");
 				}
 			
 			
 			}else if ("userInfo".equals(op)) {
 				/**
-				 * Ìø×ªÓÃ»§ÏêÏ¸Ò³£¬²¢ÔÚÒ³ÃæÖÐÏÔÊ¾¸ÃÓÃ»§Ïà¹ØÐÅÏ¢
+				 * ï¿½ï¿½×ªï¿½Ã»ï¿½ï¿½ï¿½Ï¸Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 				 */
 				
 				if (session.getAttribute("user")!=null) {
-					//Èç¹ûÓÃ»§ÐÅÏ¢²»Îª¿Õ
-					//»ñÈ¡ÓÃ»§ÐÅÏ¢
+					//ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½Îªï¿½ï¿½
+					//ï¿½ï¿½È¡ï¿½Ã»ï¿½ï¿½ï¿½Ï¢
 					Users user = (Users) session.getAttribute("user");
-					//»ñÈ¡ÓÃ»§ÏêÏ¸ÐÅÏ¢
+					//ï¿½ï¿½È¡ï¿½Ã»ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½Ï¢
 					List<Users_info> usersInfoList= us.getUserInfo(user);
-					Users_info users_info =usersInfoList.get(0);
-					//´«µÝÓÃ»§ÐÅÏ¢
+					Users_info users_info = usersInfoList.get(0);
+					//ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ï¢
 					request.setAttribute("userInfo", users_info);
-					//Ò³ÃæÌø×ª
+					//Ò³ï¿½ï¿½ï¿½ï¿½×ª
 					request.getRequestDispatcher("user.jsp").forward(request, response);
 				}
 				
 				
 			}else if ("updateUserInfo".equals(op)) {
 				/**
-				 * ÐÞ¸ÄÓÃ»§ÏêÏ¸ÐÅÏ¢±í
+				 * ï¿½Þ¸ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½Ï¢ï¿½ï¿½
 				 */
 				
-				//»ñÈ¡ÓÃ»§ÐÅÏ¢
+				//ï¿½ï¿½È¡ï¿½Ã»ï¿½ï¿½ï¿½Ï¢
 				String infoId = request.getParameter("infoId");
 				String userSex =  request.getParameter("userSex");
 				String userTel = request.getParameter("userTel");
-				//´´½¨ÓÃ»§ÐÅÏ¢¶ÔÏó
+				//ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
 				Users_info userInfo = new Users_info(Integer.parseInt(infoId), 0, userSex, userTel);
-				//ÐÞ¸ÄÐÅÏ¢
+				//ï¿½Þ¸ï¿½ï¿½ï¿½Ï¢
 				boolean result= us.updateUserInfoById(userInfo);
-				//ajax´òÓ¡
+				//ajaxï¿½ï¿½Ó¡
 				printJson(out, result);
 				
 			}
@@ -185,15 +185,15 @@ public class UsersServlet extends HttpServlet {
 		
 		
 	}
-	//ajax´òÓ¡
+	//ajaxï¿½ï¿½Ó¡
 	private void printJson(PrintWriter out,Object result){
-		//´´½¨Json
+		//ï¿½ï¿½ï¿½ï¿½Json
 		Gson gson = new Gson();
-		//×ª»¯³ÉJson¸ñÊ½
+		//×ªï¿½ï¿½ï¿½ï¿½Jsonï¿½ï¿½Ê½
 		String str = gson.toJson(result);
-		//´òÓ¡
+		//ï¿½ï¿½Ó¡
 		out.print(str);
-		//ÊÍ·Å×ÊÔ´
+		//ï¿½Í·ï¿½ï¿½ï¿½Ô´
 		out.close();
 	}
 

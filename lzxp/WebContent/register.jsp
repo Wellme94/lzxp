@@ -270,7 +270,7 @@
 			<div class="register-main wrap clearfix" id="r1">
 				<div class="reg-img"><img src="img/left_img2.jpg" class="pic" alt=""></div>
 				<div class="reg-data">
-					<div class="rdt-titlte"><strong class="tit">用户注册</strong><span class="to-log">已有账户，<a href="login.html" class="free-reg">在此登录></a></span></div>
+					<div class="rdt-titlte"><strong class="tit">用户注册</strong><span class="to-log">已有账户，<a href="login.jsp" class="free-reg">在此登录></a></span></div>
 					<div class="rdt-from">
 						<ul class="form-data">
 							<li>

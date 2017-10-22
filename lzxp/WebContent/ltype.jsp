@@ -27,10 +27,19 @@
 		<link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
 		<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
 		<script type="text/javascript">
-			$(function () {
+		  //页面加载时调用函数   
+		  $(function(){	
+			 //如果flag不为1就加载页面
+			  if(<%=session.getAttribute("flag")%>==null){
+				  location.href="GetGoodsServlet?op=queryAllGoods";
+			  }		  
+		  });
+		  //调用函数onload()
+		
+			
+		   $(function () {
 				/* 退出点击事件 */
-				$("#exit").click(function () {
-					
+				$("#exit").click(function () {					
 					location.href="http://localhost:8080/lzxp/UsersServlet?op=exit&isExit=true";
 				});
 				
@@ -42,8 +51,29 @@
 				
 			});
 			
-			
-		
+			  //点击查询按钮 进行商品名查询
+			   $(function(){				   
+				  $("#sch-btn").click(function(){
+					  //获取关键字 
+					  var keyword = $("#keyword").val();
+					  if(keyword=="输入关键字"){
+						alert("请输入关键字！");  
+					  }else{
+						  alert(keyword);
+						  location.href="stype.jsp?keyword="+keyword;	
+					  }
+				  });
+				   
+			   });					
+			  $(function(){
+				  $(".name").click(function(){				  
+					var goodId = $(this).prev().val(); 
+					 
+					 location.href = "GetAllGoodsServlet?op=queryGoodsById&goodsId="+goodId;
+				  });
+				  
+			  })
+			  
 		</script>
 </head>
 <body>
@@ -179,11 +209,10 @@
 						<a href="#">花生瓜子</a>
 					</div>
 					<!--搜索框-->
-					<div class="search-area">
-						<!--<form id="productSearchForm" action="" method="get" target="_blank">-->
-							<input class="sch-key" type="text" name="keyword" id="keyword" placeholder="商品搜索">
-							<input class="sch-btn" type="submit" value="搜 索">
-						<!--</form>-->
+					<div class="search-area">			
+							<input class="sch-key" type="text"  id="keyword" value="" placeholder="商品搜索" >
+							<input class="sch-btn" type="button" id = "sch-btn" value="搜 索">
+						
 					</div>
 				</div>
 				<div class="hd-user">
@@ -224,13 +253,13 @@
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
 										<li>
-											<a target="_blank" href="stype.jsp?stypeId=1">嗑壳坚果</a>
+											<a target="_blank" href="stype.jsp?keyword=嗑壳坚果">嗑壳坚果</a>
 										</li>
 										<li>
-											<a target="_blank" href="stype.jsp?stypeId=2">果果仁仁</a>
+											<a target="_blank" href="stype.jsp?keyword=果果仁仁">果果仁仁</a>
 										</li>
 										<li>
-											<a target="_blank" href="stype.jsp?stypeId=3">特惠炒货</a>
+											<a target="_blank" href="stype.jsp?keyword=特惠炒货">特惠炒货</a>
 										</li>
 									</ul>
 								</div>
@@ -242,16 +271,16 @@
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
 										<li>
-											<a target="_blank" href="#">猪肉系列</a>
+											<a target="_blank" href="stype.jsp?keyword=猪肉系列">猪肉系列</a>
 										</li>
 										<li>
-											<a target="_blank" href="#">牛肉系列</a>
+											<a target="_blank" href="stype.jsp?keyword=牛肉系列">牛肉系列</a>
 										</li>
 										<li>
-											<a target="_blank" href="#">鸡鸭系列</a>
+											<a target="_blank" href="stype.jsp?keyword=鸡鸭系列">鸡鸭系列</a>
 										</li>
 										<li>
-											<a target="_blank" href="#">海味系列</a>
+											<a target="_blank" href="stype.jsp?keyword=海味系列">海味系列</a>
 										</li>
 									</ul>
 								</div>
@@ -263,13 +292,13 @@
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
 										<li>
-											<a target="_blank" href="#">缤纷果干</a>
+											<a target="_blank" href="stype.jsp?keyword=缤纷果干">缤纷果干</a>
 										</li>
 										<li>
-											<a target="_blank" href="#">话梅山楂</a>
+											<a target="_blank" href="stype.jsp?keyword=话梅山楂">话梅山楂</a>
 										</li>
 										<li>
-											<a target="_blank" href="#">红枣葡萄</a>
+											<a target="_blank" href="stype.jsp?keyword=红枣葡萄">红枣葡萄</a>
 										</li>
 									</ul>
 								</div>
@@ -281,16 +310,16 @@
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
 										<li>
-											<a target="_blank" href="#">糕点系列</a>
+											<a target="_blank" href="stype.jsp?keyword=糕点系列">糕点系列</a>
 										</li>
 										<li>
-											<a target="_blank" href="#">饼干系列</a>
+											<a target="_blank" href="stype.jsp?keyword=饼干系列">饼干系列</a>
 										</li>
 										<li>
-											<a target="_blank" href="#">糖果系列</a>
+											<a target="_blank" href="stype.jsp?keyword=糖果系列">糖果系列</a>
 										</li>
 										<li>
-											<a target="_blank" href="#">果冻系列</a>
+											<a target="_blank" href="stype.jsp?keyword=果冻系列">果冻系列</a>
 										</li>
 									</ul>
 								</div>
@@ -302,13 +331,13 @@
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
 										<li>
-											<a target="_blank" href="#">美味豆干</a>
+											<a target="_blank" href="stype.jsp?keyword=美味豆干">美味豆干</a>
 										</li>
 										<li>
-											<a target="_blank" href="#">笋菌海带</a>
+											<a target="_blank" href="stype.jsp?keyword=笋菌海带">笋菌海带</a>
 										</li>
 										<li>
-											<a target="_blank" href="#">其他山珍</a>
+											<a target="_blank" href="stype.jsp?keyword=其他山珍">其他山珍</a>
 										</li>
 									</ul>
 								</div>
@@ -320,10 +349,10 @@
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
 										<li>
-											<a target="_blank" href="#">养生冲调</a>
+											<a target="_blank" href="stype.jsp?keyword=养生冲调">养生冲调</a>
 										</li>
 										<li>
-											<a target="_blank" href="#">进口饮料</a>
+											<a target="_blank" href="stype.jsp?keyword=进口饮料">进口饮料</a>
 										</li>
 									</ul>
 								</div>
@@ -335,13 +364,13 @@
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
 										<li>
-											<a target="_blank" href="#">进口糕点</a>
+											<a target="_blank" href="stype.jsp?keyword=进口糕点">进口糕点</a>
 										</li>
 										<li>
-											<a target="_blank" href="#">进口糖果</a>
+											<a target="_blank" href="stype.jsp?keyword=进口糖果">进口糖果</a>
 										</li>
 										<li>
-											<a target="_blank" href="#">休闲零食</a>
+											<a target="_blank" href="stype.jsp?keyword=休闲零食">休闲零食</a>
 										</li>
 									</ul>
 								</div>
@@ -353,10 +382,10 @@
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
 										<li>
-											<a target="_blank" href="#">零食礼盒</a>
+											<a target="_blank" href="stype.jsp?keyword=零食礼盒">零食礼盒</a>
 										</li>
 										<li>
-											<a target="_blank" href="#">年货量贩装</a>
+											<a target="_blank" href="stype.jsp?keyword=年货量贩装">年货量贩装</a>
 										</li>
 									</ul>
 								</div>
@@ -370,13 +399,13 @@
 				<div class="idx-slider">
 					<ul class="islide">
 						<li style="background-color:#feeaf2">
-							<a title="零嘴抢购" href="#" target="_blank"><img class="lazy" data-original="" src="img/lunbo/lunbo-1.jpg" alt="零嘴抢购" /></a>
+							<a title="零嘴抢购" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/lunbo/lunbo-1.jpg" alt="零嘴抢购" /></a>
 						</li>
 						<li style="background-color:#e9e7ea">
-							<a title="零嘴大礼包" href="#" target="_blank"><img class="lazy" data-original="" src="img/lunbo/lunbo-2.jpg" alt="零嘴大礼包" /></a>
+							<a title="零嘴大礼包" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/lunbo/lunbo-2.jpg" alt="零嘴大礼包" /></a>
 						</li>
 						<li style="background-color:#faf0e6">
-							<a title="零嘴上新尝鲜" href="#" target="_blank"><img class="lazy" data-original="" src="img/lunbo/lunbo-3.jpg" alt="零嘴上新尝鲜" /></a>
+							<a title="零嘴上新尝鲜" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/lunbo/lunbo-3.jpg" alt="零嘴上新尝鲜" /></a>
 						</li>
 					</ul>
 				</div>
@@ -385,13 +414,13 @@
 					<div class="rush-hot-cont rush-slide">
 						<ul class="rhc-list rslide">
 							<li>
-								<a title="特惠上" href="#" target="_blank"><img class="lazy" data-original="" src="img/lunbo-right1.jpg" alt=特惠上 " /></a>
+								<a title="特惠上" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/lunbo-right1.jpg" alt=特惠上 " /></a>
 				</li>
 				</ul>
 				</div><div class="rush-hot-cont rush-slide ">
 				<ul class="rhc-list rslide ">
 				<li>
-					<a title="特惠下 " href="# " target="_blank "><img class="lazy " data-original=" " src="img/lunbo-right2.jpg " alt=特惠下" /></a>
+					<a title="特惠下 " href="javascript:void(0)" target="_blank "><img class="lazy " data-original=" " src="img/lunbo-right2.jpg " alt=特惠下" /></a>
 							</li>
 						</ul>
 					</div>
@@ -409,25 +438,25 @@
 					<li>
 						<h3>先领券再购物</h3>
 						<div class="act-list-cont">
-							<a title="主推" href="${requestScope.path }detail.jsp"><img class="lazy" data-original="" src="img/idx-activity/1.jpg" alt="主推"></a>
+							<a title="主推" href="javascript:void(0)"><img class="lazy" data-original="" src="img/idx-activity/1.jpg" alt="主推"></a>
 						</div>
 					</li>
 					<li> 
 						<h3>先领券再购物</h3>
 						<div class="act-list-cont">
-							<a title="主推" href="#" target="_blank"><img class="lazy" data-original="img/idx-activity/2.jpg" alt="主推"></a>
+							<a title="主推" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="img/idx-activity/2.jpg" alt="主推"></a>
 						</div>
 					</li>
 					<li>
 						<h3>先领券再购物</h3>
 						<div class="act-list-cont">
-							<a title="主推" href="#" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/3.jpg" alt="主推"></a>
+							<a title="主推" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/3.jpg" alt="主推"></a>
 						</div>
 					</li>
 					<li>
 						<h3>满送专区</h3>
 						<div class="act-list-cont">
-							<a title="主推" href="#"><img class="lazy" data-original="" src="img/idx-activity/4.jpg" alt="主推"></a>
+							<a title="主推" href="javascript:void(0)"><img class="lazy" data-original="" src="img/idx-activity/4.jpg" alt="主推"></a>
 						</div>
 					</li>
 				</ul>
@@ -440,66 +469,66 @@
 					<h2>活动精选</h2>
 					<ul class="star-tabs">
 						<li>
-							<a href="javascript:;">大促特惠</a>
+							<a href="javascript:void(0);">大促特惠</a>
 						</li>
 						<li>
-							<a href="javascript:;">6月TOP榜</a>
+							<a href="javascript:void(0);">6月TOP榜</a>
 						</li>
 						<li>
-							<a href="javascript:;">新品尝鲜</a>
+							<a href="javascript:void(0)">新品尝鲜</a>
 						</li>
 					</ul>
 				</div>
 				<div class="star-area">
 					<ul class="star-area-list">
 						<li>
-							<a title="专区" href="#" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-1.jpg" alt="专区"></a>
+							<a title="专区" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-1.jpg" alt="专区"></a>
 						</li>
 						<li>
-							<a title="专区" href="#" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-2.jpg" alt="专区"></a>
+							<a title="专区" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-2.jpg" alt="专区"></a>
 						</li>
 						<li>
-							<a title="专区" href="#" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-3.jpg" alt="专区"></a>
+							<a title="专区" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-3.jpg" alt="专区"></a>
 						</li>
 						<li>
-							<a title="专区" href="#" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-4.jpg" alt="专区"></a>
+							<a title="专区" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-4.jpg" alt="专区"></a>
 						</li>
 						<li>
-							<a title="专区" href="#" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-5.jpg" alt="专区"></a>
-						</li>
-					</ul>
-					<ul class="star-area-list">
-						<li>
-							<a title="TOP" href="#" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-6.jpg" alt="TOP"></a>
-						</li>
-						<li>
-							<a title="TOP" href="#" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-7.jpg" alt="TOP"></a>
-						</li>
-						<li>
-							<a title="TOP" href="#" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-8.jpg" alt="TOP"></a>
-						</li>
-						<li>
-							<a title="TOP" href="#" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-9.jpg" alt="TOP"></a>
-						</li>
-						<li>
-							<a title="TOP" href="#" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-10.jpg" alt="TOP"></a>
+							<a title="专区" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-5.jpg" alt="专区"></a>
 						</li>
 					</ul>
 					<ul class="star-area-list">
 						<li>
-							<a title="新品" href="#" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-1.jpg" alt="新品"></a>
+							<a title="TOP" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-6.jpg" alt="TOP"></a>
 						</li>
 						<li>
-							<a title="新品" href="#" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-2.jpg" alt="新品"></a>
+							<a title="TOP" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-7.jpg" alt="TOP"></a>
 						</li>
 						<li>
-							<a title="新品" href="#" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-3.jpg" alt="新品"></a>
+							<a title="TOP" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-8.jpg" alt="TOP"></a>
 						</li>
 						<li>
-							<a title="新品" href="#" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-4.jpg" alt="新品"></a>
+							<a title="TOP" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-9.jpg" alt="TOP"></a>
 						</li>
 						<li>
-							<a title="新品" href="#" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-5.jpg" alt="新品"></a>
+							<a title="TOP" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-10.jpg" alt="TOP"></a>
+						</li>
+					</ul>
+					<ul class="star-area-list">
+						<li>
+							<a title="新品" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-1.jpg" alt="新品"></a>
+						</li>
+						<li>
+							<a title="新品" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-2.jpg" alt="新品"></a>
+						</li>
+						<li>
+							<a title="新品" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-3.jpg" alt="新品"></a>
+						</li>
+						<li>
+							<a title="新品" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-4.jpg" alt="新品"></a>
+						</li>
+						<li>
+							<a title="新品" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/idx-activity/jx-5.jpg" alt="新品"></a>
 						</li>
 					</ul>
 				</div>
@@ -521,13 +550,13 @@
 					<div class="sc-title jk">
 						<ul class="sct-tabs">
 							<li>
-								<a href="style.html#">嗑壳坚果</a>
+								<a href="style.jsp?keyword=嗑壳坚果">嗑壳坚果</a>
 							</li>
 							<li>
-								<a href="style.html">果果仁仁</a>
+								<a href="style.jsp?keyword=果果仁仁">果果仁仁</a>
 							</li>
 							<li>
-								<a href="style.html">特惠炒货</a>
+								<a href="style.jsp?keyword=特惠炒货">特惠炒货</a>
 							</li>
 						</ul>
 						<div class="sct-hot">
@@ -537,104 +566,39 @@
 					<div class="sc-info">
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="嗑壳坚果" target="_blank" href="style.html">
-									<img class="lazy" data-original="" src="img/jianguo/01.jpg" alt="">
-								</a>
-							</div>
-							<ul class="node-list">
-								<li>
-									<div class="p-img">
-										<a title="黑美人葵花籽" href="" target="_blank">
-											<img class="lazy" data-original="#" src="img/jianguo/011.jpg" alt="黑美人葵花籽" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="黑美人葵花籽">
-											黑美人葵花籽
-										</a>
-										<span class="price">
-																	<small>￥</small>25.<small>90</small>
+							<a title="嗑壳坚果" target="_blank" href="style.html">
+						        <img class="lazy" data-original="" src="img/jianguo/01.jpg" alt="">
+							</a>									
+							</div><!--node-first  -->
+							
+							  <ul class="node-list">
+							   <!-- 这里动态显示图片 -->
+							   <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==1}">
+								         <c:if test="${goods.STYPEID==1}">								                	     
+								                      <li>
+														<div class="p-img">
+															<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
+																<img class="lazy"  src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}" >
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="南瓜籽110g" href="#" target="_blank">
-											<img class="lazy" data-original="#" src="img/jianguo/012.jpg" alt="南瓜籽110g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="南瓜籽110g">
-											南瓜籽110g
-										</a>
-										<span class="price">
-																	<small>￥</small>25.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="伊朗开心果190g" href="detail.jsp" target="_blank">
-											<img class="lazy" data-original="" src="img/jianguo/013.jpg" alt="伊朗开心果190g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="detail.jsp" target="_blank" title="伊朗开心果190g">
-											伊朗开心果190g
-										</a>
-										<span class="price">
-																	<small>￥</small>29.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="黑美人葵花籽" href="#" target="_blank">
-											<img class="lazy" data-original="#" src="img/jianguo/011.jpg" alt="黑美人葵花籽" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="黑美人葵花籽">
-											黑美人葵花籽
-										</a>
-										<span class="price">
-																	<small>￥</small>25.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="南瓜籽110g" href="#" target="_blank">
-											<img class="lazy" data-original="#" src="img/jianguo/012.jpg" alt="南瓜籽110g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="南瓜籽110g">
-											南瓜籽110g
-										</a>
-										<span class="price">
-																	<small>￥</small>25.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="伊朗开心果190g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jianguo/013.jpg" alt="伊朗开心果190g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="伊朗开心果190g">
-											伊朗开心果190g
-										</a>
-										<span class="price">
-																	<small>￥</small>29.<small>90</small>
-																</span>
-									</div>
-								</li>
-
-							</ul>
-						</div>
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>	
+						</ul><!-- class="node-list" -->
+						
+						</div><!-- sin-node -->
 						<div class="sin-node">
 							<div class="node-first">
 								<a title="果果仁仁" target="_blank" href="style.html">
@@ -642,96 +606,29 @@
 								</a>
 							</div>
 							<ul class="node-list">
-								<li>
-									<div class="p-img">
-										<a title="甘栗80g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jianguo/021.jpg" alt="甘栗80g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="甘栗80g">
-											甘栗80g
-										</a>
-										<span class="price">
-																	<small>￥</small>19.<small>90</small>
+								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==1}">
+								         <c:if test="${goods.STYPEID==2}">								                	     
+								                      <li>
+														<div class="p-img">
+														  <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
+																<img class="lazy"  src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="烘烤薯片原味98g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jianguo/022.jpg" alt="烘烤薯片原味98g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="烘烤薯片原味98g">
-											烘烤薯片原味98g
-										</a>
-										<span class="price">
-																	<small>￥</small>18.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="欢乐套餐" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jianguo/023.jpg" alt="欢乐套餐" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="欢乐套餐">
-											欢乐套餐
-										</a>
-										<span class="price">
-																	<small>￥</small>33.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="甘栗80g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jianguo/021.jpg" alt="甘栗80g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="甘栗80g">
-											甘栗80g
-										</a>
-										<span class="price">
-																	<small>￥</small>19.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="烘烤薯片原味98g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jianguo/022.jpg" alt="烘烤薯片原味98g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="烘烤薯片原味98g">
-											烘烤薯片原味98g
-										</a>
-										<span class="price">
-																	<small>￥</small>18.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="欢乐套餐" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jianguo/023.jpg" alt="欢乐套餐" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="欢乐套餐">
-											欢乐套餐
-										</a>
-										<span class="price">
-																	<small>￥</small>33.<small>90</small>
-																</span>
-									</div>
-								</li>
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>			
 							</ul>
 						</div>
 						<div class="sin-node">
@@ -741,96 +638,30 @@
 								</a>
 							</div>
 							<ul class="node-list">
-								<li>
-									<div class="p-img">
-										<a title="蛋花玉米65g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jianguo/031.jpg" alt="蛋花玉米65g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="蛋花玉米65g">
-											蛋花玉米65g
-										</a>
-										<span class="price">
-																	<small>￥</small>16.<small>00</small>
+								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==1}">
+								         <c:if test="${goods.STYPEID==3}">								                	     
+								                      <li>
+														<div class="p-img">
+														      <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
+																<img class="lazy" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="多味花生" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jianguo/032.jpg" alt="多味花生" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="多味花生">
-											多味花生
-										</a>
-										<span class="price">
-																	<small>￥</small>18.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="牛肉味兰花豆 " href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jianguo/033.jpg" alt="牛肉味兰花豆" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="牛肉味兰花豆">
-											牛肉味兰花豆
-										</a>
-										<span class="price">
-																	<small>￥</small>16.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="蛋花玉米65g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jianguo/031.jpg" alt="蛋花玉米65g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="蛋花玉米65g">
-											蛋花玉米65g
-										</a>
-										<span class="price">
-																	<small>￥</small>16.<small>00</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="多味花生" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jianguo/032.jpg" alt="多味花生" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="多味花生">
-											多味花生
-										</a>
-										<span class="price">
-																	<small>￥</small>18.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="牛肉味兰花豆 " href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jianguo/033.jpg" alt="牛肉味兰花豆" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="牛肉味兰花豆">
-											牛肉味兰花豆
-										</a>
-										<span class="price">
-																	<small>￥</small>16.<small>90</small>
-																</span>
-									</div>
-								</li>
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>	
+								
 							</ul>
 						</div>
 					</div>
@@ -874,96 +705,29 @@
 								</a>
 							</div>
 							<ul class="node-list">
-								<li>
-									<div class="p-img">
-										<a title="卤香猪蹄250g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/011.jpg" alt="卤香猪蹄250g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="卤香猪蹄250g">
-											卤香猪蹄250g
-										</a>
-										<span class="price">
-																	<small>￥</small>36.<small>90</small>
+								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==2}">
+								         <c:if test="${goods.STYPEID==4}">								                	     
+								                      <li>
+														<div class="p-img">
+																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
+																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="迷你烤香肠炭烤味" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/012.jpg" alt="迷你烤香肠炭烤味" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="迷你烤香肠炭烤味">
-											迷你烤香肠炭烤味
-										</a>
-										<span class="price">
-																	<small>￥</small>35.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="五香猪尾238g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/013.jpg" alt="五香猪尾238g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="五香猪尾238g">
-											五香猪尾238g
-										</a>
-										<span class="price">
-																	<small>￥</small>25.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="卤香猪蹄250g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/011.jpg" alt="卤香猪蹄250g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="卤香猪蹄250g">
-											卤香猪蹄250g
-										</a>
-										<span class="price">
-																	<small>￥</small>36.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="迷你烤香肠炭烤味" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/012.jpg" alt="迷你烤香肠炭烤味" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="迷你烤香肠炭烤味">
-											迷你烤香肠炭烤味
-										</a>
-										<span class="price">
-																	<small>￥</small>35.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="五香猪尾238g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/013.jpg" alt="五香猪尾238g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="五香猪尾238g">
-											五香猪尾238g
-										</a>
-										<span class="price">
-																	<small>￥</small>25.<small>90</small>
-																</span>
-									</div>
-								</li>
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>								
 
 							</ul>
 						</div>
@@ -974,96 +738,29 @@
 								</a>
 							</div>
 							<ul class="node-list">
-								<li>
-									<div class="p-img">
-										<a title="麻辣牛板筋180g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/021.jpg" alt="麻辣牛板筋180g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="麻辣牛板筋180g">
-											麻辣牛板筋180g
-										</a>
-										<span class="price">
-																	<small>￥</small>33.<small>90</small>
+								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==2}">
+								         <c:if test="${goods.STYPEID==5}">								                	     
+								                      <li>
+														<div class="p-img">
+																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
+																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="秘制卤牛肉140g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/022.jpg" alt="秘制卤牛肉140g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="秘制卤牛肉140g">
-											秘制卤牛肉140g
-										</a>
-										<span class="price">
-																	<small>￥</small>39.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="泡椒牛肉165g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/023.jpg" alt="泡椒牛肉165g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="泡椒牛肉165g">
-											泡椒牛肉165g
-										</a>
-										<span class="price">
-																	<small>￥</small>24.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="麻辣牛板筋180g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/021.jpg" alt="麻辣牛板筋180g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="麻辣牛板筋180g">
-											麻辣牛板筋180g
-										</a>
-										<span class="price">
-																	<small>￥</small>33.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="秘制卤牛肉140g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/022.jpg" alt="秘制卤牛肉140g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="秘制卤牛肉140g">
-											秘制卤牛肉140g
-										</a>
-										<span class="price">
-																	<small>￥</small>39.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="泡椒牛肉165g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/023.jpg" alt="泡椒牛肉165g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="泡椒牛肉165g">
-											泡椒牛肉165g
-										</a>
-										<span class="price">
-																	<small>￥</small>24.<small>90</small>
-																</span>
-									</div>
-								</li>
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>								
 							</ul>
 						</div>
 						<div class="sin-node">
@@ -1073,102 +770,34 @@
 								</a>
 							</div>
 							<ul class="node-list">
-								<li>
-									<div class="p-img">
-										<a title="奥尔良风味烤鸡翅178g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/031.jpg" alt="奥尔良风味烤鸡翅178g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="奥尔良风味烤鸡翅178g">
-											奥尔良风味烤鸡翅178g
-										</a>
-										<span class="price">
-																	<small>￥</small>19.<small>90</small>
+							  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==2}">
+								         <c:if test="${goods.STYPEID==6}">								                	     
+								                      <li>
+														<div class="p-img">
+																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
+																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="酱香味鸭舌58g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/032.jpg" alt="酱香味鸭舌58g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="酱香味鸭舌58g">
-											酱香味鸭舌58g
-										</a>
-										<span class="price">
-																	<small>￥</small>24.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="鸭翅甜辣味150g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/033.jpg" alt="鸭翅甜辣味150g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="鸭翅甜辣味150g">
-											鸭翅甜辣味150g
-										</a>
-										<span class="price">
-																	<small>￥</small>23.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="奥尔良风味烤鸡翅178g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/031.jpg" alt="奥尔良风味烤鸡翅178g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="奥尔良风味烤鸡翅178g">
-											奥尔良风味烤鸡翅178g
-										</a>
-										<span class="price">
-																	<small>￥</small>19.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="酱香味鸭舌58g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/032.jpg" alt="酱香味鸭舌58g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="酱香味鸭舌58g">
-											酱香味鸭舌58g
-										</a>
-										<span class="price">
-																	<small>￥</small>24.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="鸭翅甜辣味150g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/rougan/033.jpg" alt="鸭翅甜辣味150g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="鸭翅甜辣味150g">
-											鸭翅甜辣味150g
-										</a>
-										<span class="price">
-																	<small>￥</small>23.<small>90</small>
-																</span>
-									</div>
-								</li>
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>									
 							</ul>
 						</div>
 					</div>
 				</div>
 			</div>
-
 			<div id="5241329588544783" class="storey-food">
 				<div class="stor-top">
 					<div class="stor-title"><span>3F</span>
@@ -1206,96 +835,29 @@
 								</a>
 							</div>
 							<ul class="node-list">
-								<li>
-									<div class="p-img">
-										<a title="菠萝片（100g）" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/011.jpg" alt="菠萝片（100g）" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="菠萝片（100g）">
-											菠萝片（100g）
-										</a>
-										<span class="price">
-																	<small>￥</small>10.<small>90</small>
+								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==3}">
+								         <c:if test="${goods.STYPEID==8}">								                	     
+								                      <li>
+														<div class="p-img">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
+																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="黄桃果干 98g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/012.jpg" alt="黄桃果干 98g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="黄桃果干 98g">
-											黄桃果干 98g
-										</a>
-										<span class="price">
-																	<small>￥</small>39.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="芒果干108g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/013.jpg" alt="芒果干108g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="芒果干108g">
-											芒果干108g
-										</a>
-										<span class="price">
-																	<small>￥</small>15.<small>80</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="菠萝片（100g）" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/011.jpg" alt="菠萝片（100g）" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="菠萝片（100g）">
-											菠萝片（100g）
-										</a>
-										<span class="price">
-																	<small>￥</small>10.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="黄桃果干 98g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/012.jpg" alt="黄桃果干 98g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="黄桃果干 98g">
-											黄桃果干 98g
-										</a>
-										<span class="price">
-																	<small>￥</small>39.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="芒果干108g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/013.jpg" alt="芒果干108g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="芒果干108g">
-											芒果干108g
-										</a>
-										<span class="price">
-																	<small>￥</small>15.<small>80</small>
-																</span>
-									</div>
-								</li>
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>									
 							</ul>
 						</div>
 						<div class="sin-node">
@@ -1305,96 +867,29 @@
 								</a>
 							</div>
 							<ul class="node-list">
-								<li>
-									<div class="p-img">
-										<a title="山楂250g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/021.jpg" alt="山楂250g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="山楂250g">
-											山楂250g
-										</a>
-										<span class="price">
-																	<small>￥</small>15.<small>90</small>
+							  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==3}">
+								         <c:if test="${goods.STYPEID==9}">								                	     
+								                      <li>
+														<div class="p-img">
+																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
+																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="果丹皮250g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/022.jpg" alt="果丹皮250g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="果丹皮250g">
-											果丹皮250g
-										</a>
-										<span class="price">
-																	<small>￥</small>11.<small>80</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="老婆梅140g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/023.jpg" alt="老婆梅140g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="老婆梅140g">
-											老婆梅140g
-										</a>
-										<span class="price">
-																	<small>￥</small>12.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="山楂250g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/021.jpg" alt="山楂250g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="山楂250g">
-											山楂250g
-										</a>
-										<span class="price">
-																	<small>￥</small>15.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="果丹皮250g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/022.jpg" alt="果丹皮250g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="果丹皮250g">
-											果丹皮250g
-										</a>
-										<span class="price">
-																	<small>￥</small>11.<small>80</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="老婆梅140g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/023.jpg" alt="老婆梅140g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="老婆梅140g">
-											老婆梅140g
-										</a>
-										<span class="price">
-																	<small>￥</small>12.<small>90</small>
-																</span>
-									</div>
-								</li>
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>									
 							</ul>
 						</div>
 						<div class="sin-node">
@@ -1403,98 +898,31 @@
 									<img class="lazy" data-original="" src="img/guogan/03.jpg" alt="">
 								</a>
 							</div>
-							<ul class="node-list">
-
-								<li>
-									<div class="p-img">
-										<a title="阿胶蜜枣175g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/031.jpg" alt="阿胶蜜枣175g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="阿胶蜜枣175g">
-											阿胶蜜枣175g
-										</a>
-										<span class="price">
-																	<small>￥</small>7.<small>90</small>
+						<ul class="node-list">
+						  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==3}">
+								         <c:if test="${goods.STYPEID==10}">								                	     
+								                      <li>
+														<div class="p-img">
+																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
+																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="黑加仑葡萄干250g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/032.jpg" alt="黑加仑葡萄干250g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="黑加仑葡萄干250g">
-											黑加仑葡萄干250g
-										</a>
-										<span class="price">
-																	<small>￥</small>15.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="精装红玛葡萄干250g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/033.jpg" alt="精装红玛葡萄干250g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="精装红玛葡萄干250g">
-											精装红玛葡萄干250g
-										</a>
-										<span class="price">
-																	<small>￥</small>11.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="阿胶蜜枣175g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/031.jpg" alt="阿胶蜜枣175g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="阿胶蜜枣175g">
-											阿胶蜜枣175g
-										</a>
-										<span class="price">
-																	<small>￥</small>7.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="黑加仑葡萄干250g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/032.jpg" alt="黑加仑葡萄干250g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="黑加仑葡萄干250g">
-											黑加仑葡萄干250g
-										</a>
-										<span class="price">
-																	<small>￥</small>15.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="精装红玛葡萄干250g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/guogan/033.jpg" alt="精装红玛葡萄干250g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="精装红玛葡萄干250g">
-											精装红玛葡萄干250g
-										</a>
-										<span class="price">
-																	<small>￥</small>11.<small>90</small>
-																</span>
-									</div>
-								</li>
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>	
+								
 							</ul>
 						</div>
 					</div>
@@ -1538,98 +966,29 @@
 								</a>
 							</div>
 							<ul class="node-list">
-								<li>
-									<div class="p-img">
-										<a title="鱼豆腐香辣味170g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/011.jpg" alt="鱼豆腐香辣味170g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="鱼豆腐香辣味170g">
-											鱼豆腐香辣味170g
-										</a>
-										<span class="price">
-																	<small>￥</small>9.<small>90</small>
+								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==4}">
+								         <c:if test="${goods.STYPEID==11}">								                	     
+								                      <li>
+														<div class="p-img">
+																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
+																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-
-								<li>
-									<div class="p-img">
-										<a title="风味豆干火辣味238g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/012.jpg" alt="风味豆干火辣味238g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="千页豆腐（麻辣味）（200g）">
-											风味豆干火辣味238g
-										</a>
-										<span class="price">
-																	<small>￥</small>8.<small>28</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="鸡蛋干酱香味158g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/013.jpg" alt="鸡蛋干酱香味158g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="鸡蛋干酱香味158g">
-											鸡蛋干酱香味158g
-										</a>
-										<span class="price">
-																	<small>￥</small>9.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="鱼豆腐香辣味170g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/011.jpg" alt="鱼豆腐香辣味170g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="鱼豆腐香辣味170g">
-											鱼豆腐香辣味170g
-										</a>
-										<span class="price">
-																	<small>￥</small>9.<small>90</small>
-																</span>
-									</div>
-								</li>
-
-								<li>
-									<div class="p-img">
-										<a title="风味豆干火辣味238g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/012.jpg" alt="风味豆干火辣味238g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="千页豆腐（麻辣味）（200g）">
-											风味豆干火辣味238g
-										</a>
-										<span class="price">
-																	<small>￥</small>8.<small>28</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="鸡蛋干酱香味158g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/013.jpg" alt="鸡蛋干酱香味158g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="鸡蛋干酱香味158g">
-											鸡蛋干酱香味158g
-										</a>
-										<span class="price">
-																	<small>￥</small>9.<small>90</small>
-																</span>
-									</div>
-								</li>
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>	
 							</ul>
 						</div>
 						<div class="sin-node">
@@ -1639,67 +998,29 @@
 								</a>
 							</div>
 							<ul class="node-list">
-								<li>
-									<div class="p-img">
-										<a title="脆笋（香辣味）（188g）" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/021.jpg" alt="脆笋（香辣味）（188g）" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="脆笋（香辣味）（188g）">
-											脆笋（香辣味）（188g）
-										</a>
-										<span class="price">
-																	<small>￥</small>9.<small>90</small>
+								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==4}">
+								         <c:if test="${goods.STYPEID==12}">								                	     
+								                      <li>
+														<div class="p-img">
+																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
+																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="泡椒味海带结 218g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/022.jpg" alt="泡椒味海带结 218g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="泡椒味海带结 218g">
-											泡椒味海带结 218g
-										</a>
-										<span class="price">
-																	<small>￥</small>9.<small>90</small>
-																</span>
-									</div>
-								</li>
-
-								<li>
-									<div class="p-img">
-										<a title="香辣味扇贝裙边" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/023.jpg" alt="香辣味扇贝裙边" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="香辣味扇贝裙边">
-											香辣味扇贝裙边
-										</a>
-										<span class="price">
-																	<small>￥</small>12.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="脆笋（香辣味）（188g）" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/021.jpg" alt="脆笋（香辣味）（188g）" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="脆笋（香辣味）（188g）">
-											脆笋（香辣味）（188g）
-										</a>
-										<span class="price">
-																	<small>￥</small>9.<small>90</small>
-																</span>
-									</div>
-								</li>
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>	
 								<li>
 									<div class="p-img">
 										<a title="泡椒味海带结 218g" href="#" target="_blank">
@@ -1716,22 +1037,7 @@
 									</div>
 								</li>
 
-								<li>
-									<div class="p-img">
-										<a title="香辣味扇贝裙边" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/023.jpg" alt="香辣味扇贝裙边" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="香辣味扇贝裙边">
-											香辣味扇贝裙边
-										</a>
-										<span class="price">
-																	<small>￥</small>12.<small>90</small>
-																</span>
-									</div>
-								</li>
-
+								
 							</ul>
 						</div>
 						<div class="sin-node">
@@ -1741,99 +1047,29 @@
 								</a>
 							</div>
 							<ul class="node-list">
-								<li>
-									<div class="p-img">
-										<a title="香酥小黄鱼118g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/031.jpg" alt="香酥小黄鱼118g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="香酥小黄鱼118g">
-											香酥小黄鱼118g
-										</a>
-										<span class="price">
-																	<small>￥</small>9.<small>90</small>
+								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==4}">
+								         <c:if test="${goods.STYPEID==13}">								                	     
+								                      <li>
+														<div class="p-img">
+																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
+																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="脆鱼干香辣味200g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/032.jpg" alt="脆鱼干香辣味200g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="脆鱼干香辣味200g">
-											脆鱼干香辣味200g
-										</a>
-										<span class="price">
-																	<small>￥</small>12.<small>90</small>
-																</span>
-									</div>
-								</li>
-
-								<li>
-									<div class="p-img">
-										<a title="行走吃货套餐524g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/033.jpg" alt="行走吃货套餐524g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="行走吃货套餐524g">
-											行走吃货套餐524g
-										</a>
-										<span class="price">
-																	<small>￥</small>39.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="香酥小黄鱼118g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/031.jpg" alt="香酥小黄鱼118g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="香酥小黄鱼118g">
-											香酥小黄鱼118g
-										</a>
-										<span class="price">
-																	<small>￥</small>9.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="脆鱼干香辣味200g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/032.jpg" alt="脆鱼干香辣味200g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="脆鱼干香辣味200g">
-											脆鱼干香辣味200g
-										</a>
-										<span class="price">
-																	<small>￥</small>12.<small>90</small>
-																</span>
-									</div>
-								</li>
-
-								<li>
-									<div class="p-img">
-										<a title="行走吃货套餐524g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/sushi/033.jpg" alt="行走吃货套餐524g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="行走吃货套餐524g">
-											行走吃货套餐524g
-										</a>
-										<span class="price">
-																	<small>￥</small>39.<small>90</small>
-																</span>
-									</div>
-								</li>
-
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>	
 							</ul>
 						</div>
 					</div>
@@ -1877,98 +1113,29 @@
 								</a>
 							</div>
 							<ul class="node-list">
-								<li>
-									<div class="p-img">
-										<a title="福多牌提拉米苏味蛋糕432g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/011.jpg" alt="福多牌提拉米苏味蛋糕432g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="福多牌提拉米苏味蛋糕432g">
-											福多牌提拉米苏味蛋糕432g
-										</a>
-										<span class="price">
-																	<small>￥</small>35.<small>90</small>
+								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==5}">
+								         <c:if test="${goods.STYPEID==15}">								                	     
+								                      <li>
+														<div class="p-img">
+																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name" >
+																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-
-								<li>
-									<div class="p-img">
-										<a title="山核桃小酥165g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/012.jpg" alt="山核桃小酥165g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="山核桃小酥165g">
-											山核桃小酥165g
-										</a>
-										<span class="price">
-																	<small>￥</small>14.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="苏打夹心饼干(榴莲味)210g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/013.jpg" alt="苏打夹心饼干(榴莲味)210g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="手撕面包（电商专供）330g">
-											苏打夹心饼干(榴莲味)210g
-										</a>
-										<span class="price">
-																	<small>￥</small>19.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="福多牌提拉米苏味蛋糕432g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/011.jpg" alt="福多牌提拉米苏味蛋糕432g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="福多牌提拉米苏味蛋糕432g">
-											福多牌提拉米苏味蛋糕432g
-										</a>
-										<span class="price">
-																	<small>￥</small>35.<small>90</small>
-																</span>
-									</div>
-								</li>
-
-								<li>
-									<div class="p-img">
-										<a title="山核桃小酥165g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/012.jpg" alt="山核桃小酥165g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="山核桃小酥165g">
-											山核桃小酥165g
-										</a>
-										<span class="price">
-																	<small>￥</small>14.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="苏打夹心饼干(榴莲味)210g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/013.jpg" alt="苏打夹心饼干(榴莲味)210g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="苏打夹心饼干(榴莲味)210g">
-											苏打夹心饼干(榴莲味)210g
-										</a>
-										<span class="price">
-																	<small>￥</small>19.<small>90</small>
-																</span>
-									</div>
-								</li>
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>							
 							</ul>
 						</div>
 						<div class="sin-node">
@@ -1978,98 +1145,30 @@
 								</a>
 							</div>
 							<ul class="node-list">
-								<li>
-									<div class="p-img">
-										<a title="杰克牌牛奶味方形威化饼干100g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/021.jpg" alt="杰克牌牛奶味方形威化饼干100g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="杰克牌牛奶味方形威化饼干100g">
-											杰克牌牛奶味方形威化饼干100g
-										</a>
-										<span class="price">
-																	<small>￥</small>15.<small>90</small>
+								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==5}">
+								         <c:if test="${goods.STYPEID==16}">								                	     
+								                      <li>
+														<div class="p-img">
+																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
+																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="苏打饼酸奶洋葱味" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/022.jpg" alt="苏打饼酸奶洋葱味" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="苏打饼酸奶洋葱味">
-											苏打饼酸奶洋葱味
-										</a>
-										<span class="price">
-																	<small>￥</small>19.<small>90</small>
-																</span>
-									</div>
-								</li>
-
-								<li>
-									<div class="p-img">
-										<a title="小老板烤海苔卷盒装（原味）32.4g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/023.jpg" alt="小老板烤海苔卷盒装（原味）32.4g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="小老板烤海苔卷盒装（原味）32.4g">
-											小老板烤海苔卷盒装（原味）32.4g
-										</a>
-										<span class="price">
-																	<small>￥</small>16.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="杰克牌牛奶味方形威化饼干100g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/021.jpg" alt="杰克牌牛奶味方形威化饼干100g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="杰克牌牛奶味方形威化饼干100g">
-											杰克牌牛奶味方形威化饼干100g
-										</a>
-										<span class="price">
-																	<small>￥</small>15.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="苏打饼酸奶洋葱味" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/022.jpg" alt="苏打饼酸奶洋葱味" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="苏打饼酸奶洋葱味">
-											苏打饼酸奶洋葱味
-										</a>
-										<span class="price">
-																	<small>￥</small>19.<small>90</small>
-																</span>
-									</div>
-								</li>
-
-								<li>
-									<div class="p-img">
-										<a title="小老板烤海苔卷盒装（原味）32.4g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/023.jpg" alt="小老板烤海苔卷盒装（原味）32.4g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="小老板烤海苔卷盒装（原味）32.4g">
-											小老板烤海苔卷盒装（原味）32.4g
-										</a>
-										<span class="price">
-																	<small>￥</small>16.<small>90</small>
-																</span>
-									</div>
-								</li>
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>	
+							
 							</ul>
 						</div>
 						<div class="sin-node">
@@ -2079,96 +1178,29 @@
 								</a>
 							</div>
 							<ul class="node-list">
-								<li>
-									<div class="p-img">
-										<a title="可乐糖60g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/031.jpg" alt="可乐糖60g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="可乐糖60g">
-											可乐糖60g
-										</a>
-										<span class="price">
-																	<small>￥</small>11.<small>90</small>
+								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==5}">
+								         <c:if test="${goods.STYPEID==17}">								                	     
+								                      <li>
+														<div class="p-img">
+																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
+																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="手造棒棒糖35g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/032.jpg" alt="手造棒棒糖35g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="手造棒棒糖35g">
-											手造棒棒糖35g
-										</a>
-										<span class="price">
-																	<small>￥</small>6.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="橡皮糖70g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/033.jpg" alt="橡皮糖70g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="橡皮糖70g">
-											橡皮糖70g
-										</a>
-										<span class="price">
-																	<small>￥</small>25.<small>00</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="可乐糖60g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/031.jpg" alt="可乐糖60g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="可乐糖60g">
-											可乐糖60g
-										</a>
-										<span class="price">
-																	<small>￥</small>11.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="手造棒棒糖35g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/032.jpg" alt="手造棒棒糖35g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="手造棒棒糖35g">
-											手造棒棒糖35g
-										</a>
-										<span class="price">
-																	<small>￥</small>6.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="橡皮糖70g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/candy/033.jpg" alt="橡皮糖70g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="橡皮糖70g">
-											橡皮糖70g
-										</a>
-										<span class="price">
-																	<small>￥</small>25.<small>00</small>
-																</span>
-									</div>
-								</li>
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>					
 							</ul>
 						</div>
 					</div>
@@ -2212,97 +1244,30 @@
 								</a>
 							</div>
 							<ul class="node-list">
-								<li>
-									<div class="p-img">
-										<a title="Tipo牛奶味奶蛋酥脆面包干(新老包装切换中)" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jinkou/011.jpg" alt="Tipo牛奶味奶蛋酥脆面包干(新老包装切换中)" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="Tipo牛奶味奶蛋酥脆面包干(新老包装切换中)">
-											Tipo牛奶味奶蛋酥脆面包干(新老包装切换中)
-										</a>
-										<span class="price">
-																	<small>￥</small>9.<small>90</small>
+								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==6}">
+								         <c:if test="${goods.STYPEID==18}">								                	     
+								                      <li>
+														<div class="p-img">
+																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
+																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="养养牌冬荫功面(酸辣虾味浓汤面)" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jinkou/012.jpg" alt="养养牌冬荫功面(酸辣虾味浓汤面)" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="养养牌冬荫功面(酸辣虾味浓汤面)">
-											养养牌冬荫功面(酸辣虾味浓汤面)
-										</a>
-										<span class="price">
-																	<small>￥</small>18.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="CZA燕麦芝士酥 100g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jinkou/013.jpg" alt="CZA燕麦芝士酥 100g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="CZA燕麦芝士酥 100g">
-											CZA燕麦芝士酥 100g
-										</a>
-										<span class="price">
-																	<small>￥</small>9.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="Tipo牛奶味奶蛋酥脆面包干(新老包装切换中)" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jinkou/011.jpg" alt="Tipo牛奶味奶蛋酥脆面包干(新老包装切换中)" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="Tipo牛奶味奶蛋酥脆面包干(新老包装切换中)">
-											Tipo牛奶味奶蛋酥脆面包干(新老包装切换中)
-										</a>
-										<span class="price">
-																	<small>￥</small>9.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="养养牌冬荫功面(酸辣虾味浓汤面)" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jinkou/012.jpg" alt="养养牌冬荫功面(酸辣虾味浓汤面)" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="养养牌冬荫功面(酸辣虾味浓汤面)">
-											养养牌冬荫功面(酸辣虾味浓汤面)
-										</a>
-										<span class="price">
-																	<small>￥</small>18.<small>90</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="CZA燕麦芝士酥 100g" href="#" target="_blank">
-											<img class="lazy" data-original="" src="img/jinkou/013.jpg" alt="CZA燕麦芝士酥 100g" style="display: block;"></a>
-									</div>
-									<div class="p-bg"></div>
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="CZA燕麦芝士酥 100g">
-											CZA燕麦芝士酥 100g
-										</a>
-										<span class="price">
-																	<small>￥</small>9.<small>90</small>
-																</span>
-									</div>
-								</li>
-
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>	
+								
 							</ul>
 						</div>
 						<div class="sin-node">
@@ -2312,97 +1277,30 @@
 								</a>
 							</div>
 							<ul class="node-list">
-								<li>
-									<div class="p-img">
-										<a title="帕克大叔草莓味软糖（凝胶糖果）42g" href="" target="_blank">
-											<img class="lazy" data-original="" src="img/jinkou/021.jpg" alt="帕克大叔草莓味软糖（凝胶糖果）42g" style="display: block;"></a>
-									</div>
-
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="帕克大叔草莓味软糖（凝胶糖果）42g">
-											帕克大叔草莓味软糖（凝胶糖果）42g
-										</a>
-										<span class="price">
-																	<small>￥</small>8.<small>00</small>
+								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
+								   <c:if test="${goods.LTYPEID==6}">
+								         <c:if test="${goods.STYPEID==19}">								                	     
+								                      <li>
+														<div class="p-img">
+																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
+																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
+															</div>
+															<div class="p-bg"></div>
+															<div class="p-info">
+															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
+																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
+																 ${goods.GOODSNAME}
+																</a>
+																<span class="price">
+																<small>￥</small>${goods.GOODSPRICE}<small></small>
 																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="喵喵肉垫棉花糖" href="" target="_blank">
-											<img class="lazy" data-original="" src="img/jinkou/022.jpg" alt="喵喵肉垫棉花糖42g42g" style="display: block;"></a>
-									</div>
-
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="喵喵肉垫棉花糖">
-											喵喵肉垫棉花糖
-										</a>
-										<span class="price">
-																	<small>￥</small>8.<small>00</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="樱桃维生素C软糖80g" href="" target="_blank">
-											<img class="lazy" data-original="" src="img/jinkou/023.jpg" alt="樱桃维生素C软糖80g" style="display: block;"></a>
-									</div>
-
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="樱桃维生素C软糖80g">
-											樱桃维生素C软糖80g
-										</a>
-										<span class="price">
-																	<small>￥</small>8.<small>00</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="帕克大叔草莓味软糖（凝胶糖果）42g" href="" target="_blank">
-											<img class="lazy" data-original="" src="img/jinkou/021.jpg" alt="帕克大叔草莓味软糖（凝胶糖果）42g" style="display: block;"></a>
-									</div>
-
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="帕克大叔草莓味软糖（凝胶糖果）42g">
-											帕克大叔草莓味软糖（凝胶糖果）42g
-										</a>
-										<span class="price">
-																	<small>￥</small>8.<small>00</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="喵喵肉垫棉花糖" href="" target="_blank">
-											<img class="lazy" data-original="" src="img/jinkou/022.jpg" alt="喵喵肉垫棉花糖42g42g" style="display: block;"></a>
-									</div>
-
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="喵喵肉垫棉花糖">
-											喵喵肉垫棉花糖
-										</a>
-										<span class="price">
-																	<small>￥</small>8.<small>00</small>
-																</span>
-									</div>
-								</li>
-								<li>
-									<div class="p-img">
-										<a title="樱桃维生素C软糖80g" href="" target="_blank">
-											<img class="lazy" data-original="" src="img/jinkou/023.jpg" alt="樱桃维生素C软糖80g" style="display: block;"></a>
-									</div>
-
-									<div class="p-info">
-										<a class="name" href="#" target="_blank" title="樱桃维生素C软糖80g">
-											樱桃维生素C软糖80g
-										</a>
-										<span class="price">
-																	<small>￥</small>8.<small>00</small>
-																</span>
-									</div>
-								</li>
-
+															</div>
+														</li> 																           
+								          </c:if>							  
+								   </c:if>
+							   </c:forEach>	
+								
 							</ul>
 						</div>
 						<div class="sin-node">
@@ -2429,7 +1327,7 @@
 
 									<li>
 										<div class="p-img">
-											<a title="张君雅小妹妹日式休闲丸子80g" href="#" target="_blank">
+											<a title="张君雅小妹妹日式休闲丸子80g" href="#" target="_blank" >
 												<img class="lazy" data-original="" src="img/jinkou/032.jpg" alt="张君雅小妹妹日式休闲丸子80g" style="display: block;"></a>
 										</div>
 										<div class="p-bg"></div>
@@ -2444,7 +1342,7 @@
 									</li>
 									<li>
 										<div class="p-img">
-											<a title="海牌海苔鱿鱼味20g" href="#" target="_blank">
+											<a title="海牌海苔鱿鱼味20g" href="#" target="_blank" >
 												<img class="lazy" data-original="" src="img/jinkou/033.jpg" alt="海牌海苔鱿鱼味20g" style="display: block;"></a>
 										</div>
 										<div class="p-bg"></div>
@@ -2474,7 +1372,7 @@
 
 										<li>
 											<div class="p-img">
-												<a title="张君雅小妹妹日式休闲丸子80g" href="#" target="_blank">
+												<a title="张君雅小妹妹日式休闲丸子80g" href="#" target="_blank" >
 													<img class="lazy" data-original="" src="img/jinkou/032.jpg" alt="张君雅小妹妹日式休闲丸子80g" style="display: block;"></a>
 											</div>
 											<div class="p-bg"></div>
@@ -2489,7 +1387,7 @@
 										</li>
 										<li>
 											<div class="p-img">
-												<a title="海牌海苔鱿鱼味20g" href="#" target="_blank">
+												<a title="海牌海苔鱿鱼味20g" href="#" target="_blank" >
 													<img class="lazy" data-original="" src="img/jinkou/033.jpg" alt="海牌海苔鱿鱼味20g" style="display: block;"></a>
 											</div>
 											<div class="p-bg"></div>
@@ -2605,9 +1503,9 @@
 							<dl>
 								<dt><strong>购物指南</strong></dt>
 								<dd>
-									<a target="_blank" href="#">安全账户</a>
-									<a target="_blank" href="#">购物流程</a>
-									<a target="_blank" href="#">生日礼购物流程</a>
+									<a target="_blank" href="javascript:void(0)">安全账户</a>
+									<a target="_blank" href="javascript:void(0)">购物流程</a>
+									<a target="_blank" href="javascript:void(0)">生日礼购物流程</a>
 									
 								</dd>
 
@@ -2615,35 +1513,35 @@
 							<dl>
 								<dt><strong>物流配送</strong></dt>
 								<dd>
-									<a target="_blank" href="#">配送说明</a>
-									<a target="_blank" href="#">签收与验货</a>
+									<a target="_blank" href="javascript:void(0)">配送说明</a>
+									<a target="_blank" href="javascript:void(0)">签收与验货</a>
 								</dd>
 
 							</dl>
 							<dl>
 								<dt><strong>付款说明</strong></dt>
 								<dd>
-									<a target="_blank" href="#">发票制度</a>
-									<a target="_blank" href="#">公司转账</a>
-									<a target="_blank" href="#">在线支付</a>
+									<a target="_blank" href="javascript:void(0)">发票制度</a>
+									<a target="_blank" href="javascript:void(0)">公司转账</a>
+									<a target="_blank" href="javascript:void(0)">在线支付</a>
 								</dd>
 
 							</dl>
 							<dl>
 								<dt><strong>客户服务</strong></dt>
 								<dd>
-									<a target="_blank" href="#">退换货服务</a>
-									<a target="_blank" href="#">联系我们</a>
-									<a target="_blank" href="#">退款说明</a>
+									<a target="_blank" href="javascript:void(0)">退换货服务</a>
+									<a target="_blank" href="javascript:void(0)">联系我们</a>
+									<a target="_blank" href="javascript:void(0)">退款说明</a>
 								</dd>
 
 							</dl>
 							<dl>
 								<dt><strong>会员专区</strong></dt>
 								<dd>
-									<a target="_blank" href="#">优惠券使用规则</a>
-									<a target="_blank" href="#">积分制度</a>
-									<a target="_blank" href="#">会员须知</a>
+									<a target="_blank" href="javascript:void(0)">优惠券使用规则</a>
+									<a target="_blank" href="javascript:void(0)">积分制度</a>
+									<a target="_blank" href="javascript:void(0)">会员须知</a>
 								</dd>
 
 							</dl>
@@ -2653,42 +1551,42 @@
 					<div class="foot-nav">
 						<ul>
 							<li>
-								<a href="#" target="_blank">关于我们</a>
+								<a href="javascript:void(0)" target="_blank">关于我们</a>
 								|
 							</li>
 							<li>
-								<a href="#" target="_blank">联系我们</a>
+								<a href="javascript:void(0)" target="_blank">联系我们</a>
 								|
 							</li>
 							<li>
-								<a href="#" target="_blank">客户服务</a>
+								<a href="javascript:void(0)" target="_blank">客户服务</a>
 								|
 							</li>
 							<li>
-								<a href="#" target="_blank">诚聘英才</a>
+								<a href="javascript:void(0)" target="_blank">诚聘英才</a>
 								|
 							</li>
 							<li>
-								<a href="#" target="_blank">商务合作</a>
+								<a href="javascript:void(0)" target="_blank">商务合作</a>
 								|
 							</li>
 							<li>
-								<a href="#" target="_blank">媒体报道</a>
+								<a href="javascript:void(0)" target="_blank">媒体报道</a>
 								|
 							</li>
 							<li>
-								<a href="#" target="_blank">网站地图</a>
+								<a href="javascript:void(0)" target="_blank">网站地图</a>
 								|
 							</li>
 							<li>
-								<a href="#" target="_blank">站长招募</a>
+								<a href="javascript:void(0)" target="_blank">站长招募</a>
 
 							</li>
 						</ul>
 					</div>
 					<div class="foot-copyright">
 						Copyright@2007-2017 零嘴小铺电子商务有限公司 All rights Reserved<br/>
-						<a target="_blank" href="#">闽ICP备15022981号</a>
+						<a target="_blank" href="javascript:void(0)">闽ICP备15022981号</a>
 						</br>
 					</div>
 				</div>

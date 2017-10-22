@@ -1,3 +1,4 @@
+<%@page import="java.net.URLDecoder"%>
 <%@page import="com.etc.lzxp.entity.Users"%>
 <%@page import="com.etc.lzxp.entity.Goods"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -26,43 +27,42 @@
 			
 		</style>
 		
-<script type="text/javascript"> 
+<script type="text/javascript">    
 	//页面加载的时候  调用函数onload() 
-	$().ready(function(){		
+	$().ready(function(){			
    		 onload();	
 	});
-  /* 函数的定义
-     function  函数名(){
-	  
-  }
-  */
+	
   //函数中使用Ajax局部刷新页面
-   function onload(){	 
-	  //先获取从大类传递过来的小类 类型Id
-	  var stypeId = <%=request.getParameter("stypeId")%> 
-	  alert(stypeId);
-	  /* var stypeId = ${sessionScope.stypeId} */
-	  /* alert("函数调用成功！");   */
-		 $.post("GetAllGoodsServlet",{"op":"queryAll","stypeId":stypeId},function(pd,status){
-			 //调用显示商品数据的方法
-			 Showgoods(pd,status);		 
-		
-		 }); /* $.post */
-  
+   function onload(){	  
+	  //先获取从大类传递过来的小类 类型名称
+	 <%--  var ltype='<%=request.getParameter("ltype")%>';
+	  alert(ltype); --%>
+	  var  keyword= '<%=request.getParameter("keyword")%>';
+	   alert(keyword); 
+	  $(".sch-key").val(keyword);
+	   /* alert(keyword);	 */  	     
+		 $.post("GetAllGoodsServlet",{"op":"queryAll","keyword":keyword},function(pd,status){
+			     /*   alert(pd.data);  */
+			     //调用显示商品数据的方法
+					Showgoods(pd,status);		 
+			
+	      }); 	 	   
+	   //获取商品名查询的关键字
+	   //获取值时在编码一下
   } /* function onload() */
-
   //分页查询
-   $(function(){
+   $(function(){   
 	   //先获取从大类传递过来的小类 类型Id
-		 var stypeId = <%=request.getParameter("stypeId")%> 
+		 var keyword = '<%=request.getParameter("keyword")%>'; 
+		<%--  var gName = '<%=session.getAttribute("gName")%>'; --%>
 	   //获取动态标签的点击事件
-	   $(document).on('click','.pageNoAjax',function(){		  
+	     $(document).on('click','.pageNoAjax',function(){		  
 		  //获取当前标签的值
-		  var page = $(this).text();
-		 /*  alert(page); */
-		  /* alert("动态事件"); */
+		  var page = $(this).text();	
+		  var keyword = $(".sch-key").val();  
 		  //Ajax请求
-		  $.post("GetAllGoodsServlet",{"op":"queryAll","stypeId":stypeId,"page":page},function(pd,status){
+		  $.post("GetAllGoodsServlet",{"op":"queryAll","page":page,"keyword":keyword},function(pd,status){
 			  
 			//调用显示商品数据的方法
 			Showgoods(pd,status);	
@@ -71,10 +71,10 @@
 	  }); 
 	  //点击确定按钮进行分页页面跳转
 	  $(document).on('click','.pg_btn',function(){
-		 var page = $(".pg_txt").val();
+		  var keyword = $(".sch-key").val();
+		  var page = $(".pg_txt").val();
 		/*  alert("点击确定后："+page); */
-		 $.post("GetAllGoodsServlet",{"op":"queryAll","stypeId":stypeId,"page":page},function(pd,status){
-			
+		 $.post("GetAllGoodsServlet",{"op":"queryAll","page":page,"keyword":keyword},function(pd,status){		    
 				//调用显示商品数据的方法
 				Showgoods(pd,status);
 			 
@@ -84,12 +84,13 @@
 	  
 	  //点击上一页或者下一页按钮进行分页跳转
 	 $(document).on('click','.pg_prev',function(){
+		var keyword = $(".sch-key").val();
 		var pageStr = $("#page-num li a.on").text();
 		var page = parseInt(pageStr)-1;
 		if(page!=0){
 		
 		/* alert("当前页："+page); */
-		 $.post("GetAllGoodsServlet",{"op":"queryAll","stypeId":stypeId,"page":page},function(pd,status){				
+		 $.post("GetAllGoodsServlet",{"op":"queryAll","page":page,"keyword":keyword},function(pd,status){				
 				//调用显示商品数据的方法
 				Showgoods(pd,status);			 
 		 });
@@ -99,11 +100,11 @@
 	 });
 	  //下一页
 	 $(document).on('click','.pg_next',function(){
-		 var pageStr = $("#page-num li a.on").text();	 
-			var page = parseInt(pageStr)+1;	
+		 var pageStr = $("#page-num li a.on").text();
+		 var keyword = $(".sch-key").val();
+		 var page = parseInt(pageStr)+1;	
 			/* alert(pageStr); */
-			 $.post("GetAllGoodsServlet",{"op":"queryAll","stypeId":stypeId,"page":page},function(pd,status){					
-				   
+			 $.post("GetAllGoodsServlet",{"op":"queryAll","page":page,"keyword":keyword},function(pd,status){									   
 				 if(page<=pd.totalPage){
 				    //调用显示商品数据的方法
 					Showgoods(pd,status);
@@ -114,26 +115,25 @@
 		 }); 
 	  //点击搜索按钮进行模糊查询
 	  $(".sch-btn").click(function(){
-		  /* alert("模糊查询"); */
-		   var keyword = $(".sch-key").val();
-		 /*   alert(keyword); */
-		   $.post("GetAllGoodsServlet",{"op":"queryAll","stypeId":stypeId,"goodsName":keyword},function(pd,status){
-				
-				//调用显示商品数据的方法
-				Showgoods(pd,status);
-			 
-		 });
+		   alert("模糊查询"); 		   
+		   var keyword = $(".sch-key").val();  
+		
+			  $.post("GetAllGoodsServlet",{"op":"queryAll","keyword":keyword},function(pd,status){						 
+					//调用显示商品数据的方法
+					Showgoods(pd,status);
+			    });
+		  
 	  });
 	  //跳转商品的详情页面
 	  $(document).on('click','.goodsId',function(){
-		  var goodsId = $("#goodsId").val();
-		  alert(goodsId);
-		  location.href = "detail.jsp?goodsId=goodsId";	  
+		  var goodsId = $(this).parent('.pt').children('#goodsId').val();		  
+		  location.href = "GetAllGoodsServlet?op=queryGoodsById&goodsId="+goodsId;	  
 	  });
   }); 
   
  //封装Ajax请求返回的数据显示的方法  
    function Showgoods(pd,status){
+	  
 	 //先将原先的样式删除掉
 		 $('#content_ul').find('li').remove();
 		 $('#page-num').find('li').remove();
@@ -141,13 +141,14 @@
 		 $.each(pd.data,function(index,showgoods){			
 			 $("#content_ul").append('<li><div class="pt">'
 		    		 +'<a href="#" title="'+showgoods.GOODSNAME+'" class="pic goodsId"> <img src="'+showgoods.PICTUREADDRESS+'"></a>'
+		    		 +'<input type="hidden" value="'+showgoods.GOODSID+'" id="goodsId"/>'
 		    		 +'<a href="#" title="'+showgoods.GOODSNAME+'" class="tit goodsId">'+showgoods.GOODSNAME+'</a>'
 		    		 +'<p class="prom" title="'+showgoods.GOODSCONTENT+'">'+showgoods.GOODSCONTENT+'</p>'
 		    		 +'</div><div class="price"><span>￥<i>'+showgoods.GOODSPRICE+'</i></span> </div>'
 					 +'<div class="part"><div class="cart">	<a class="add" href="#">加购物车</a>'
 					 +'<a class="atte" href="#">加关注</a></div><div class="meta"> <span class="sale">已售：<i>356</i></span>'
 					 +'<div class="comm"> <span class="tx">评分：</span> <span class="score-star"><i class="star05"></i></span></div>	</div>'
-					 +'</div><input type="hidden" value="'+showgoods.GOODSID+'" id="goodsId"></li>');  
+					 +'</div><input type="hidden" value="'+showgoods.GOODSID+'" id="goodsId"/></li>');  
 		 });/*$.each  */
 		 //显示分页
 		 $("#page-num").append('<li><a  class="pg_prev">上页</a></li>');
@@ -163,10 +164,8 @@
 	    	 }
 		 $("#page-num").append('<li><a class="pg_next">下页</a></li>');
 		
-		 $("#page-num").append('<li><small class="sum">共<b>'+pd.totalPage+'</b>页</small><i>到第</i><input class="pg_txt" type="text" value="1" name="curPage" id="turnPage"><i>页</i><input class="pg_btn" type="button" value="确定" id="pg_btn"></li>');
-	
+		 $("#page-num").append('<li><small class="sum">共<b>'+pd.totalPage+'</b>页</small><i>到第</i><input class="pg_txt" type="text" value="1" name="curPage" id="turnPage"><i>页</i><input class="pg_btn" type="button" value="确定" id="pg_btn"></li>');	
  }
-
 </script>
 <script type="text/javascript">	
 		 //是否显示有货
@@ -236,7 +235,7 @@
 		</script>
 		
 </head>
-
+  
 	<body class="listpage">
 		<!-- header include -->
 		<script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
@@ -347,22 +346,23 @@
 			<div class="head-main wrap clearfix">
 				<!--该href地址应该跳转至商城首页-->
 				<div class="logo">
-					<a href="#">零嘴小铺-BESTORE</a><span>官方商城</span></div>
+					<a href="index.jsp">零嘴小铺-BESTORE</a><span>官方商城</span></div>
 				<div class="hd-search">
 					<!--该搜索的href应该是我们自己的servlet-->
 					<div class="hot-tag">
 						<span>热门搜索：</span>
-						<a class="red" href="#">松子</a>
+						<a class="red" href="">松子</a>
 						<a href="#">牛肉</a>
 						<a href="#">开心果</a>
 						<a href="#">核桃</a>
 						<a href="#">话梅</a>
 						<a href="#">花生瓜子</a>
 					</div>
+					<!-- 搜索框 -->
 					<div class="search-area">
 						<!--<form id="productSearchForm" action="#" method="get" target="_blank">-->
-						<input class="sch-key" type="text" name="keyword" id="keyword" value="商品搜索">
-						<input class="sch-btn"  id = "sch-btn" type="button" placeholder="商品搜索">
+						<input class="sch-key" type="text" name="keyword" id="keyword" value="" onfocus="if (value =='商品搜索'){value =''}" onblur="if (value ==''){value='商品搜索'}">
+						<input class="sch-btn"  id = "sch-btn" type="button" >
 						<!--</form>-->
 					</div>
 				</div>
@@ -390,7 +390,7 @@
 				<div class="menu-main wrap">
 					<ul class="menu-list">
 						<li>
-							<a href="#">首页</a>
+							<a href="GetGoodsServlet?op=queryAllGoods">首页</a>
 						</li>
 
 						<li>
@@ -415,14 +415,16 @@
 				<input type="hidden" id="keyword1" name="keyword" />
 				<!--公共部分刷新时可能需要用到ajax-->
 				<div class="place-site">
-					<a class="home" href="#">首页</a><span>&gt;</span>
-					<a href="#">坚果炒货</a><span>&gt;</span><em>嗑壳坚果</em>
+					<a class="home" href="GetGoodsServlet?op=queryAllGoods">首页</a><span>&gt;</span>
+				     <!-- 判断是否从小类进入该页面 -->
+				    <%-- <c:if test="${requestScope.ltype!null}"> --%>			      	
+					  <a href="#">商品搜索</a><span>&gt;</span><em></em>
+				     <%-- </c:if> --%>
 				</div>
 				<div class="filtrate">
 					<div class="fitl-txt">
 						<div class="ft-tit">
-							<h2>嗑壳坚果<span>商品筛选</span></h2><i class="icon">&gt;</i></div>&nbsp;&nbsp;&nbsp;共
-						<font id="count">0</font>个商品
+							<h2><span>商品筛选</span></h2><i class="icon">&gt;</i></div>&nbsp;&nbsp;&nbsp;		
 					</div>
 					<div class="sift-selected clearfix">
 						<div class="label">已选条件：</div>
@@ -640,9 +642,9 @@
 						<dl>
 							<dt><strong>购物指南</strong></dt>
 							<dd>
-								<a href="#">安全账户</a>
-								<a href="#">购物流程</a>
-								<a href="#">生日礼购物流程</a>
+								<a href="javascript:void(0)">安全账户</a>
+								<a href="javascript:void(0)">购物流程</a>
+								<a href="javascript:void(0)">生日礼购物流程</a>
 								
 							</dd>
 
@@ -650,35 +652,35 @@
 						<dl>
 							<dt><strong>物流配送</strong></dt>
 							<dd>
-								<a href="#">配送说明</a>
-								<a href="#">签收与验货</a>
+								<a href="javascript:void(0)">配送说明</a>
+								<a href="javascript:void(0)">签收与验货</a>
 							</dd>
 
 						</dl>
 						<dl>
 							<dt><strong>付款说明</strong></dt>
 							<dd>
-								<a href="#">发票制度</a>
-								<a href="#">公司转账</a>
-								<a href="#">在线支付</a>
+								<a href="javascript:void(0)">发票制度</a>
+								<a href="javascript:void(0)">公司转账</a>
+								<a href="javascript:void(0)">在线支付</a>
 							</dd>
 
 						</dl>
 						<dl>
 							<dt><strong>客户服务</strong></dt>
 							<dd>
-								<a href="#">退换货服务</a>
-								<a href="#">联系我们</a>
-								<a href="#">退款说明</a>
+								<a href="javascript:void(0)">退换货服务</a>
+								<a href="javascript:void(0)">联系我们</a>
+								<a href="javascript:void(0)">退款说明</a>
 							</dd>
 
 						</dl>
 						<dl>
 							<dt><strong>会员专区</strong></dt>
 							<dd>
-								<a href="#">优惠券使用规则</a>
-								<a href="#">积分制度</a>
-								<a href="#">会员须知</a>
+								<a href="javascript:void(0)">优惠券使用规则</a>
+								<a href="javascript:void(0)">积分制度</a>
+								<a href="javascript:void(0)">会员须知</a>
 							</dd>
 
 						</dl>
@@ -691,35 +693,35 @@
 				<div class="foot-nav">
 					<ul>
 						<li>
-							<a href="#">关于我们</a>
+							<a href="javascript:void(0)">关于我们</a>
 							|
 						</li>
 						<li>
-							<a href="#">联系我们</a>
+							<a href="javascript:void(0)">联系我们</a>
 							|
 						</li>
 						<li>
-							<a href="#">客户服务</a>
+							<a href="javascript:void(0)">客户服务</a>
 							|
 						</li>
 						<li>
-							<a href="#">诚聘英才</a>
+							<a href="javascript:void(0)">诚聘英才</a>
 							|
 						</li>
 						<li>
-							<a href="#">商务合作</a>
+							<a href="javascript:void(0)">商务合作</a>
 							|
 						</li>
 						<li>
-							<a href="#">媒体报道</a>
+							<a href="javascript:void(0)">媒体报道</a>
 							|
 						</li>
 						<li>
-							<a href="#">网站地图</a>
+							<a href="javascript:void(0)">网站地图</a>
 							|
 						</li>
 						<li>
-							<a href="#">站长招募</a>
+							<a href="javascript:void(0)">站长招募</a>
 
 						</li>
 					</ul>
@@ -727,7 +729,7 @@
 				<!--foot-nav-->
 				<div class="foot-copyright">
 					Copyright@2007-2017 零嘴小铺电子商务有限公司 All rights Reserved<br/>
-					<a href="#">闽ICP备15022981号</a>
+					<a href="javascript:void(0)">闽ICP备15022981号</a>
 				</div>
 			</div>
 			<!--foot-area-->

@@ -21,6 +21,12 @@
 		<script src="js/jquery.min.js"></script>
 		<script src="js/common.js"></script>
 		<script src="js/jquery.cookie.js"></script>
+		<style type="text/css">
+		 #gp {
+		   font-size:20px ;
+		 }
+		
+		</style>
 </head>
 <body class="product-detail">
 		<!-- header include -->
@@ -39,71 +45,20 @@
 				});
 
 			});
-		</script>
 
-		<script type="text/javascript">
-			var username;
-			$().ready(initPage);
-
-			function checkname(callback) {
-				$.ajax({
-					url: "http://www.lppz.com/sso/checkname.jhtml",
-					async: false,
-					type: "GET",
-					cache: false,
-					dataType: 'jsonp',
-					jsonp: 'callback',
-					success: callback
-				});
-			}
-
-			function initPage() {
-				var $headerLogin = $("#headerLogin");
-				var $headerRegister = $("#headerRegister");
-				var $headerUsername = $("#headerUsername");
-				var $headerLogout = $("#headerLogout");
-				var $productSearchForm = $("#productSearchForm");
-				var $keyword = $("#productSearchForm input");
-				var defaultKeyword = "商品搜索";
-
-				checkname(function(message) {
-					if(message == '#') {
-						window.location.href = "https://reg.lppz.com/bind/index.jhtml";
-					}
-					username = message;
-					if(username) {
-						$headerUsername.html("您好 <a href=\"http://home.lppz.com/member/index.jhtml\" class=\"user\">" + username + "</a>，").show();
-						$headerLogout.show();
-						$headerLogin.hide();
-						$headerRegister.hide();
-						$('.alipay').parent().hide();
-						$('.qq').parent().hide();
-						$('.weibo').parent().hide();
-					} else {
-						$headerLogout.hide();
-						$headerLogin.show();
-						$headerRegister.show();
-						$('.alipay').parent().show();
-						$('.qq').parent().show();
-						$('.weibo').parent().show();
-					}
-
-					if(window.afterloadmember) {
-						window.afterloadmember();
-					}
-
-					$(document).trigger('afterloadmember', username);
-				});
-			}
-		</script>
-		<!--<script type="text/javascript" src="http://116.211.81.199:8090/WebChatClient/js/init.js" charset="utf-8"></script>-->
-		<script language="javascript" type="text/javascript" charset="utf-8">
-			NTKF_PARAM = {
-				siteid: "lppz_netinfo",
-				uid: username || '',
-				uname: username || ''
-
-			};
+			  //点击查询按钮 进行商品名查询
+			   $(function(){				   
+				  $("#sch-btn").click(function(){
+					  //获取关键字 
+					  var keyword = $("#keyword").val();					 					  
+					  if(keyword=="商品搜索"){
+						  alert("请输入关键字！");
+					  }else{
+					     location.href="stype.jsp?keyword="+keyword;	
+					  }
+				  });
+				   
+			   });		
 		</script>
 		<div id="out"></div>
 		<!-- header -->
@@ -196,7 +151,7 @@
 		<div class="header">
 			<div class="head-main wrap clearfix">
 				<div class="logo">
-					<a href="#">零嘴小铺</a><span>官方商城</span></div>
+					<a href="index.jsp">零嘴小铺</a><span>官方商城</span></div>
 				<div class="hd-search">
 					<div class="hot-tag">
 						<span>热门搜索：</span>
@@ -209,8 +164,8 @@
 					</div>
 					<div class="search-area">
 						<!--<form id="productSearchForm" action="#" method="post" >-->
-						<input class="sch-key" type="text" name="keyword" id="keyword" value="商品搜索">
-						<input class="sch-btn" type="submit" value="搜 索">
+				        <input class="sch-key" type="text" name="keyword" id="keyword" value="" onfocus="if (value =='商品搜索'){value =''}" onblur="if (value ==''){value='商品搜索'}">
+						<input class="sch-btn" type="button" id = "sch-btn" value="搜 索"/>
 						<!--</form>-->
 					</div>
 				</div>
@@ -231,248 +186,7 @@
 					</div>
 				</div>
 			</div>
-			<script type="text/javascript">
-				//刷新head里面的购物车
-				function refreshCart() {
-					$.ajax({
-						url: "#",
-						type: "GET",
-						cache: false,
-						dataType: 'jsonp',
-						jsonp: 'callback',
-						success: function(message) {
-							message = decodeURI(decodeURIComponent(message));
-							message = message.replace(/\+/g, ' ');
-							$(".cart-list-body").html(message);
-							var cartCacheNum = $.cookie('cart-cache-num');
-							$('.cart-cache-num').html('<b>' + (!!cartCacheNum ? cartCacheNum : 0) + '</b>');
-							$('#cartcount').html(!!cartCacheNum ? cartCacheNum : 0);
-						}
-					});
-				}
-				$(function() {
-					var $keyword = $("#productSearchForm input");
-					var defaultKeyword = "商品搜索";
-					//搜索框进入
-					$keyword.focus(function() {
-						if($keyword.val() == defaultKeyword) {
-							$keyword.val("");
-						}
-					});
-					//搜索框离开
-					$keyword.blur(function() {
-						if($keyword.val() == "") {
-							$keyword.val(defaultKeyword);
-						}
-					});
-
-					//页面购物车数量
-					var cartCacheNum = $.cookie('cart-cache-num');
-					$('.cart-cache-num').html('<b>' + (!!cartCacheNum ? cartCacheNum : 0) + '</b>');
-					$('#cartcount').html(!!cartCacheNum ? cartCacheNum : 0);
-
-					//显示购物车详情
-					var getcartdelay;
-					$('.indexcart').mouseenter(function() {
-						clearTimeout(getcartdelay);
-						getcartdelay = setTimeout(function() {
-							refreshCart();
-						}, 500);
-					});
-					//删除购物车
-					$('.delete-header-cart-item').die().live('click', function() {
-						var catItemId = $(this).attr('cart-item-id')
-						deleteHeadCart(catItemId);
-					});
-
-					//删除购物车的方法
-					function deleteHeadCart(itemId) {
-						if(!confirm("您确定要删除吗？")) {
-							return false;
-						}
-
-						$.ajax({
-							url: "http://www.lppz.com/cart/delete.jhtml",
-							type: "GET",
-							data: {
-								id: itemId
-							},
-							dataType: 'jsonp',
-							jsonp: 'callback',
-							cache: false,
-							success: function(data) {
-								if(data.type == "success") {
-									refreshCart();
-								} else {
-									$.message(data);
-								}
-							}
-						});
-					}
-				});
-			</script>
-
-			<div class="menu clearfix">
-				<div class="menu-main wrap">
-					<div class="goods-sort">
-						<a class="goods-sort-btn" href="#"><span>商品分类</span><i class="icon"></i></a>
-						<div class="goods-sort-nav" style="display: none;">
-							<ul>
-								<li>
-									<div class="top-sort">
-										<h3><a href="#">
-							<i class="iconfont">&#xe610;</i>坚果炒货</a></h3></div>
-									<div class="sub-sort">
-										<ul class="sub-sort-list">
-											<li>
-												<a href="#">嗑壳坚果</a>
-											</li>
-											<li>
-												<a href="#">果果仁仁</a>
-											</li>
-											<li>
-												<a href="#">特惠炒货</a>
-											</li>
-										</ul>
-									</div>
-								</li>
-								<li>
-									<div class="top-sort">
-										<h3><a href="#">
-							<i class="iconfont">&#xe613;</i>肉脯鱼干</a></h3></div>
-									<div class="sub-sort">
-										<ul class="sub-sort-list">
-											<li>
-												<a href="#">猪肉系列</a>
-											</li>
-											<li>
-												<a href="#">牛肉系列</a>
-											</li>
-											<li>
-												<a href="#">鸡鸭系列</a>
-											</li>
-											<li>
-												<a href="#">海味系列</a>
-											</li>
-										</ul>
-									</div>
-								</li>
-								<li>
-									<div class="top-sort">
-										<h3><a href="#">
-							<i class="iconfont">&#xe60b;</i>果干果脯</a></h3></div>
-									<div class="sub-sort">
-										<ul class="sub-sort-list">
-											<li>
-												<a href="#">缤纷果干</a>
-											</li>
-											<li>
-												<a href="#">话梅山楂</a>
-											</li>
-											<li>
-												<a href="#">红枣葡萄</a>
-											</li>
-										</ul>
-									</div>
-								</li>
-								<li>
-									<div class="top-sort">
-										<h3><a href="#">
-							<i class="iconfont">&#xe608;</i>糕点糖果</a></h3></div>
-									<div class="sub-sort">
-										<ul class="sub-sort-list">
-											<li>
-												<a href="#">糕点系列</a>
-											</li>
-											<li>
-												<a href="#">饼干系列</a>
-											</li>
-											<li>
-												<a href="#">糖果系列</a>
-											</li>
-											<li>
-												<a href="#">果冻系列</a>
-											</li>
-										</ul>
-									</div>
-								</li>
-								<li>
-									<div class="top-sort">
-										<h3><a href="#">
-							<i class="iconfont">&#xe60f;</i>素食山珍</a></h3></div>
-									<div class="sub-sort">
-										<ul class="sub-sort-list">
-											<li>
-												<a href="#">美味豆干</a>
-											</li>
-											<li>
-												<a href="#">笋菌海带</a>
-											</li>
-											<li>
-												<a href="#">其他山珍</a>
-											</li>
-										</ul>
-									</div>
-								</li>
-								<li>
-									<div class="top-sort">
-										<h3><a href="#">
-							<i class="iconfont">&#xe611;</i>花茶饮品</a></h3></div>
-									<div class="sub-sort">
-										<ul class="sub-sort-list">
-											<li>
-												<a href="#">养生冲调</a>
-											</li>
-											<li>
-												<a href="#">进口饮料</a>
-											</li>
-										</ul>
-									</div>
-								</li>
-								<li>
-									<div class="top-sort">
-										<h3><a href="#">
-							<i class="iconfont">&#xe601;</i>进口食品</a></h3></div>
-									<div class="sub-sort">
-										<ul class="sub-sort-list">
-											<li>
-												<a href="#">进口糕点</a>
-											</li>
-											<li>
-												<a href="#">进口糖果</a>
-											</li>
-											<li>
-												<a href="#">休闲零食</a>
-											</li>
-										</ul>
-									</div>
-								</li>
-								<li>
-									<div class="top-sort">
-										<h3><a href="#">
-							<i class="iconfont">&#xe604;</i>精选礼盒</a></h3></div>
-									<div class="sub-sort">
-										<ul class="sub-sort-list">
-											<li>
-												<a href="#">零食礼盒</a>
-											</li>
-											<li>
-												<a href="#">年货量贩装</a>
-											</li>
-										</ul>
-									</div>
-								</li>
-
-							</ul>
-						</div>
-					</div>
-					<ul class="menu-list">
-
-					</ul>
-				</div>
-			</div>
-		</div>
-		<!-- content -->
+		
 		<div class="container wrap">
 			<div class="place-site">
 				<a class="home" href="index.html">首页</a>
@@ -484,74 +198,39 @@
 			<div class="details">
 				<div class="detail-top clearfix">
 					<div id="product_show" class="product-preview">
-						<div class="product-pic">
-							<div class="duct-zoom jqzoom">
-								<img width="400" height="400" src="img/detail/01.jpg" alt="" jqimg="" />
+						<div class="product-pic" id = "product-pic">					
+					 <c:if test="${requestScope.list!=null}">
+					     <c:forEach items="${requestScope.list}" var="showgoods" >                           
+						 <div class="duct-zoom jqzoom">
+								<img width="400" height="400" src="${showgoods.PICTUREADDRESS}"  />
 							</div>
 							<div id="duct-list">
 								<a href="javascript:;" class="duct-control" id="duct_prev"></a>
 								<a href="javascript:;" class="duct-control" id="duct_next"></a>
 								<div class="duct-items">
 									<ul class="dlist">
-										<li class="current"><img class="lazy img-hover" alt="" src="img/detail/01.jpg" data-original="" large="img/detail/01.jpg" width="60" height="60"></li>
-										<li><img class="lazy" alt="" src="img/detail/02.jpg" data-original="" large="img/detail/02.jpg" width="60" height="60"></li>
-										<li><img class="lazy" alt="" src="img/detail/03.jpg" data-original="" large="img/detail/03.jpg" width="60" height="60"></li>
-										<li><img class="lazy" alt="" src="img/detail/04.jpg" data-original="" large="img/detail/04.jpg" width="60" height="60"></li>
+										<li class="current"><img class="lazy img-hover" alt="" src="${showgoods.PICTUREADDRESS}" data-original="" large="${showgoods.PICTUREADDRESS}" width="60" height="60"></li>
+										<li><img class="lazy" alt="" src="${showgoods.PICTUREADDRESS}" data-original="" large="${showgoods.PICTUREADDRESS}" width="60" height="60"></li>
+										<li><img class="lazy" alt="" src="${showgoods.PICTUREADDRESS}" data-original="" large="${showgoods.PICTUREADDRESS}" width="60" height="60"></li>
+										<li><img class="lazy" alt="" src="${showgoods.PICTUREADDRESS}" data-original="" large="${showgoods.PICTUREADDRESS}" width="60" height="60"></li>
 									</ul>
 								</div>
-							</div>
-						</div>
+							</div><!-- duct-list  -->	       
+						      </c:forEach>						      
+						  </c:if>
+	                       
+						</div><!-- product-pic 拼接-->
 						<div class="product-share clearfix">
-							<script>
-								$(function() {
-									$('.bdsharebuttonbox').one("mouseover", function() {
-										$(this).append(shareCode);
-									});
-								})
-
-								function shareCode() {
-									window._bd_share_config = {
-										"common": {
-											"bdSnsKey": {},
-											"bdText": "开心果（190g）（电商专供新包装）",
-											"bdMini": "2",
-											"bdMiniList": false,
-											"bdPic": "http://img.lppz.com/group1/M00/01/FB/CghmzVdL0TSAchfkAAAIUy0ePi0872.jpg",
-											"bdStyle": "0",
-											"bdSize": "16"
-										},
-										"share": {}
-									};
-									with(document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
-								}
-							</script>
+					
 						</div>
 					</div>
 					<div class="product-param">
-						<div class="primary">
-							<div class="p-title" style="margin-left: 100px; margin-top: 50px;"><strong>伊朗开心果190g</strong></div>
-							<div class="p-exp" style="margin-left: 130px;">清甜微咸</div>
-							<div class="p-price" id="isscoreProduct" style="display:none;">
-								<div class="mall basic">
-									<div class="lb">价格：</div>
-									<span><del>￥<span>25</span>.90</del>
-									</span>
-								</div>
-							</div>
-
-							<div class="p-price" id="commonProduct">
-								<div class="promotion">
-									<div class="lb">价格：</div>
-									<div id="priceShow" class="cost">￥<span>25</span>.90</div>
-								</div>
-							</div>
-
-							<div class="p-price" id="isscoreProduct1" style="display:none;">
-								<div class="promotion">
-									<div class="lb">兑换价：</div>
-									<div id="pointShowTbar" class="cost"><span></span>积分</div>
-								</div>
-							</div>
+						<div class="primary">					
+						<c:if test="${requestScope.list!=null}">
+					     <c:forEach items="${requestScope.list}" var="showgoods" >  
+							<div class="p-title" style="margin-left: 100px; margin-top: 50px;"><strong>${showgoods.GOODSNAME}</strong><input type="hidden" id ="goodsId" value ="${showgoods.GOODSID}"/></div>
+							<div class="p-exp" style="margin-left: 130px;">${showgoods.GOODSCONTENT}</div>							
+									<div class="lb" id = "gp">价格：<strong>${showgoods.GOODSPRICE}</strong></div>																
 
 							<div class="p-sales">
 								<div class="lb">月销量：</div>
@@ -562,7 +241,9 @@
 								<div class="dd"><span class="score-star "><i class="star05">分</i></span></div>
 								<span class="sum-sales">（累计评价：<a  class="all-comment-num sum-sales-nums" href="#">0</a>）</span>
 							</div>
-						</div>
+						  </c:forEach>
+						</c:if>	
+						</div><!-- primary 拼接-->
 						<div class="choose">
 
 							<div class="c-num pim" style="margin-top: 10px;">
@@ -580,8 +261,8 @@
 							<div class="join-buy">
 								<a class="add-cart addToCart" href="javascript:;" style="margin-left: 30px;">加入购物车</a>
 							</div>
-						</div>
-					</div>
+						</div><!-- choose 拼接-->
+					</div><!-- product-param -->
 				</div>
 			</div>
 

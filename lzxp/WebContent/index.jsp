@@ -9,7 +9,6 @@
 -->
 <head>
 <title>零嘴小铺</title>
-
 		<!-- Meta-Tags -->
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -73,7 +72,7 @@
 								<a href="index.jsp">首页</a>
 							</li>
 							<li>
-								<a target="_blank" href="ltype.jsp">所有商品</a>
+								<a target="_blank" href="GetGoodsServlet?op=queryAllGoods">所有商品</a>
 							</li>
 							<li>
 								<a href="#portfolio">关于我们</a>

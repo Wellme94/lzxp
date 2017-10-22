@@ -1,7 +1,9 @@
 package com.etc.lzxp.dao;
 
+import java.util.List;
+
 import com.etc.lzxp.entity.Goods;
-import com.etc.lzxp.entity.ShowGoods;
+import com.etc.lzxp.entity.V_SearchGoods;
 import com.etc.util.BaseDao;
 import com.etc.util.PageData;
 
@@ -13,18 +15,20 @@ public class GetAllGoodsDao {
      * @param pageSize
      * @param stypeid
      * @param goodsName 
+     * @param goodsState 
      * @return
      */
-	
-    public PageData<ShowGoods> getGoodsBystypeId(int page, int pageSize,int stypeId, String goodsName){
-		
-    	String sql = "select goods.goodsid,goods.goodsname,"
-    			+ "goods.stypeid,goods.goodsprice,goods.goodscontent,"
-    			+ "goods.goodsstock,goods.goodsstate,GOODS_PICTURE.pictureid,"
-    			+ "GOODS_PICTURE.pictureaddress from goods inner join GOODS_PICTURE on goods.GOODSID = GOODS_PICTURE.GOODSID "
-    			+ "where goods.STYPEID = ? and goods.GOODSNAME like ?";        
-		return BaseDao.getOraclePage(sql, page, pageSize, ShowGoods.class, stypeId,"%"+goodsName+"%");
-    	
-    }
-	
+	//通过商品Id将对应的商品数据找出
+	public List<V_SearchGoods> getGoodsById(int goodsId, int goodsState) {
+		// TODO Auto-generated method stub
+		String sql = "select * from V_SEARCHGOODS where  GOODSID = ? and  GOODSSTATE = ?";   
+		return (List<V_SearchGoods>) BaseDao.select(sql,V_SearchGoods.class, goodsId,goodsState);
+	}
+	 //查找视图中的数据
+	  public PageData<V_SearchGoods> getGoodsBykeyword(int page, int pageSize, String keyword, int goodsState){
+			
+	    	String sql = "select * from V_SEARCHGOODS where  (STYPENAME =? or GOODSNAME like ?) and  GOODSSTATE = ?";        
+			return BaseDao.getOraclePage(sql, page, pageSize, V_SearchGoods.class,keyword,"%"+keyword+"%",goodsState);
+	    	
+	    } 
 }
