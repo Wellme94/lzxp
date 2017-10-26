@@ -44,7 +44,7 @@
 					$.post("UsersServlet",{"op":"isLogin","userName":$("#username").val(),"userPwd":$("#password").val()},function(result,status){
 						if(result == true){
 							//如果登录成功,页面跳转
-							location.href="http://localhost:8080/lzxp/ltype.jsp";
+							location.href="GetGoodsServlet?op=queryAllGoods";
 						}else{
 							//如果失败
 							$('#userNameError').show();
@@ -103,7 +103,7 @@
 					<ul class="fl">
 						<li>您好，欢迎来到零嘴小铺官方商城！</li>
 						<li>
-							<a class="reg" href="register.html">[注册]</a>
+							<a class="reg" href="register.jsp">[注册]</a>
 						</li>
 
 					</ul>
@@ -125,7 +125,7 @@
 				</div>
 				<div class="login-data">
 					<div class="ldt-titlte">
-						<strong class="tit">会员登录</strong><span class="reg-new">新用户，<a href="register.html" class="free-reg">免费注册></a>
+						<strong class="tit">会员登录</strong><span class="reg-new">新用户，<a href="register.jsp" class="free-reg">免费注册></a>
 					</span>
 					</div>
 

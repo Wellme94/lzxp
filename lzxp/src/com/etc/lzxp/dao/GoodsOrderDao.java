@@ -1,4 +1,4 @@
-package com.etc.lzxp.dao;
+ï»¿package com.etc.lzxp.dao;
 
 import com.etc.lzxp.entity.Goods_order;
 import com.etc.util.BaseDao;
@@ -6,12 +6,12 @@ import com.etc.util.PageData;
 
 /**
  * @author Administrator
- *Goods_order µÄdao
+ *Goods_order çš„dao
  */
 public class GoodsOrderDao {
 	
 	/**
-	 * ¸ù¾İÓÃ»§ÃûºÍ×´Ì¬ÏÔÊ¾¶©µ¥
+	 * æ ¹æ®ç”¨æˆ·åå’ŒçŠ¶æ€æ˜¾ç¤ºè®¢å•
 	 * @param page
 	 * @param pageSize
 	 * @param userName
@@ -20,5 +20,16 @@ public class GoodsOrderDao {
 	 */
 	public PageData<Goods_order> getOrder(int page,int pageSize,String userName,String userState){
 		return BaseDao.getOraclePage("select * from goods_order where username=? and userstate like ? order by to_date('ORDERDATE','yyyy-mm-dd hh24:mi:ss') desc", page, pageSize, Goods_order.class, userName,userState);
+	}
+	
+	
+	/**
+	 * é€šè¿‡è®¢å•id ç”¨æˆ·ç¡®è®¤æ”¶è´§
+	 * @param orderId
+	 * @return
+	 */
+	public boolean updateOrderUserState(int orderId){
+		
+		return BaseDao.execute("update goods_order set userstate='å·²æ”¶è´§',sallerstate='å·²æ”¶è´§' where orderid=?", orderId)>0;
 	}
 }

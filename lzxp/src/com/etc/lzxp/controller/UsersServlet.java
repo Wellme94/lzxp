@@ -2,6 +2,7 @@ package com.etc.lzxp.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -12,8 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.etc.lzxp.entity.GoodsCart;
 import com.etc.lzxp.entity.Users;
 import com.etc.lzxp.entity.Users_info;
+import com.etc.lzxp.service.GoodsCartService;
+import com.etc.lzxp.service.GoodsService;
 import com.etc.lzxp.service.UsersService;
 import com.google.gson.Gson;
 
@@ -25,7 +29,9 @@ import com.google.gson.Gson;
 public class UsersServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	UsersService us = new UsersService();
-
+	private GoodsService gs= new GoodsService();
+	private GoodsCartService gcs = new GoodsCartService();
+	List<GoodsCart> listgc = new ArrayList<GoodsCart>();
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -37,163 +43,217 @@ public class UsersServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
+		//¾ø¶ÔÂ·¾¶
 		String path = request.getScheme() + "://" + request.getServerName() + ":" + request.getLocalPort()
 				+ request.getContextPath() + "/";
-		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½
+		//ÉèÖÃÇëÇóÏìÓ¦±àÂë
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
-		//ï¿½ï¿½ï¿½Ã»á»°
+		//ÉèÖÃ»á»°
 		HttpSession session = request.getSession();
-		//ï¿½ï¿½ï¿½ï¿½jasonï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½
+		//ÉèÖÃjason¸ñÊ½±àÂë
 		response.setContentType("application/json");
 		PrintWriter out= response.getWriter();
+		List<GoodsCart> listhas = new ArrayList<GoodsCart>();
 		if (request.getParameter("op")!=null) {
-			//ï¿½ï¿½ï¿½opï¿½ï¿½Îªï¿½ï¿½
+			//Èç¹ûop²»Îª¿Õ
 			String op = request.getParameter("op");
 			if ("isLogin".equals(op)) {
-				//ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½Â¼ï¿½É¹ï¿½
-				//ï¿½ï¿½È¡ï¿½Ã»ï¿½ï¿½ï¿½Ï¢
+				//ÅÐ¶ÏÊÇ·ñµÇÂ¼³É¹¦,µÇÂ½Ö®ºó°ÑsessionÖÐµÄ¹ºÎï³µµÄÉÌÆ·ÐÅÏ¢Ìí¼Óµ½ÓÃ»§µÄ¹ºÎï³µ±íµ±ÖÐ
+				//»ñÈ¡ÓÃ»§ÐÅÏ¢
 				String userName = request.getParameter("userName");
 				String userPwd = request.getParameter("userPwd");
-				//ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½
+				//´´½¨ÓÃ»§
 				Users user = new Users(0, userName, userPwd);
-				//ï¿½ï¿½ï¿½ï¿½UsersServiceï¿½ï¿½ï¿½ï¿½
+				//µ÷ÓÃUsersService·½·¨
 				if (us.isLogin(user)) {
-					//ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½á»°ï¿½ï¿½Ï¢
+					listgc = (List<GoodsCart>)session.getAttribute("goodscart");	
+					listhas = gcs.selectAllCart(userName);					
+					if(listgc!=null&&listgc.size()>0) {
+						
+						if(listhas.size()==0) {
+							for (GoodsCart goodsCart : listgc) {							
+									gcs.addNewGoods(userName,goodsCart.getGOODSID(),goodsCart.getGOODSCOUNT(),goodsCart.getGOODSPRICE(),goodsCart.getGOODSNAME());
+							}
+						}else {
+						for (GoodsCart goodsCart : listgc) {
+							for (GoodsCart goodsCarts : listhas) {
+								if(goodsCarts.getGOODSID()==goodsCart.getGOODSID()) {
+									
+									gcs.updateGoodNumById((goodsCart.getGOODSCOUNT()+goodsCarts.getGOODSCOUNT()), goodsCarts.getGOODSID());
+								}else {
+									
+								gcs.addNewGoods(userName,goodsCart.getGOODSID(),goodsCart.getGOODSCOUNT(),goodsCart.getGOODSPRICE(),goodsCart.getGOODSNAME());
+								}
+							}
+						}
+						}
+					}
+					session.removeAttribute("goodscart");
+					//Èç¹ûµÇÂ¼³É¹¦£¬´«µÝÓÃ»§»á»°ÐÅÏ¢
 					session.setAttribute("user", user);
-					//ï¿½ï¿½ï¿½ï¿½Cookie
+					//ÉèÖÃCookie
 					Cookie cookie1 = new Cookie("userName", userName);
 					Cookie cookie2 = new Cookie("userPwd", userPwd);
-					//ï¿½ï¿½ï¿½ï¿½cookie
+					//ÉèÖÃcookie
 					response.addCookie(cookie1);
 					response.addCookie(cookie2);
 					
 				}
-				//ï¿½ï¿½Ó¡json
-				printJson(out, us.isLogin(user));
-				
-				
+				//´òÓ¡json
+				printJson(out, us.isLogin(user));			
 				
 			}else if ("judgeUserName".equals(op)) {
-				//ï¿½Ð¶ï¿½ï¿½Ã»ï¿½ï¿½Ç·ï¿½ï¿½Ñ¾ï¿½ï¿½Ø¸ï¿½
-				//ï¿½ï¿½È¡ï¿½Ã»ï¿½ï¿½ï¿½
+				//ÅÐ¶ÏÓÃ»§ÊÇ·ñÒÑ¾­ÖØ¸´
+				//»ñÈ¡ÓÃ»§Ãû
 				String userName = request.getParameter("userName");
-				//ï¿½Ð¶ï¿½ï¿½Ã»ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½
+				//ÅÐ¶ÏÓÃ»§ÊÇ·ñ´æÔÚ
 				printJson(out, us.judgeUserName(userName));
 				
 				
 				
 			}else if ("register".equals(op)) {
-				//×¢ï¿½ï¿½
-				//ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Ï¢
+				//×¢²á
+				//»ñÈ¡±íµ¥ÐÅÏ¢
 				if ((request.getParameter("username")!="")&&(request.getParameter("username")!="")
 						&&(request.getParameter("mobile")!="")) {
-					//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½Õµï¿½ï¿½ï¿½ï¿½
+					//Èç¹û¾ù²»Îª¿ÕµÄÇé¿ö
 					String userName = request.getParameter("username");
 					String userPwd = request.getParameter("password");
 					String userTel = request.getParameter("mobile");
-					//ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½
+					//´´½¨ÓÃ»§
 					Users user = new Users(0, userName, userPwd);
-					//ï¿½Ð¶ï¿½ï¿½Ç·ï¿½×¢ï¿½ï¿½É¹ï¿½
+					//ÅÐ¶ÏÊÇ·ñ×¢²á³É¹¦
 					if (us.isRegister(user, userTel)) {
-						//ï¿½ï¿½ï¿½ï¿½É¹ï¿½
-						//ï¿½ï¿½ï¿½ï¿½cookie
+						listgc = (List<GoodsCart>)session.getAttribute("goodscart");	
+						listhas = gcs.selectAllCart(userName);					
+						if(listgc!=null&&listgc.size()>0) {
+							
+							if(listhas.size()==0) {
+								for (GoodsCart goodsCart : listgc) {							
+										gcs.addNewGoods(userName,goodsCart.getGOODSID(),goodsCart.getGOODSCOUNT(),goodsCart.getGOODSPRICE(),goodsCart.getGOODSNAME());
+								}
+							}else {
+							for (GoodsCart goodsCart : listgc) {
+								for (GoodsCart goodsCarts : listhas) {
+									if(goodsCarts.getGOODSID()==goodsCart.getGOODSID()) {
+										
+										gcs.updateGoodNumById((goodsCart.getGOODSCOUNT()+goodsCarts.getGOODSCOUNT()), goodsCarts.getGOODSID());
+									}else {
+										
+									gcs.addNewGoods(userName,goodsCart.getGOODSID(),goodsCart.getGOODSCOUNT(),goodsCart.getGOODSPRICE(),goodsCart.getGOODSNAME());
+									}
+								}
+							}
+							}
+						}
+						session.removeAttribute("goodscart");
+						//Èç¹û³É¹¦
+						//ÉèÖÃcookie
 						Cookie cookie1 = new Cookie("userName", userName);
 						Cookie cookie2 = new Cookie("userPwd", userPwd);
-						//ï¿½ï¿½ï¿½ï¿½cookie
+						//ÉèÖÃcookie
 						response.addCookie(cookie1);
 						response.addCookie(cookie2);
-						//ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³
+						//Ìø×ªµ½·ÖÀàÒ³
 						response.sendRedirect("login.jsp");
 					}else{
-						//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½Ò³ï¿½ï¿½
+						//¼ÌÐø·µ»Ø×¢²áÒ³Ãæ
 						response.sendRedirect("register.jsp");
 					}
 				}else{
-					//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½Ò³ï¿½ï¿½
+					//¼ÌÐø·µ»Ø×¢²áÒ³Ãæ
 					response.sendRedirect("register.jsp");
 				}
 				
 				
 			}else if ("exit".equals(op)) {
-				//ï¿½Ë³ï¿½ï¿½Ã»ï¿½
-				//ï¿½ï¿½ï¿½ï¿½Ë³ï¿½
+				//ÍË³öÓÃ»§
+				//Èç¹ûÍË³ö
 				
 				if (request.getParameter("isExit")!=null) {	
-					//ï¿½Æ³ï¿½ï¿½á»°ï¿½Ðµï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ï¢
+					//ÒÆ³ý»á»°ÖÐµÄÓÃ»§ÏûÏ¢
 					session.removeAttribute("user");
-					//ï¿½Ë³ï¿½ï¿½ï¿½ï¿½ï¿½Ò³
+					//ÍË³öµ½Ê×Ò³
 					response.sendRedirect("index.jsp");
 				}
 				
 				
 			}else if("countOrder".equals(op)){
-				//ï¿½ï¿½ï¿½ã¶©ï¿½ï¿½,ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½Â¼
-				//ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½Â¼ï¿½ï¿½
-				/*System.out.println(11111);
-				System.out.println(session.getAttribute("user"));*/
+				//½áËã¶©µ¥,ÅÐ¶ÏÊÇ·ñÒÑ¾­µÇÂ¼
+				//ÅÐ¶ÏÊÇ·ñÒÑ¾­µÇÂ¼ÁË
 				if (session.getAttribute("user")!=null) {
-					//ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½Â¼ï¿½Ë£ï¿½Ö±ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½
-					response.sendRedirect("myorder.jsp");
+					//Èç¹ûÒÑ¾­µÇÂ¼ÁË£¬Ö±½ÓÌø×ªµ½½áËãÒ³Ãæ
+					response.sendRedirect("myorder2.jsp");
 				}else{
-					//ï¿½ï¿½×ªï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Â¼Ò³ï¿½ï¿½
+					//Ìø×ªµ½ÓÃ»§µÇÂ¼Ò³Ãæ
 					response.sendRedirect("login.jsp");
 				}
 			
 			
 			}else if ("userInfo".equals(op)) {
 				/**
-				 * ï¿½ï¿½×ªï¿½Ã»ï¿½ï¿½ï¿½Ï¸Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
+				 * Ìø×ªÓÃ»§ÏêÏ¸Ò³£¬²¢ÔÚÒ³ÃæÖÐÏÔÊ¾¸ÃÓÃ»§Ïà¹ØÐÅÏ¢
 				 */
 				
 				if (session.getAttribute("user")!=null) {
-					//ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½Îªï¿½ï¿½
-					//ï¿½ï¿½È¡ï¿½Ã»ï¿½ï¿½ï¿½Ï¢
+					//Èç¹ûÓÃ»§ÐÅÏ¢²»Îª¿Õ
+					//»ñÈ¡ÓÃ»§ÐÅÏ¢
 					Users user = (Users) session.getAttribute("user");
-					//ï¿½ï¿½È¡ï¿½Ã»ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½Ï¢
+					//»ñÈ¡ÓÃ»§ÏêÏ¸ÐÅÏ¢
 					List<Users_info> usersInfoList= us.getUserInfo(user);
-					Users_info users_info = usersInfoList.get(0);
-					//ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ï¢
+					Users_info users_info =usersInfoList.get(0);
+					//´«µÝÓÃ»§ÐÅÏ¢
 					request.setAttribute("userInfo", users_info);
-					//Ò³ï¿½ï¿½ï¿½ï¿½×ª
+					//Ò³ÃæÌø×ª
 					request.getRequestDispatcher("user.jsp").forward(request, response);
 				}
 				
 				
 			}else if ("updateUserInfo".equals(op)) {
 				/**
-				 * ï¿½Þ¸ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½Ï¢ï¿½ï¿½
+				 * ÐÞ¸ÄÓÃ»§ÏêÏ¸ÐÅÏ¢±í
 				 */
 				
-				//ï¿½ï¿½È¡ï¿½Ã»ï¿½ï¿½ï¿½Ï¢
+				//»ñÈ¡ÓÃ»§ÐÅÏ¢
 				String infoId = request.getParameter("infoId");
 				String userSex =  request.getParameter("userSex");
 				String userTel = request.getParameter("userTel");
-				//ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
+				//´´½¨ÓÃ»§ÐÅÏ¢¶ÔÏó
 				Users_info userInfo = new Users_info(Integer.parseInt(infoId), 0, userSex, userTel);
-				//ï¿½Þ¸ï¿½ï¿½ï¿½Ï¢
+				//ÐÞ¸ÄÐÅÏ¢
 				boolean result= us.updateUserInfoById(userInfo);
-				//ajaxï¿½ï¿½Ó¡
+				//ajax´òÓ¡
 				printJson(out, result);
 				
+			}else if ("changePwd".equals(op)) {
+				/**
+				 * ÐÞ¸ÄÓÃ»§ÃÜÂë
+				 */
+				//»ñÈ¡ÓÃ»§ÃÜÂë
+				String beforePwd = request.getParameter("beforePwd");
+				String newPwd = request.getParameter("newPwd");
+				String userName =request.getParameter("userName");
+				//ÐÞ¸ÄÃÜÂë
+				printJson(out, us.updatePwd(userName, beforePwd, newPwd));
+				
 			}
-			
-			
+
+				
 			
 		}
 		
 		
 	}
-	//ajaxï¿½ï¿½Ó¡
+	//ajax´òÓ¡
 	private void printJson(PrintWriter out,Object result){
-		//ï¿½ï¿½ï¿½ï¿½Json
+		//´´½¨Json
 		Gson gson = new Gson();
-		//×ªï¿½ï¿½ï¿½ï¿½Jsonï¿½ï¿½Ê½
+		//×ª»¯³ÉJson¸ñÊ½
 		String str = gson.toJson(result);
-		//ï¿½ï¿½Ó¡
+		//´òÓ¡
 		out.print(str);
-		//ï¿½Í·ï¿½ï¿½ï¿½Ô´
+		//ÊÍ·Å×ÊÔ´
 		out.close();
 	}
 

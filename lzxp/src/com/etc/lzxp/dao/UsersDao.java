@@ -1,4 +1,4 @@
-package com.etc.lzxp.dao;
+ï»¿package com.etc.lzxp.dao;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,64 +12,64 @@ import com.etc.util.BaseDao;
 
 /**
  * @author Administrator
- *ÓÃ»§Users Dao
+ *ç”¨æˆ·Users Dao
  */
 public class UsersDao {
 	List<Users> list = new ArrayList<>();
 	
 	/**
-	 * ÅĞ¶ÏÊÇ·ñµÇÂ¼³É¹¦
+	 * åˆ¤æ–­æ˜¯å¦ç™»å½•æˆåŠŸ
 	 * @param user
 	 * @return
 	 */
 	public boolean isLogin(Users user){
 		list = (List<Users>) BaseDao.select("select * from users where username=? and userpwd=?", Users.class, user.getUSERNAME(),user.getUSERPWD());
 		if (list.size()>0) {
-			//Èç¹ûÓĞ²éµ½¸ÃÓÃ»§
+			//å¦‚æœæœ‰æŸ¥åˆ°è¯¥ç”¨æˆ·
 			return true;
 		}
 		return false;
 	}
 	
 	/**
-	 * ÅĞ¶ÏÓÃ»§ÃûÊÇ·ñ´æÔÚ
+	 * åˆ¤æ–­ç”¨æˆ·åæ˜¯å¦å­˜åœ¨
 	 * @param userName
 	 * @return
 	 */
 	public boolean judgeUserName(String userName){
 		list = (List<Users>) BaseDao.select("select * from users where username=?", Users.class, userName);
 		if (list.size()>0) {
-			//Èç¹ûÓĞ²éµ½¸ÃÓÃ»§
+			//å¦‚æœæœ‰æŸ¥åˆ°è¯¥ç”¨æˆ·
 			return true;
 		}
 		return false;
 	}
 	
 	/**
-	 * ×¢²á
-	 * @param user ÓÃ»§
-	 * @param userTel µç»°
-	 * @return ÊÇ·ñÌí¼Ó³É¹¦ 
+	 * æ³¨å†Œ
+	 * @param user ç”¨æˆ·
+	 * @param userTel ç”µè¯
+	 * @return æ˜¯å¦æ·»åŠ æˆåŠŸ 
 	 */
 	public boolean isRegister(Users user,String userTel){
-		//»ñÈ¡Á¬½Ó
+		//è·å–è¿æ¥
 		Connection conn = BaseDao.getConn();
-		//ÉèÖÃÊÖ¶¯Ìá½»
+		//è®¾ç½®æ‰‹åŠ¨æäº¤
 		try {
 			conn.setAutoCommit(false);
-			//Ìí¼ÓÓÃ»§±í
+			//æ·»åŠ ç”¨æˆ·è¡¨
 			BaseDao.execute("insert into users values(?,?,?)", conn, null,user.getUSERNAME(),user.getUSERPWD());
-			//»ñÈ¡ÓÃ»§id
+			//è·å–ç”¨æˆ·id
 			list=  (List<Users>) BaseDao.select("select userid from users where username=?",conn,Users.class, user.getUSERNAME());
 			int useId= list.get(0).getUSERID();
-			//Ìí¼ÓÓÃ»§ÏêÇé±í
+			//æ·»åŠ ç”¨æˆ·è¯¦æƒ…è¡¨
 			BaseDao.execute("insert into users_info values(null,?,null,?)", conn, useId,userTel);
-			//Ìá½»
+			//æäº¤
 			conn.commit();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			//Èç¹û³ö´í£¬×Ô¶¯»Ø¹ö
+			//å¦‚æœå‡ºé”™ï¼Œè‡ªåŠ¨å›æ»š
 			try {
 				conn.rollback();
 				return false;
@@ -78,7 +78,7 @@ public class UsersDao {
 				e1.printStackTrace();
 			}
 		}finally{
-			//ÊÍ·Å×ÊÔ´
+			//é‡Šæ”¾èµ„æº
 			try {
 				conn.close();
 			} catch (SQLException e) {
@@ -91,24 +91,65 @@ public class UsersDao {
 	}
 	
 	/**
-	 * »ñÈ¡ÓÃ»§ÏêÏ¸ĞÅÏ¢
-	 * @param userÓÃ»§
-	 * @return ÓÃ»§ÏêÏ¸ĞÅÏ¢
+	 * è·å–ç”¨æˆ·è¯¦ç»†ä¿¡æ¯
+	 * @param userç”¨æˆ·
+	 * @return ç”¨æˆ·è¯¦ç»†ä¿¡æ¯
 	 */
 	public List<Users_info> getUserInfo(Users user){
-		//»ñÈ¡ÓÃ»§ID
-		list = (List<Users>) BaseDao.select("select userid from users where username=? and userpwd=?", Users.class, user.getUSERNAME(),user.getUSERPWD());
-		//»ñÈ¡ÓÃ»§ÏêÏ¸ĞÅÏ¢
+		//è·å–ç”¨æˆ·ID
+		list = (List<Users>) BaseDao.select("select userid from users where username=?", Users.class, user.getUSERNAME());
+		//è·å–ç”¨æˆ·è¯¦ç»†ä¿¡æ¯
 		return (List<Users_info>) BaseDao.select("select * from users_info where userid=?", Users_info.class, list.get(0).getUSERID());
 	}
 	
 	/**
-	 * ¸ù¾İÓÃ»§ÏêÇéIDĞŞ¸ÄÓÃ»§ÏêÇéĞÅÏ¢±í
-	 * @param userInfo ÓÃ»§ÏêÇéĞÅÏ¢
+	 * æ ¹æ®ç”¨æˆ·è¯¦æƒ…IDä¿®æ”¹ç”¨æˆ·è¯¦æƒ…ä¿¡æ¯è¡¨
+	 * @param userInfo ç”¨æˆ·è¯¦æƒ…ä¿¡æ¯
 	 * @return true false
 	 */
 	public boolean updateUserInfoById(Users_info userInfo){
 		return BaseDao.execute("update users_info set usersex=?,usertel=? where infoid=?", userInfo.getUSERSEX(),userInfo.getUSERTEL(),userInfo.getINFOID())>0;
 	}
 	
+	
+	/**
+	 * ä¿®æ”¹å¯†ç 
+	 * @param userNameç”¨æˆ·å
+	 * @param beforPwd åŸå§‹å¯†ç 
+	 * @param newPwd æ–°å¯†ç 
+	 * @return ç»“æœ
+	 */
+	public String updatePwd(String userName,String beforePwd,String newPwd){
+		//è·å–è¡¨æ ¼åŸå§‹å¯†ç 
+		 List<Users> list =(List<Users>) BaseDao.select("select * from users where username=? and userpwd=?", Users.class, userName,beforePwd);
+		 if (list.size()>0) {
+			 //ä¿®æ”¹å¯†ç 
+			 if (BaseDao.execute("update users set userpwd=? where username=?", newPwd,userName)>0) {
+				//æ“ä½œæˆåŠŸ
+				 return "æ“ä½œæˆåŠŸ";
+			}else{
+				return "æ“ä½œå¤±è´¥";
+			}
+		}else{
+			//å¦‚æœæ²¡æœ‰æ•°æ®ï¼Œåˆ™è¾“å…¥çš„åŸå§‹å¯†ç æœ‰è¯¯
+			return "åŸå¯†ç æœ‰è¯¯,è¯·é‡æ–°è¾“å…¥";
+		}
+	}
+	
+	/**
+	 * è·å–ç”¨æˆ·åœ°å€
+	 * @param userç”¨æˆ·
+	 * @return ç”¨æˆ·è¯¦ç»†ä¿¡æ¯
+	 */
+	public int getUserId(String username){
+		//è·å–ç”¨æˆ·ID
+		int userid = 0;
+		list = (List<Users>) BaseDao.select("select * from USERS where USERNAME=?", Users.class,username);
+		if(!list.isEmpty()) {
+			for (Users users : list) {
+				userid = users.getUSERID();
+			}			
+		}
+		return userid;
+	}
 }

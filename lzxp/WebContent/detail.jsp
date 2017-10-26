@@ -2,6 +2,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+	String path = request.getScheme() + "://" + request.getServerName()
+			+ ":" + request.getLocalPort() + request.getContextPath()
+			+ "/";
+	//折中处理一下
+	pageContext.setAttribute("path",path);
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -51,14 +58,23 @@
 				  $("#sch-btn").click(function(){
 					  //获取关键字 
 					  var keyword = $("#keyword").val();					 					  
-					  if(keyword=="商品搜索"){
+					  if(keyword=="商品搜索"||keyword.length == 0 || keyword.match(/^\s+$/g)){
 						  alert("请输入关键字！");
 					  }else{
 					     location.href="stype.jsp?keyword="+keyword;	
 					  }
-				  });
-				   
+				  });		   
 			   });		
+			  
+			   //点击热门 关键字进行商品的模糊查询
+				 $(function(){
+					$(".hot_sh").click(function(){					
+						var hotword = $(this).text();
+						/* alert("hotword:"+hotword); */
+						location.href = "stype.jsp?keyword="+hotword;
+					});
+				 });
+			   
 		</script>
 		<div id="out"></div>
 		<!-- header -->
@@ -67,11 +83,12 @@
 				<ul class="fl">
 					<li id="headerUsername" class="headerUsername"></li>
 					<% 
+						Users user=null;
 						if(request.getSession().getAttribute("user")!=null){
 							//如果有传递过来用户信息
-							Users user = (Users)request.getSession().getAttribute("user");
+							user = (Users)request.getSession().getAttribute("user");
 							%>
-								<li>欢迎<span class="log"><%=user.getUSERNAME() %></span>来到零嘴小铺官方商城！</li>
+								<li>欢迎<span class="log username"><%=user.getUSERNAME() %></span>来到零嘴小铺官方商城！</li>
 							<%
 						}else{
 							%>
@@ -155,12 +172,12 @@
 				<div class="hd-search">
 					<div class="hot-tag">
 						<span>热门搜索：</span>
-						<a class="red" href="#">松子</a>
-						<a href="#">牛肉</a>
-						<a href="#">开心果</a>
-						<a href="#">核桃</a>
-						<a href="#">话梅</a>
-						<a href="#">花生瓜子</a>
+							<a class="red hot_sh" href="javascript:void(0)">饼干</a>
+							<a class = "hot_sh"  href="javascript:void(0)">牛肉</a>
+							<a class = "hot_sh"  href="javascript:void(0)">豆干</a>
+							<a class = "hot_sh"  href="javascript:void(0)">进口</a>
+							<a class = "hot_sh"  href="javascript:void(0)">话梅</a>
+							<a class = "hot_sh"  href="javascript:void(0)">瓜子</a>
 					</div>
 					<div class="search-area">
 						<!--<form id="productSearchForm" action="#" method="post" >-->
@@ -172,15 +189,13 @@
 				<div class="hd-user">
 					<div class="user-shoping">
 						<a class="us-btn indexcart" href="#">购物车</a>
-						<span class="us-num cart-cache-num"><b>0</b></span>
+						<span class="us-num cart-cache-num"><b id="goodsnum">0</b></span>
 						<div class="cart-list cart-list-body">
 							<span class="tit">最新加入的商品</span>
 							<div class="cart-roll">
 								<ul class="goods"></ul>
 							</div>
-							<div class="total">
-								<p>共<span class="red">0</span>件商品，共计<span class="sum">￥0.00</span></p>
-								<a class="settle" href="#" id="countOrder">去购物车结算</a>
+							<div class="total">								
 							</div>
 						</div>
 					</div>
@@ -251,16 +266,20 @@
 								<div class="dd">
 									<span class="num-btn">
 									<a id="decrease" class="decrease">-</a>
-									<input class="quantity" type="text" onpaste="return false;" id="stockNumSelect" max="10" min="1" maxlength="4" value="1" name="quantity"/>
+									<input class="quantity" type="text" onpaste="return false;" id="stockNumSelect" max="1000" min="1" maxlength="4" value="1" name="quantity"/>
 									<a id="increase" class="increase">+</a>
 								</span>
 									<span class="num-unit">件<small style="display:none;" >库存<span id="stockNum">1000</span>件</small>
 									</span>
 								</div>
 							</div>
-							<div class="join-buy">
+							<div class="join-buy" style="display:inline-block">
 								<a class="add-cart addToCart" href="javascript:;" style="margin-left: 30px;">加入购物车</a>
 							</div>
+							<!-- 立即购买 -->
+							<a href="#" id="payNow" style="margin-left: 0;">
+								<img alt="立即购买" src="images/paynow.png">
+							</a>
 						</div><!-- choose 拼接-->
 					</div><!-- product-param -->
 				</div>
@@ -393,12 +412,7 @@
 		<!-- 右侧功能菜单 -->
 		<!-- 右侧功能菜单 -->
 		<div class="right-navbar">
-			<ul class="rnb-list">
-				<li class="gw indexcart" style="margin-top: 280px;">
-					<a href="#"><i class="icon">▪</i><span>购物车</span><small class="sum" id="cartcount">0</small></a>
-				</li>
-
-			</ul>
+			
 			<ul class="rnb-link">
 
 				<li class="goback">
@@ -407,21 +421,7 @@
 			</ul>
 		</div>
 		<script language="javascript" type="text/javascript">
-			NTKF_PARAM = {
-				siteid: "kf_9893",
-				settingid: "kf_9893_1407138307993",
-				uid: username || '',
-				uname: username || '',
-				itemid: ''
 
-					,
-				ntalkerparam: {　　
-					item: {　　
-						id: ''　　
-					}
-				}
-
-			}
 		</script>
 		<!--<script type="text/javascript" src="http://download.ntalker.com/t2d2/ntkfstat.js?siteid=kf_9893" charset="utf-8"></script>-->
 		<!-- footer -->
@@ -544,804 +544,151 @@
 		</div>
 
 		<script language="javascript">
-			function doBind() {
-				var chkBoxes = document.getElementsByName("chkBind");
-				var x = '[';
-				var count = 0;
-				for(var i = 0; i < chkBoxes.length; i++) {
-					if(chkBoxes[i].checked == true) {
-						count++;
-						var chkId = chkBoxes[i].id;
-						var id = chkId.split(';');
-						x += '{"memberNo":"';
-						x += id[0];
-						x += '","storeid":"';
-						x += id[1];
-						x += '"},';
-					}
-				}
-				if(count > 0) {
-					x = x.substring(0, x.length - 1);
-				}
-				x += ']';
-				if(x == '[]') {
-					alert("没有选择任何平台");
-				} else {
-					$.ajax({
-						type: "get",
-						dataType: "json",
-						url: "http://www.lppz.com/sso/exeThirdAccountBind.jhtml",
-						data: {
-							"bind": x
-						},
-						success: function(data) {
-							alert(data.msg);
-							document.getElementById("ceng").style.display = "none";
-							document.getElementById("Bing").style.display = "none";
-						}
-					});
-				}
-			}
+
 		</script>
 
 		<!--<script src="//configch2.veinteractive.com/tags/B105FE22/510E/4163/911D/0A070929DD44/tag.js" type="text/javascript" async></script>
 	<script type="text/javascript" src="http://www.lppz.com/resources/shop/js/lp_public.js"></script>	-->
+	
+<script type="text/javascript">
+		//页面加载时初始化购物车中的信息
+			$(".goods").empty();
+			$(".total").empty();
+			$("#goodsnum").text("");
+			var sumgoods = 0;
+			var sumprice = 0;
+			var username = $('.username').text();
+			/* alert(username) */
+			$.post("${path}GoodsCartServlet",{"op":"queryShopCart","UserName":username},function(listgc,status){
+				$.each(listgc,function(index,data){
+					/* 购物车的的item- */							
+					$(".goods").append("<li><input type='hidden' id='GOODSID' class='goodsiddel' value='"+data.GOODSID+"' /><div class='gd-lft'><a class='pic'><img src='"+data.GOODSPICTURE+"'/></a><p class='tit'>"+data.GOODSNAME+"</p></div><div class='gd-price'><span>￥"
+						+data.GOODSPRICE+"<small>x"+data.GOODSCOUNT+"</small></span><a href='javascript:;' class='delete'>删除</a></div></li>");
+			   	   sumgoods += data.GOODSCOUNT;
+			   	   sumprice += (sumgoods*data.GOODSPRICE);
+				});			
+				$(".total").append("<p>共<span class='red'>"+sumgoods+"</span>件商品，共计<span class='sum+'>￥"+sumprice.toFixed(2)+"</span></p><a class='settle' href='javascript:;'>去购物车结算</a>");
+				$("#goodsnum").text(sumgoods);
+			});	
+
+		</script>	
 
 		<script type="text/javascript">
-			var productMap = {};
-			productMap['103e92b7305311e5a454005056a25157'] = {
-				path: null,
-				specificationValues: []
-			};
-			$(function() {
-
-				//$('.intro-item.ask').wbExecute({
-				//	exeFun: consultationList
-				//});
-
-				//$('.intro-item.comm').wbExecute({
-				//	exeFun: reviewList
-				//});
-
-				//$("#intro_tabs li .pj").click(function(){
-				//	reviewList();
-				//});
-				//$("#intro_tabs li .wd").click(function(){
-				//	consultationList();
-				//});
-
-				var $addCart = $('.addToCart');
-				var $addFavorite = $('.addFavorite');
-				// 加入购物车 / 到货通知
-				$addCart.click(function() {
-					//加入到货通知
-					if($addCart.attr('nostock')) {
-						checkname(function(login) {
-							if(login) {
-								$.ajax({
-									url: "http://www.lppz.com/member/email.jhtml",
-									type: "GET",
-									dataType: "jsonp",
-									jsonp: "callback",
-									cache: false,
-									success: function(message) {
-										if(message) {
-											$('#notifyEmail').val(message);
-										} else {
-											$('#notifyEmail').val('');
-										}
-										hasUp($('#aogMessage'));
-									}
-								});
-							} else {
-								$.loginIframe({
-									id: '11000703',
-									operation: 'notify'
-								});
-							}
-						});
-						return;
-					}
-					//加入购物车
-					var quantity = $('.quantity').val();
-					quantity -= 0;
-					if(/^\d*[1-9]\d*$/.test(quantity) && parseInt(quantity) > 0) {
-						$.ajax({
-							url: "http://www.lppz.com/cart/add.jhtml",
-							type: "GET",
-							crossDomain: true,
-							data: {
-								sku: '11000703',
-								quantity: quantity
-							},
-							jsonp: "callback",
-							dataType: "jsonp",
-							cache: false,
-							success: function(message) {
-								if(message.type == 'success') {
-									refreshCart();
-								}
-								$.message(message);
-							}
-						});
-					} else {
-						$.message("warn", "购买数量必须为正整数");
-					}
-				});
-
-				// 添加商品收藏
-				$addFavorite.click(function() {
-					checkname(function(login) {
-						if(login) {
-							$.ajax({
-								url: "http://www.lppz.com/member/favorite/add.jhtml?skucode=11000703",
-								type: "GET",
-								dataType: "jsonp",
-								jsonp: "callback",
-								cache: false,
-								success: function(message) {
-									$.message(message);
-									$("#favorite").attr("class", "follow-ok");
-								}
-							});
-						} else {
-							$.loginIframe({
-								id: '11000703',
-								operation: 'favor'
-							});
-						}
-					});
-				});
-
-				// 规格值选择
-				$specificationValue.click(function() {
-					var $this = $(this);
-					if($this.hasClass("locked")) {
-						return false;
-					}
-					$this.parent().toggleClass("this").siblings().removeClass("this");
-					$this.toggleClass("this").parent().siblings().children("a").removeClass("this");
-					var selectedIds = new Array();
-					$specificationValue.filter(".this").each(function(i) {
-						selectedIds[i] = $(this).attr("val");
-					});
-					var locked = true;
-					$.each(productMap, function(i, product) {
-						if(product.specificationValues.length == selectedIds.length && contains(product.specificationValues, selectedIds)) {
-							if(product.path != null) {
-								location.href = "http://item.lppz.com" + product.path;
-								locked = false;
-							}
-							return false;
-						}
-					});
-					if(locked) {
-						lockSpecificationValue();
-					}
-					//$specificationTitle.hide();
-					return false;
-				});
-
-				// 锁定规格值
-				lockSpecificationValue();
-
-				// 浏览记录
-				var historyProducts = getCookie("historyProduct");
-				if(!historyProducts) {
-					historyProducts = [];
-				} else {
-					historyProducts = eval('(' + historyProducts + ')');
+		//加入购物车
+			var $addCart = $('.addToCart');
+			$addCart.click(function() {	
+			$(".goods").empty();
+			$(".total").empty();
+			$("#goodsnum").text("");
+			var cartid = $('#goodsId').val();
+			var quantity = $('.quantity').val();
+			var username = $('.username').text();
+			var sumgoods = 0;
+			var sumprice = 0;
+			var price = 0;
+			quantity -= 0;
+			if (/^\d*[1-9]\d*$/.test(quantity) && parseInt(quantity) > 0) {
+				$.post("${path}GoodsCartServlet",{"op":"queryGoodsById","UserName":username,"GoodsID":cartid,"GoodsCount":quantity},function(listgc,status){			
+					$.each(listgc,function(index,data){
+												
+						$(".goods").append("<li><input type='hidden' id='GOODSID' class='goodsiddel' value='"+data.GOODSID+"' /><div class='gd-lft'><a class='pic'><img src='"+data.GOODSPICTURE+"'/></a><p class='tit'>"+data.GOODSNAME+"</p></div><div class='gd-price'><span>￥"
+							+data.GOODSPRICE+"<small>x"+data.GOODSCOUNT+"</small></span><a href='javascript:;' class='delete'>删除</a></div></li>");
+				   	   sumgoods += data.GOODSCOUNT;				   	   
+				   	   sumprice += (data.GOODSCOUNT*data.GOODSPRICE);
+					});			
+					$(".total").append("<p>共<span class='red'>"+sumgoods+"</span>件商品，共计<span class='sum+'>￥"+sumprice.toFixed(2)+"</span></p><a class='settle' href='javascript:;'>去购物车结算</a>");
+					$("#goodsnum").text(sumgoods);
+				});		
+			} else {
+				alert("购买数量必须为正整数");
 				}
-				var isInHistory = false;
-				for(var i = historyProducts.length - 1; i >= 0; i--) {
-					if(historyProducts[i].sku == escape('11000703')) {
-						isInHistory = true;
-						break;
-					}
-				}
-
-				if(!isInHistory) {
-
-					var historyProduct = {};
-					historyProduct['sku'] = escape('11000703');
-					historyProduct['pname'] = escape('开心果（190g）（电商专供新包装）');
-					historyProduct['img'] = escape('http://img.lppz.com/group1/M00/01/FB/CghmzFdL0TSAJedIAAAQdqkuaUo582.jpg');
-					historyProduct['path'] = escape('/11000703.html');
-					historyProduct['pprice'] = escape('￥25.90');
-					historyProduct['jifen'] = escape('');
-					//	historyProduct['pmarketprice'] = escape('');
-					historyProducts.push(historyProduct);
-
-					if(historyProducts.length > 12) {
-						historyProducts.shift();
-					}
-
-					addCookie("historyProduct", JSONstringify(historyProducts), {
-						domain: ".lppz.com"
-					});
-				}
-
-				var historyView = $('.gl-list');
-				historyView.html('');
-				for(var i = historyProducts.length - 1; i >= 0; i--) {
-					var product = historyProducts[i];
-					var price = product.jifen ? product.jifen + '积分' : product.pprice;
-					var html = '<li>' +
-						'<a href="http://item.lppz.com' + unescape(product.path) + '" title="' + unescape(product.pname) + '" class="pic">' +
-						'<img src="' + unescape(product.img) + '" alt="" class="lazy" data-original="' + unescape(product.img) + '"/>' +
-						'</a>' +
-						'<a href="http://item.lppz.com' + unescape(product.path) + '" class="tit">' + unescape(product.pname) + '</a>' +
-						'<p><span class="price">' + unescape(price) + '</span></p>' +
-						'</li>';
-					historyView.append(html);
-				}
-
-			});
-
-			window.afterloadmember = function() {
-				//更新页面动态信息
-				updateProductInfo();
-				//增加会员浏览记录
-				addProductViewHistory();
-				//商品评价
-				//reviewList();
-			}
-
-			var $specificationValue = $("#specification a");
-			var $specification = $("#specification dl");
-			// 锁定规格值
-			function lockSpecificationValue() {
-				var selectedIds = [];
-				$specificationValue.filter(".this").each(function(i) {
-					selectedIds[i] = $(this).attr("val");
-				});
-				$specification.each(function() {
-					var $this = $(this);
-					var selectedId = $this.find("a.this").attr("val");
-					var otherIds = $.grep(selectedIds, function(n, i) {
-						return n != selectedId;
-					});
-					$this.find("a").each(function() {
-						var $this = $(this);
-						otherIds.push($this.attr("val"));
-						var locked = true;
-						$.each(productMap, function(i, product) {
-							if(contains(product.specificationValues, otherIds)) {
-								locked = false;
-								return false;
-							}
-						});
-						if(locked) {
-							$this.addClass("locked");
-						} else {
-							$this.removeClass("locked");
-						}
-						otherIds.pop();
-					});
-				});
-			}
-
-			// 判断是否包含
-			function contains(array, values) {
-				var contains = true;
-				for(i in values) {
-					if($.inArray(values[i], array) < 0) {
-						contains = false;
-						break;
-					}
-				}
-				return contains;
-			}
-
-			function showaog1(sku) {
-				notifysku = sku;
-				$.ajax({
-					url: "http://www.lppz.com/member/email.jhtml",
-					type: "GET",
-					dataType: "jsonp",
-					jsonp: "callback",
-					cache: false,
-					success: function(message) {
-						if(message) {
-							$('#notifyEmail').val(message);
-						} else {
-							$('#notifyEmail').val('');
-						}
-						hasUp($('#aogMessage'));
-					}
-				});
-			}
-
-			function addFavor(id) {
-				$.ajax({
-					url: "http://www.lppz.com/member/favorite/add.jhtml",
-					type: "GET",
-					data: {
-						skucode: id
-					},
-					dataType: 'jsonp',
-					jsonp: 'callback',
-					cache: false,
-					success: function(message) {
-						$.message(message);
-						$("#favorite").attr("class", "follow-ok");
-					}
-				});
-			}
-
-			function updateProductInfo() {
-				$.ajax({
-					url: "http://www.lppz.com/product/info/11000703.jhtml",
-					type: "GET",
-					dataType: "jsonp",
-					jsonp: "callback",
-					cache: false,
-					beforeSend: function(XMLHttpRequest) {
-						$("#productPromotions11").css({
-							display: ""
-						});
-						$("#productGifts11").css({
-							display: ""
-						});
-						$("#productGroup11").css({
-							display: ""
-						});
-					},
-					success: function(message) {
-						message = decodeURIComponent(message); //alert(message);
-						try {
-							message = decodeURI(message);
-						} catch(e) {};
-						message = message.replace(/\+/g, ' ');
-						message = eval('(' + message + ')');
-						if(message.stock != undefined) { //update stock
-							$('#stockNum').html(message.stock);
-							var max = 99;
-							if((max - 0) > (message.stock - 0)) {
-								max = message.stock;
-							}
-							$('#stockNumSelect').attr('max', max);
-
-							if((message.stock - 0) <= 0) {
-								var btns = $('.addToCart');
-								btns.html('&nbsp;&nbsp;到货通知');
-								btns.attr('noStock', true);
-
-								btns.each(function() {
-									if($(this).hasClass('add-cart')) {
-										$(this).removeClass('add-cart');
-										$(this).addClass('aog-btn');
-									}
-								});
-							}
-						}
-
-						if(message.isMarketable != 1) {
-							var btns = $('.addToCart');
-							btns.html('&nbsp;&nbsp;到货通知');
-							btns.attr('noStock', true);
-
-							btns.each(function() {
-								if($(this).hasClass('add-cart')) {
-									$(this).removeClass('add-cart');
-									$(this).addClass('aog-btn');
-								}
-							});
-						}
-
-						if(message.price) { //update price
-							var fp = (message.price - 0).toFixed(2);
-							var sp = fp.split('\.');
-							$('#priceShow').html('￥<span>' + sp[0] + '</span>.' + sp[1]);
-							$('#priceShowTbar').html('￥<i>' + sp[0] + '</i>.' + sp[1]);
-							$("#commonProduct").css({
-								display: ""
-							});
-							$("#isscoreProduct").css({
-								display: "none"
-							});
-							$("#isscoreProduct1").css({
-								display: "none"
-							});
-						}
-						if(message.require_score != undefined) {
-							if((message.require_score - 0) > 0) {
-								$("#commonProduct").css({
-									display: "none"
-								});
-								$("#isscoreProduct").css({
-									display: ""
-								});
-								$("#isscoreProduct1").css({
-									display: ""
-								});
-								$('#priceShowTbar').html('<span>' + message.require_score + '</span>积分');
-								$('#pointShowTbar').html('<span>' + message.require_score + '</span>积分');
-							}
-						}
-
-						if(message.sale) {
-							$('.mon-sales').html(message.sale);
-						}
-
-						if(message.productGroups == null || message.productGroups == undefined || message.productGroups == "") {
-							$("#productGroup11").css({
-								display: "none"
-							});
-						} else {
-							$("#productGroup11").html(message.productGroups);
-
-							// 套餐
-							var sku = [];
-							var promid = [];
-							var prodgrp = [];
-							var quantitysuit = [];
-							var $cbxs = $("#suitListWrap .cb-ipt");
-							var $suit_total = $(".suit-total strong");
-							var price = parseFloat($("#j_pro_price").data("price"), 10);
-							var $j_suit_number = $("#j_suit_number");
-
-							var calcSuitPrice = function() {
-								var cost = price;
-								var num = 0;
-								sku = [];
-								promid = [];
-								prodgrp = [];
-								quantitysuit = [];
-								sku.push($("input.skucode").val())
-								//promid.push($("input.promid").val())
-								//prodgrp.push($("input.prodgrp").val())
-
-								$cbxs.each(function() {
-									cost += this.checked ? parseFloat($(this).data("price"), 10) : 0;
-									num += this.checked ? 1 : 0;
-									this.checked && sku.push($(this).siblings("input.skucode").val());
-									this.checked && promid.push($(this).siblings("input.promid").val());
-									this.checked && prodgrp.push($(this).siblings("input.prodgrp").val());
-									this.checked && quantitysuit.push($(this).siblings("input.quantitysuit").val());
-								});
-								$suit_total.html("￥" + cost.toFixed(2));
-								$j_suit_number.html(num);
-							}
-							$("#suitListWrap").on("click", ".cb-ipt", function() {
-								calcSuitPrice();
-							});
-							calcSuitPrice();
-
-							var $gobuy = $('.go-buy');
-							//立即购买
-							var $addCart = $('.addToCart');
-							var $addFavorite = $('.addFavorite');
-							$gobuy.click(function() {
-
-								//加入到货通知
-								if($addCart.attr('nostock')) {
-									checkname(function(login) {
-										if(login) {
-											$.ajax({
-												url: "http://www.lppz.com/member/email.jhtml",
-												type: "GET",
-												dataType: "jsonp",
-												jsonp: "callback",
-												cache: false,
-												success: function(message) {
-													if(message) {
-														$('#notifyEmail').val(message);
-													} else {
-														$('#notifyEmail').val('');
-													}
-													hasUp($('#aogMessage'));
-												}
-											});
-										} else {
-											$.loginIframe({
-												id: '11000703',
-												operation: 'notify'
-											});
-										}
-									});
-									return;
-								}
-								//加入购物车
-								var quantity = $('.quantity').val();
-								quantity -= 0;
-								if(/^\d*[1-9]\d*$/.test(quantity) && parseInt(quantity) > 0) {
-									quantitysuit.unshift(quantity);
-									$.ajax({
-										url: "http://www.lppz.com/cart/add.jhtml",
-										type: "GET",
-										crossDomain: true,
-										data: {
-											sku: sku.join(","),
-											promotionId: encodeURI(encodeURI(promid.join(","))),
-											groupName: encodeURI(prodgrp.join(",")),
-											quantity: encodeURI(encodeURI(quantitysuit.join(",")))
-										},
-										jsonp: "callback",
-										dataType: "jsonp",
-										cache: false,
-										beforeSend: function(XMLHttpRequest) {
-											XMLHttpRequest.setRequestHeader("RequestType", "ajax");
-										},
-										success: function(message) {
-											if(message.type == 'success') {
-
-											}
-											$.message(message);
-										}
-									});
-								} else {
-									$.message("warn", "购买数量必须为正整数");
-								}
-
-							});
-						}
-						$("#intro_top").find(".intro-tit").topSuction({
-							fixCls: "int-fixed"
-						});
-
-						if(message.promotionNames.indexOf("<li>") > 0) {
-							$("#productPromotions11").parents(".p-favor").removeClass("none");
-							$("#productPromotions11").replaceWith(message.promotionNames);
-						}
-						if(message.productGifts.indexOf("<li>") > 0) {
-							$("#productGifts11").parents(".p-favor").removeClass("none");
-							$("#productGifts11").replaceWith(message.productGifts);
-						}
-						// $("#productGifts11").html(message.productGifts); 
-
-						//if (message.review) {
-						//	$('.sum-sales-nums').html(message.review);
-						//}
-					},
-					error: function() {
-						$("#productPromotions11").css({
-							display: ""
-						});
-						$("#productGifts11").css({
-							display: ""
-						});
-						$("#productGroup11").css({
-							display: ""
-						});
-					}
-				});
-			}
-			//增加会员浏览记录
-			function addProductViewHistory() {
-				var img = '';
-				img = escape('http://img.lppz.com/group1/M00/01/FB/CghmzFdL0TSAcHW3AABKd6wBjlY162.jpg');
-				$.ajax({
-					url: "http://www.lppz.com/member/addProductViewHistory.jhtml",
-					type: "GET",
-					dataType: "jsonp",
-					data: {
-						uid: encodeURI(username),
-						sku: encodeURI('11000703'),
-						price: encodeURI('25.9'),
-						name: encodeURI('开心果（190g）（电商专供新包装）'),
-						image: img
-					},
-
-					jsonp: "callback",
-					cache: false,
-					success: function(message) {
-
-					}
-
-				});
-			}
-
-			var curPage = 1,
-				pageSize = 10;
-
-			function consultationList() {
-				if(window.consultationListExe) {
-					return;
-				}
-				submitData = "curPage=" + curPage + "&pageSize=" + pageSize;
-				$.ajax({
-					type: "GET",
-					url: "http://www.lppz.com/product/getConsultation/11000703.jhtml",
-					dataType: "jsonp",
-					jsonp: "callback",
-					data: submitData,
-					beforeSend: function(XMLHttpRequest) {
-						$("#loadingMessage2").html("&nbsp;&nbsp;&nbsp;&nbsp;<span>请稍后，数据加载中！</span>");
-						$("#loadingMessage2").css({
-							display: ""
-						});
-					},
-					success: function(data) { //如果调用成功
-						data = decodeURI(decodeURIComponent(data));
-						data = data.replace(/\+/g, ' ');
-						data = eval('(' + data + ')');
-						$("#showControlPage2").html(data.content);
-						$("#loadingMessage2").css({
-							display: "none"
-						});
-						$("#pageBar2").html(data.pageBar);
-						window.consultationListExe = true;
-					},
-					error: function() {
-						$("#loadingMessage2").css({
-							display: ""
-						});
-						$("#loadingMessage2").html(
-							"<span class=\"errorFont\">数据加载遇到错误，请稍后再试</span>");
-					}
-				});
-			}
-
-			function showReviewPages(curPageUser) {
-				window.reviewListExe = false;
-				curPage = curPageUser;
-				reviewList();
-			}
-
-			function showConsultationPages(curPageUser) {
-				window.consultationListExe = false;
-				curPage = curPageUser;
-				consultationList();
-			}
-
-			function JSONstringify(Json) {
-				if($.browser.msie) {
-					if($.browser.version == "7.0" || $.browser.version == "6.0") {
-						var result = jQuery.parseJSON(Json);
-					} else {
-						var result = JSON.stringify(Json);
-					}
-				} else {
-					var result = JSON.stringify(Json);
-				}
-				return result;
-
-			}
+			});	
 		</script>
+
+<script type="text/javascript">
+		//立即购买
+			var $addCart = $('#payNow');
+			$addCart.click(function() {
+			//判断用户是否已经登录	
+			 
+			if(<%=(user!=null)%>){
+				
+					//用户已登录
+			
+				$(".goods").empty();
+				$(".total").empty();
+				$("#goodsnum").text("");
+				var cartid = $('#goodsId').val();
+				var quantity = $('.quantity').val();
+				var username = $('.username').text();
+				quantity -= 0;
+				if (/^\d*[1-9]\d*$/.test(quantity) && parseInt(quantity) > 0) {
+					$.post("${path}GoodsCartServlet",{"op":"paynow","UserName":username,"GoodsID":cartid,"GoodsCount":quantity},function(listgc,status){
+						location.href="http://localhost:8080/lzxp/myorder2.jsp";
+					});		
+				} else {
+					alert("购买数量必须为正整数");
+					}
+				
+			
+			}else{
+				//页面跳转登录页面
+				location.href="login.jsp";
+			}
+			
+		
+			});	
+		</script>
+
+
 		<script type="text/javascript">
-			$(document).ready(function() {
-				$.ajax({
-					type: "GET",
-					url: "http://www.lppz.com/product/hasFavor.jhtml",
-					dataType: "jsonp",
-					jsonp: "callback",
-					data: {
-						productId: '11000703'
-					},
-					success: function(data) { //如果调用成功
-						if(data.type == "success") {
-							$("#favorite").attr("class", "follow-ok");
-						}
-					}
-				});
-			});
-		</script>
-		<script>
-			!(function($) {
-				var template = [];
-				template.push('<div class="lp-login-overlay"></div>');
-				template.push('<div class="lp-login-dialog">');
-				template.push('<div class="lld-head">');
-				template.push('<span>您尚未登录</span>');
-				template.push('<span class="close" id="jLldClose" title="关闭"></span>');
-				template.push('</div>');
-				template.push('<div class="lld-main">');
-				template.push('<iframe src="https://login.lppz.com/login?viewType=window&service=http://item.lppz.com/return.html" style="border:none; width: 100%; height: 100%;" frameborder="0" scrolling="no"></iframe>');
-				template.push('</div>');
-				template.push('</div>');
-
-				var $window = $(window),
-					resizeTimer = null;
-
-				var setPosition = function() {
-					var winWidth = $window.width(),
-						winHeight = $window.height(),
-						wrap = $('.lp-login-dialog').get(0),
-						width = wrap.offsetWidth,
-						height = wrap.offsetHeight,
-						left = (winWidth - width) / 2,
-						top = (winHeight - height) / 2;
-
-					var cssText = 'left:' + left + 'px;top:' + top + 'px; width: ' +
-						'_left:expression((document.documentElement).scrollLeft+' + left + ');_top:expression((document.documentElement).scrollTop+' + top + ');';
-					wrap.style.cssText = cssText;
-				}
-
-				var winResize = function() {
-					resizeTimer && clearTimeout(resizeTimer);
-					resizeTimer = setTimeout(function() {
-						setPosition();
-					}, 40);
-				};
-
-				$.loginIframe = function(options) {
-					if(this.length === 0) {
-						return false;
-					}
-
-					if(options && options.id) {
-						template[7] = '<iframe src="https://login.lppz.com/login?viewType=window&service=http://item.lppz.com/return.html?id=' + options.id + '-' + options.operation + '" style="border:none; width: 100%; height: 100%;" frameborder="0" scrolling="no"></iframe>'
-					}
-					$(template.join('')).appendTo($('body'));
-
-					var $lockMask = $('.lp-login-overlay'),
-						$wrap = $('.lp-login-dialog');
-
-					setPosition();
-
-					// 关闭弹层
-					$wrap.on('click', '.close', function() {
-						var un = function() {
-							$lockMask.html('').attr({
-								"style": ""
-							}).remove();
-						};
-						$window.off('resize');
-						$wrap.off().html('').attr({
-							'style': ''
-						}).remove();
-						$lockMask.animate({
-							opacity: 0
-						}, 300, un);
+			//购物车中删除
+			$(document).on("click",'.delete',function(index){
+				var sumgoods = 0;
+				var sumprice = 0;
+				$("#goodsnum").text("");
+				var username = $('.username').text();
+				var goodsiddel=$(this).parent().parent().find("#GOODSID").val();
+				var flag=confirm("是否要删除");
+				if(flag){
+					$(".goods").empty();
+					$(".total").empty();
+					$.post("${path}GoodsCartServlet",{"op":"queryGoodsDelete","UserName":username,"GoodsID":goodsiddel},function(listgc,status){			
+					$.each(listgc,function(index,data){
+					/* 购物车的的item- */							
+					$(".goods").append("<li><input type='hidden' id='GOODSID' class='goodsiddel' value='"+data.GOODSID+"' /><div class='gd-lft'><a class='pic'><img src='"+data.GOODSPICTURE+"'/></a><p class='tit'>"+data.GOODSNAME+"</p></div><div class='gd-price'><span>￥"
+					+data.GOODSPRICE+"<small>x"+data.GOODSCOUNT+"</small></span><a href='javascript:;' class='delete'"+data.GOODSID+"'>删除</a></div></li>");
+					sumgoods += data.GOODSCOUNT;
+					sumprice += (data.GOODSCOUNT*data.GOODSPRICE);
+					});			
+					$(".total").append("<p>共<span class='red'>"+sumgoods+"</span>件商品，共计<span class='sum+'>￥"+sumprice.toFixed(2)+"</span></p><a class='settle' href='javascript:;'>去购物车结算</a>");
+					$("#goodsnum").text(sumgoods);
 					});
-
-					$window.on('resize', winResize);
+				}else{
+					
 				}
-			}(jQuery));
+			});
 
-			// 关闭弹层
-			function closeLldDialog() {
-				$('.lp-login-dialog .close').trigger('click');
-			}
+		</script>
+
+		<script type="text/javascript">
+		//购物车结算按钮的点击
+		var username = $('.username').text();
+		$(document).on("click",'.settle',function(index){
+							$.post("${path}GoodsCartServlet",{"op":"submitOrder","UserName":username},function(result,status){
+								if(result == true){
+									//如果登录成功,页面跳转
+									location.href="http://localhost:8080/lzxp/myorder2.jsp";
+								}else{
+									//如果失败
+									location.href="http://localhost:8080/lzxp/login.jsp";
+								}
+							});
+						});
 		</script>
 		<script type="text/javascript" src="http://www.lppz.com/resources/shop/js/o_code.js"></script>
 		<script type="text/javascript">
-			var _gtc = _gtc || [];
-			$(document).on('afterloadmember', function(o, username) {
-				//聚合
-				var _mvq = window._mvq || [];
-				window._mvq = _mvq;
-				_mvq.push(['$setAccount', 'm-28592-0']);
 
-				_mvq.push(['$setGeneral', 'goodsdetail', '', /*用户名*/ username, /*用户id*/ '']);
-				_mvq.push(['$logConversion']);
-
-				_mvq.push(['setPageUrl', /*单品着陆页url*/ window.location.href]); //如果不需要特意指定单品着陆页url请将此语句删掉
-				_mvq.push(['$addGoods', /*分类id*/ 'c51fe57124aa44978e9f0eec46240c0b', /*品牌id*/ '', /*商品名称*/ '开心果（190g）（电商专供新包装）', /*商品ID*/ '11000703', /*商品售价*/ '25.9', /*商品图片url*/ 'http://img.lppz.com/group1/M00/01/F8/CghmzVdGsFeARW03AAAiUxAMUNo874.jpg', /*分类名*/ '嗑壳坚果', /*品牌名*/ '', /*商品库存状态1或是0*/ '', /*网络价*/ '', /*收藏人数*/ '', /*商品下架时间*/ '']);
-				_mvq.push(['$addPricing', /*价格描述*/ '']);
-				_mvq.push(['$logData']);
-
-				//爱投
-				var _aitgoodsData = [{
-					"pName": "开心果（190g）（电商专供新包装）", //商品名称 (必填)
-					"price": '25.9', //商品售价 (必填)
-					"clickUrl": window.location.href, //商品URL地址  (必填)
-					"pid": "11000703", //商品唯一标识（ID） (必填)
-					"imgUrl": "http://img.lppz.com/group1/M00/01/F8/CghmzVdGsFeARW03AAAiUxAMUNo874.jpg", //商品预览图URL地址 (必填)
-					"bName": "", //商品品牌名称
-					"bNameUrl": "", //品牌页URL地址
-					"cName": "", //一级分类名称
-					"subCategory": "嗑壳坚果", //二级分类名称
-					"cPageUrl": "", //一级分类页url
-					"startTime": "", //商品上架时间(13位或10位时间戳e.g.1441504971067)
-					"invalidTime": "", //商品下架时间
-					"originalPrice": "25.9", //商品原价
-					"inventoryNum": "", //商品库存数量
-					"star": "", //收藏人数
-					"score": "" //商品评分
-				}];
-
-				_gtc.push(["fnSetAccount", "1009"]);
-				_gtc.push(["v", "1"]);
-				_gtc.push(["fnGeneral", "arrived"]); //到达
-				_gtc.push(["fnGeneral", "addGoods", _aitgoodsData]); //商品
-				var nGtc = document.createElement("script");
-				nGtc.type = "text/javascript";
-				nGtc.async = true;
-				nGtc.src = ("https:" == document.location.protocol ? "https://sslcdn.istreamsche.com" : "http://ga.istreamsche.com") + "/stat/gtc.js";
-				document.getElementsByTagName("head")[0].appendChild(nGtc);
-			});
 		</script>
 		<script src="js/base.js"></script>
 	</body>

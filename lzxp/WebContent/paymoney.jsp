@@ -59,9 +59,9 @@ $(function () {
 			<% 
 				if(request.getSession().getAttribute("user")!=null){
 				//如果有传递过来用户信息
-					Users user = (Users)request.getSession().getAttribute("user");
+					Users user = (Users)request.getSession().getAttribute("user");					
 			%>
-					<li>欢迎<span class="log"><%=user.getUSERNAME() %></span>来到零嘴小铺官方商城！</li>
+					<li>欢迎<span class="log username"><%=user.getUSERNAME() %></span>来到零嘴小铺官方商城！</li>
 			<%
 				}else{
 			%>
@@ -125,7 +125,7 @@ $(function () {
 		</ul>
 	</div>
 </div>	</div>	
-	<div class="container order mgtop">
+	<div class="container order mgtop" style="width:1200px;margin:0 auto">
 		<div id="dialog" class="dialog">
 			<dl>
 				<dt>请在新打开的页面中完成付款</dt><dd>付款完成前请不要关闭此窗口</dd><dd>完成付款后请点击下面按钮</dd>
@@ -147,13 +147,13 @@ $(function () {
 					<tr>
 						<td width="100">订单编号:</td>
 						<td width="340">
-							<strong>LPB2017101800000001</strong>
+							<strong id="orderid"><%=request.getAttribute("orderid")%></strong>
 							<a href="#">[查看订单]</a>
 						</td>
 						
 							<td width="100">订单金额:</td>
 							<td>
-								<strong>￥61.80元</strong>
+								<strong>￥<%=request.getAttribute("orderbalance")%>元</strong>
 							</td>
 					</tr>
 					<tr>
@@ -195,7 +195,7 @@ $(function () {
 													</td>
 										</tr>
 								</table>
-								<input type="submit" id="paymentButton" class="paymentButton" value="立即支付" />
+								<input type="button" id="paymentButton" class="paymentButton" value="立即支付" />
 							</form>
 					
 			</div>
@@ -311,7 +311,24 @@ $(function () {
 	</div>
 	
 
+<script type="text/javascript">
+		//购物车结算按钮的点击
+		$(document).on("click",'#paymentButton',function(){
+			var username = $('.username').text();
+			var orderid = $("#orderid").text();	
+			location.href="OrderServlet?op=payOrder&UserName="+username+"&OrderId="+orderid;
+		});	
 
+		</script>
+		</script>
+		<script type="text/javascript">
+
+		</script>
+		<script type="text/javascript" src="http://www.lppz.com/resources/shop/js/o_code.js"></script>
+		<script type="text/javascript">
+
+		</script>
+		<script src="js/base.js"></script>
 
 
 </body>

@@ -1,3 +1,6 @@
+
+<%@page import="com.etc.lzxp.entity.V_AllGoods"%>
+<%@page import="java.util.List"%>
 <%@page import="com.etc.lzxp.entity.Users"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
@@ -56,23 +59,51 @@
 				  $("#sch-btn").click(function(){
 					  //获取关键字 
 					  var keyword = $("#keyword").val();
-					  if(keyword=="输入关键字"){
+					  /* alert("keyword:"+keyword); */
+					  if(keyword=="输入关键字"||keyword==""){
 						alert("请输入关键字！");  
 					  }else{
-						  alert(keyword);
 						  location.href="stype.jsp?keyword="+keyword;	
 					  }
 				  });
 				   
 			   });					
+			 //点击商品图片  获取商品Id进行对应商品的搜索
 			  $(function(){
 				  $(".name").click(function(){				  
-					var goodId = $(this).prev().val(); 
-					 
+					var goodId = $(this).prev().val(); 					 
 					 location.href = "GetAllGoodsServlet?op=queryGoodsById&goodsId="+goodId;
 				  });
 				  
 			  })
+			  //点击大类  进行大类所有商品的搜索
+			  $(function(){
+				  $(".ltype").click(function(){
+					var ltypeName = $(this).children('.ltypeName').val();
+					location.href = "stype.jsp?keyword="+ltypeName;
+					  
+				  });
+			  });
+			 //点击热门 关键字进行商品的模糊查询
+			 $(function(){
+				$(".hot_sh").click(function(){					
+					var hotword = $(this).text();
+					/* alert("hotword:"+hotword); */
+					location.href = "stype.jsp?keyword="+hotword;
+				});
+			 });
+			 //点击更多商品 进行对应搜索
+			 $(function(){
+				$(".more").click(function(){
+					//找到被激活的li对应的a标签内容
+					var keyword = $(this).parent('.sct-hot').prev('.sct-tabs').find("li[class='active'] a").text();				
+					/* alert(keyword); */
+					location.href = "stype.jsp?keyword="+keyword;
+								
+				});
+			 });
+			 
+			
 			  
 		</script>
 </head>
@@ -93,7 +124,7 @@
 							//如果有传递过来用户信息
 							Users user = (Users)request.getSession().getAttribute("user");
 							%>
-								<li>欢迎<span class="log"><%=user.getUSERNAME() %></span>来到零嘴小铺官方商城！</li>
+								<li>欢迎<span class="log username"><%=user.getUSERNAME() %></span>来到零嘴小铺官方商城！</li>
 							<%
 						}else{
 							%>
@@ -201,12 +232,12 @@
 					<div class="hot-tag">
 						<!--热门搜索-->
 						<span>热门搜索：</span>
-						<a class="red" href="#">松子</a>
-						<a href="#">牛肉</a>
-						<a href="#">开心果</a>
-						<a href="#">核桃</a>
-						<a href="#">话梅</a>
-						<a href="#">花生瓜子</a>
+						<a class="red hot_sh" href="javascript:void(0)">饼干</a>
+						<a class = "hot_sh"  href="javascript:void(0)">牛肉</a>
+						<a class = "hot_sh"  href="javascript:void(0)">豆干</a>
+						<a class = "hot_sh"  href="javascript:void(0)">进口</a>
+						<a class = "hot_sh"  href="javascript:void(0)">话梅</a>
+						<a class = "hot_sh"  href="javascript:void(0)">瓜子</a>
 					</div>
 					<!--搜索框-->
 					<div class="search-area">			
@@ -224,9 +255,7 @@
 							<div class="cart-roll">
 								<ul class="goods"></ul>
 							</div>
-							<div class="total">
-								<p>共<span class="red">0</span>件商品，共计<span class="sum">￥0.00</span></p>
-								<a class="settle" href="#" id="countOrder">去购物车结算</a>
+							<div class="total">						
 							</div>
 						</div>
 					</div>
@@ -248,7 +277,7 @@
 						<ul>
 							<li>
 								<div class="top-sort">
-									<h3><a href="#">
+									<h3><a href="javascript:void(0)" class = "ltype"  target="_blank"><input type="hidden" value="坚果炒货" class="ltypeName"/>
 						<span class="icon-fire font-color"></span>&nbsp;坚果炒货</a></h3></div>
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
@@ -266,7 +295,7 @@
 							</li>
 							<li>
 								<div class="top-sort">
-									<h3><a href="#">
+									<h3><a href="javascript:void(0)" class = "ltype"  target="_blank"><input type="hidden" value="肉脯鱼干" class="ltypeName"/>
 						<span class="icon-lab font-color"></span>&nbsp;肉脯鱼干</a></h3></div>
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
@@ -287,7 +316,7 @@
 							</li>
 							<li>
 								<div class="top-sort">
-									<h3><a href="#">
+									<h3><a href="javascript:void(0)" class = "ltype"  target="_blank"><input type="hidden" value="果干果脯" class="ltypeName"/>
 						<span class="icon-food font-color"></span>&nbsp;果干果脯</a></h3></div>
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
@@ -305,7 +334,7 @@
 							</li>
 							<li>
 								<div class="top-sort">
-									<h3><a href="#">
+									<h3><a href="javascript:void(0)" class = "ltype"  target="_blank"><input type="hidden" value="糕点糖果" class="ltypeName"/>
 						<span class="icon-search font-color"></span>&nbsp;糕点糖果</a></h3></div>
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
@@ -326,7 +355,7 @@
 							</li>
 							<li>
 								<div class="top-sort">
-									<h3><a href="#">
+									<h3><a href="javascript:void(0)" class = "ltype"  target="_blank"><input type="hidden" value="素食山珍" class="ltypeName"/>
 						<span class="icon-data font-color"></span>&nbsp;素食山珍</a></h3></div>
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
@@ -344,7 +373,7 @@
 							</li>
 							<li>
 								<div class="top-sort">
-									<h3><a href="#">
+									<h3><a href="javascript:void(0)" class = "ltype"  target="_blank"><input type="hidden" value="花茶饮品" class="ltypeName"/>
 						<span class="icon-cup font-color"></span>&nbsp;花茶饮品</a></h3></div>
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
@@ -359,7 +388,7 @@
 							</li>
 							<li>
 								<div class="top-sort">
-									<h3><a href="#">
+									<h3><a href="javascript:void(0)" class = "ltype"  target="_blank"><input type="hidden" value="进口食品" class="ltypeName"/>
 						<span class="icon-paperplane font-color"></span>&nbsp;进口食品</a></h3></div>
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
@@ -377,7 +406,7 @@
 							</li>
 							<li>
 								<div class="top-sort">
-									<h3><a href="#">
+									<h3><a href="javascript:void(0)" class = "ltype"  target="_blank"><input type="hidden" value="精选礼盒" class="ltypeName"/>
 						<span class="icon-shop font-color"></span>&nbsp;精选礼盒</a></h3></div>
 								<div class="sub-sort">
 									<ul class="sub-sort-list">
@@ -541,7 +570,7 @@
 					<div class="stor-slide of-slide">
 						<ul class="stor-list oslide">
 							<li>
-								<a title="首页类目楼层-坚果炒货" href="style.html" target="_blank"><img class="lazy" data-original="" src="img/jianguo/00.jpg" alt="首页类目楼层-坚果炒货" /></a>
+								<a title="首页类目楼层-坚果炒货" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/jianguo/00.jpg" alt="首页类目楼层-坚果炒货" /></a>
 							</li>
 						</ul>
 					</div>
@@ -550,118 +579,135 @@
 					<div class="sc-title jk">
 						<ul class="sct-tabs">
 							<li>
-								<a href="style.jsp?keyword=嗑壳坚果">嗑壳坚果</a>
+								<a  href="javascript:void(0)">嗑壳坚果</a>
 							</li>
 							<li>
-								<a href="style.jsp?keyword=果果仁仁">果果仁仁</a>
+								<a  href="javascript:void(0)">果果仁仁</a>
 							</li>
 							<li>
-								<a href="style.jsp?keyword=特惠炒货">特惠炒货</a>
+								<a  href="javascript:void(0)">特惠炒货</a>
 							</li>
 						</ul>
 						<div class="sct-hot">
-							<a href="style.html" target="_blank" class="more">更多商品&gt;</a>
+							<a href="javascript:void(0)" target="_blank" class="more">更多商品&gt;</a>
 						</div>
 					</div>
 					<div class="sc-info">
 						<div class="sin-node">
 							<div class="node-first">
-							<a title="嗑壳坚果" target="_blank" href="style.html">
+							<a title="嗑壳坚果" target="_blank" href="javascript:void(0)">
 						        <img class="lazy" data-original="" src="img/jianguo/01.jpg" alt="">
 							</a>									
 							</div><!--node-first  -->
 							
 							  <ul class="node-list">
 							   <!-- 这里动态显示图片 -->
-							   <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==1}">
-								         <c:if test="${goods.STYPEID==1}">								                	     
-								                      <li>
-														<div class="p-img">
-															<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
-																<img class="lazy"  src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}" >
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>	
+							   <% int step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==1){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>5){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>							  
 						</ul><!-- class="node-list" -->
 						
 						</div><!-- sin-node -->
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="果果仁仁" target="_blank" href="style.html">
+								<a title="果果仁仁" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/jianguo/02.jpg" alt="">
 								</a>
 							</div>
 							<ul class="node-list">
-								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==1}">
-								         <c:if test="${goods.STYPEID==2}">								                	     
-								                      <li>
-														<div class="p-img">
-														  <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
-																<img class="lazy"  src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>			
+								   <% step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==2){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>5){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>		
 							</ul>
 						</div>
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="特惠炒货" target="_blank" href="style.html">
+								<a title="特惠炒货" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/jianguo/03.jpg" alt="">
 								</a>
 							</div>
 							<ul class="node-list">
-								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==1}">
-								         <c:if test="${goods.STYPEID==3}">								                	     
-								                      <li>
-														<div class="p-img">
-														      <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
-																<img class="lazy" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>	
-								
+								    <% step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==3){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>5){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>
 							</ul>
 						</div>
 					</div>
@@ -675,7 +721,7 @@
 					<div class="stor-slide of-slide">
 						<ul class="stor-list oslide">
 							<li>
-								<a title="首页类目楼层-肉脯鱼干" href="" target="_blank"><img class="lazy" data-original="" src="img/rougan/00.jpg" alt="首页类目楼层-肉脯鱼干" /></a>
+								<a title="首页类目楼层-肉脯鱼干" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/rougan/00.jpg" alt="首页类目楼层-肉脯鱼干" /></a>
 							</li>
 						</ul>
 					</div>
@@ -684,115 +730,133 @@
 					<div class="sc-title jk">
 						<ul class="sct-tabs">
 							<li>
-								<a href="#">猪肉系列</a>
+								<a href="javascript:void(0)">猪肉系列</a>
 							</li>
 							<li>
-								<a href="#">牛肉系列</a>
+								<a href="javascript:void(0)">牛肉系列</a>
 							</li>
 							<li>
-								<a href="#">鸡鸭系列</a>
+								<a href="javascript:void(0)">鸡鸭系列</a>
 							</li>
 						</ul>
 						<div class="sct-hot">
-							<a href="#" target="_blank" class="more">更多商品&gt;</a>
+							<a href="javascript:void(0)" target="_blank" class="more">更多商品&gt;</a>
 						</div>
 					</div>
 					<div class="sc-info">
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="猪肉系列" target="_blank" href="#">
+								<a title="猪肉系列" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/rougan/01.jpg" alt="">
 								</a>
 							</div>
 							<ul class="node-list">
-								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==2}">
-								         <c:if test="${goods.STYPEID==4}">								                	     
-								                      <li>
-														<div class="p-img">
-																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
-																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>								
+								     <% step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==4){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>5){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>						
 
 							</ul>
 						</div>
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="牛肉系列" target="_blank" href="#">
+								<a title="牛肉系列" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/rougan/02.jpg" alt="">
 								</a>
 							</div>
 							<ul class="node-list">
-								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==2}">
-								         <c:if test="${goods.STYPEID==5}">								                	     
-								                      <li>
-														<div class="p-img">
-																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
-																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>								
+								     <% step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==5){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>5){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>						
 							</ul>
 						</div>
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="鸡鸭系列" target="_blank" href="#">
+								<a title="鸡鸭系列" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/rougan/03.jpg" alt="">
 								</a>
 							</div>
 							<ul class="node-list">
-							  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==2}">
-								         <c:if test="${goods.STYPEID==6}">								                	     
-								                      <li>
-														<div class="p-img">
-																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
-																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>									
+							     <% step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==6){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>5){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>									
 							</ul>
 						</div>
 					</div>
@@ -805,7 +869,7 @@
 					<div class="stor-slide of-slide">
 						<ul class="stor-list oslide">
 							<li>
-								<a title="首页类目楼层-果干果脯" href="" target="_blank"><img class="lazy" data-original="" src="img/guogan/00.jpg" alt="首页类目楼层-果干果脯" /></a>
+								<a title="首页类目楼层-果干果脯" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/guogan/00.jpg" alt="首页类目楼层-果干果脯" /></a>
 							</li>
 						</ul>
 					</div>
@@ -814,114 +878,132 @@
 					<div class="sc-title jk">
 						<ul class="sct-tabs">
 							<li>
-								<a href="#">缤纷果干</a>
+								<a href="javascript:void(0)">缤纷果干</a>
 							</li>
 							<li>
-								<a href="#">话梅山楂</a>
+								<a href="javascript:void(0)">话梅山楂</a>
 							</li>
 							<li>
-								<a href="#">红枣葡萄</a>
+								<a href="javascript:void(0)">红枣葡萄</a>
 							</li>
 						</ul>
 						<div class="sct-hot">
-							<a href="#" target="_blank" class="more">更多商品&gt;</a>
+							<a href="javascript:void(0)" target="_blank" class="more">更多商品&gt;</a>
 						</div>
 					</div>
 					<div class="sc-info">
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="缤纷果干" target="_blank" href="#">
+								<a title="缤纷果干" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/guogan/01.jpg" alt="">
 								</a>
 							</div>
-							<ul class="node-list">
-								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==3}">
-								         <c:if test="${goods.STYPEID==8}">								                	     
-								                      <li>
-														<div class="p-img">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
-																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>									
+							<ul class="node-list ">
+								    <% step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==8){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>5){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>								
 							</ul>
 						</div>
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="话梅山楂" target="_blank" href="#">
+								<a title="话梅山楂" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/guogan/02.jpg" alt="">
 								</a>
 							</div>
 							<ul class="node-list">
-							  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==3}">
-								         <c:if test="${goods.STYPEID==9}">								                	     
-								                      <li>
-														<div class="p-img">
-																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
-																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>									
+							    <% step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==9){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>5){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>						
 							</ul>
 						</div>
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="红枣葡萄" target="_blank" href="#">
+								<a title="红枣葡萄" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/guogan/03.jpg" alt="">
 								</a>
 							</div>
 						<ul class="node-list">
-						  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==3}">
-								         <c:if test="${goods.STYPEID==10}">								                	     
-								                      <li>
-														<div class="p-img">
-																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
-																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>	
+						     <% step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==10){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>5){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>
 								
 							</ul>
 						</div>
@@ -936,7 +1018,7 @@
 					<div class="stor-slide of-slide">
 						<ul class="stor-list oslide">
 							<li>
-								<a title="首页类目楼层-山珍素食" href="" target="_blank"><img class="lazy" data-original="" src="img/sushi/00.jpg" alt="首页类目楼层-山珍素食" /></a>
+								<a title="首页类目楼层-山珍素食" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/sushi/00.jpg" alt="首页类目楼层-山珍素食" /></a>
 							</li>
 						</ul>
 					</div>
@@ -945,85 +1027,98 @@
 					<div class="sc-title jk">
 						<ul class="sct-tabs">
 							<li>
-								<a href="#">美味豆干</a>
+								<a href="javascript:void(0)">美味豆干</a>
 							</li>
 							<li>
-								<a href="#">笋菌海带</a>
+								<a href="javascript:void(0)">笋菌海带</a>
 							</li>
 							<li>
-								<a href="#">其他山珍</a>
+								<a href="javascript:void(0)">其他山珍</a>
 							</li>
 						</ul>
 						<div class="sct-hot">
-							<a href="#" target="_blank" class="more">更多商品&gt;</a>
+							<a href="javascript:void(0)" target="_blank" class="more">更多商品&gt;</a>
 						</div>
 					</div>
 					<div class="sc-info">
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="美味豆干" target="_blank" href="#">
+								<a title="美味豆干" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/sushi/01.jpg" alt="">
 								</a>
 							</div>
-							<ul class="node-list">
-								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==4}">
-								         <c:if test="${goods.STYPEID==11}">								                	     
-								                      <li>
-														<div class="p-img">
-																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
-																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>	
+							<ul class="node-list txtx">
+								    <% step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==15){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>5){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>
 							</ul>
 						</div>
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="笋菌海带" target="_blank" href="#">
+								<a title="笋菌海带" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/sushi/02.jpg" alt="">
 								</a>
 							</div>
+										
 							<ul class="node-list">
-								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==4}">
-								         <c:if test="${goods.STYPEID==12}">								                	     
-								                      <li>
-														<div class="p-img">
-																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
-																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>	
+								    <% step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==16){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>4){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>
 								<li>
 									<div class="p-img">
-										<a title="泡椒味海带结 218g" href="#" target="_blank">
+										<a title="泡椒味海带结 218g" href="javascript:void(0)" target="_blank">
 											<img class="lazy" data-original="" src="img/sushi/022.jpg" alt="泡椒味海带结 218g" style="display: block;"></a>
 									</div>
 									<div class="p-bg"></div>
@@ -1042,34 +1137,40 @@
 						</div>
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="其他山珍" target="_blank" href="#">
+								<a title="其他山珍" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/sushi/03.jpg" alt="">
 								</a>
 							</div>
 							<ul class="node-list">
-								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==4}">
-								         <c:if test="${goods.STYPEID==13}">								                	     
-								                      <li>
-														<div class="p-img">
-																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
-																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>	
+								  <% step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==17){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>5){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>
 							</ul>
 						</div>
 					</div>
@@ -1083,7 +1184,7 @@
 					<div class="stor-slide of-slide">
 						<ul class="stor-list oslide">
 							<li>
-								<a title="首页类目楼层-糖果糕点" href="" target="_blank"><img class="lazy" data-original="" src="img/candy/00.jpg" alt="首页类目楼层-糖果糕点" /></a>
+								<a title="首页类目楼层-糖果糕点" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/candy/00.jpg" alt="首页类目楼层-糖果糕点" /></a>
 							</li>
 						</ul>
 					</div>
@@ -1092,115 +1193,133 @@
 					<div class="sc-title jk">
 						<ul class="sct-tabs">
 							<li>
-								<a href="#">糕点系列</a>
+								<a href="javascript:void(0)">糕点系列</a>
 							</li>
 							<li>
-								<a href="#">饼干系列</a>
+								<a href="javascript:void(0)">饼干系列</a>
 							</li>
 							<li>
-								<a href="#">糖果系列</a>
+								<a href="javascript:void(0)">糖果系列</a>
 							</li>
 						</ul>
 						<div class="sct-hot">
-							<a href="#" target="_blank" class="more">更多商品&gt;</a>
+							<a href="javascript:void(0)" target="_blank" class="more">更多商品&gt;</a>
 						</div>
 					</div>
 					<div class="sc-info">
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="糕点系列" target="_blank" href="#">
+								<a title="糕点系列" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/candy/01.jpg" alt="">
 								</a>
 							</div>
 							<ul class="node-list">
-								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==5}">
-								         <c:if test="${goods.STYPEID==15}">								                	     
-								                      <li>
-														<div class="p-img">
-																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name" >
-																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>							
+								 <% step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==11){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>5){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>					
 							</ul>
 						</div>
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="饼干系列" target="_blank" href="#">
+								<a title="饼干系列" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/candy/02.jpg" alt="">
 								</a>
 							</div>
 							<ul class="node-list">
-								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==5}">
-								         <c:if test="${goods.STYPEID==16}">								                	     
-								                      <li>
-														<div class="p-img">
-																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
-																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>	
+								  <% step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==12){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>5){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>
 							
 							</ul>
 						</div>
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="糖果系列" target="_blank" href="#">
+								<a title="糖果系列" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/candy/03.jpg" alt="">
 								</a>
 							</div>
 							<ul class="node-list">
-								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==5}">
-								         <c:if test="${goods.STYPEID==17}">								                	     
-								                      <li>
-														<div class="p-img">
-																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
-																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>					
+								  <% step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==13){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>5){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>		
 							</ul>
 						</div>
 					</div>
@@ -1214,7 +1333,7 @@
 					<div class="stor-slide of-slide">
 						<ul class="stor-list oslide">
 							<li>
-								<a title="首页类目楼层-进口食品" href="" target="_blank"><img class="lazy" data-original="" src="img/jinkou/00.jpg" alt="首页类目楼层-进口食品" /></a>
+								<a title="首页类目楼层-进口食品" href="javascript:void(0)" target="_blank"><img class="lazy" data-original="" src="img/jinkou/00.jpg" alt="首页类目楼层-进口食品" /></a>
 							</li>
 						</ul>
 					</div>
@@ -1223,96 +1342,108 @@
 					<div class="sc-title jk">
 						<ul class="sct-tabs">
 							<li>
-								<a href="#">进口糕点</a>
+								<a href="javascript:void(0)">进口糕点</a>
 							</li>
 							<li>
-								<a href="#">进口糖果</a>
+								<a href="javascript:void(0)">进口糖果</a>
 							</li>
 							<li>
-								<a href="#">休闲零食</a>
+								<a href="javascript:void(0)">休闲零食</a>
 							</li>
 						</ul>
 						<div class="sct-hot">
-							<a href="#" target="_blank" class="more">更多商品&gt;</a>
+							<a href="javascript:void(0)" target="_blank" class="more">更多商品&gt;</a>
 						</div>
 					</div>
 					<div class="sc-info">
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="进口糕点" target="_blank" href="#">
+								<a title="进口糕点" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/jinkou/01.jpg" alt="">
 								</a>
 							</div>
 							<ul class="node-list">
-								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==6}">
-								         <c:if test="${goods.STYPEID==18}">								                	     
-								                      <li>
-														<div class="p-img">
-																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
-																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>	
+								  <% step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==20){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>5){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>
 								
 							</ul>
 						</div>
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="进口糖果" target="_blank" href="#">
+								<a title="进口糖果" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/jinkou/02.jpg" alt="">
 								</a>
 							</div>
 							<ul class="node-list">
-								  <c:forEach items="${requestScope.list}" var="goods">							            							            								         
-								   <c:if test="${goods.LTYPEID==6}">
-								         <c:if test="${goods.STYPEID==19}">								                	     
-								                      <li>
-														<div class="p-img">
-																<input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a title=" ${goods.GOODSNAME}" href="javascript:void(0)" target="_blank" class = "name">
-																<img class="lazy" data-original="#" src=" ${goods.PICTUREADDRESS}" alt="${goods.GOODSNAME}" style="display: block;"></a>
-															</div>
-															<div class="p-bg"></div>
-															<div class="p-info">
-															    <input type="hidden" value ="${goods.GOODSID}" id="goodsId"/>
-																<a class="name" href="javascript:void(0)" target="_blank" title="${goods.GOODSNAME}">
-																 ${goods.GOODSNAME}
-																</a>
-																<span class="price">
-																<small>￥</small>${goods.GOODSPRICE}<small></small>
-																</span>
-															</div>
-														</li> 																           
-								          </c:if>							  
-								   </c:if>
-							   </c:forEach>	
+								 <% step=0;
+							   	for(V_AllGoods goods:(List<V_AllGoods>)request.getAttribute("list")){
+								   if(goods.getSTYPEID()==21){
+									   %>
+									   		<li>
+												<div class="p-img">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a title="<%=goods.getGOODSNAME()%>" href="javascript:void(0)" target="_blank" class = "name">
+													<img class="lazy"  src=" <%=goods.getPICTUREADDRESS()%>" alt="<%=goods.getGOODSNAME()%>" style="display: block;"></a>
+												</div>
+												<div class="p-bg"></div>
+												<div class="p-info">
+													<input type="hidden" value ="<%=goods.getGOODSID()%>" id="goodsId"/>
+													<a class="name" href="javascript:void(0)" target="_blank" title="<%=goods.getGOODSNAME()%>" >
+													<%=goods.getGOODSNAME()%>
+													</a>
+													<span class="price">
+														<small>￥</small><%=goods.getGOODSPRICE()%><small></small>
+													</span>
+												</div>
+											</li> 	
+									   <%
+									   step++;
+									   if(step>5){
+										   break;
+									   }
+								   }
+							   } 							   
+						  %>
 								
 							</ul>
 						</div>
 						<div class="sin-node">
 							<div class="node-first">
-								<a title="休闲零食" target="_blank" href="#">
+							<a title="休闲零食" target="_blank" href="javascript:void(0)">
 									<img class="lazy" data-original="" src="img/jinkou/03.jpg" alt="">
 								</a>
 							</div>
 							<ul class="node-list">
 								<li>
 									<div class="p-img">
-										<a title="ZEK芝士鳕鱼肠" href="#" target="_blank">
+										<a title="ZEK芝士鳕鱼肠" href="javascript:void(0)" target="_blank">
 											<img class="lazy" data-original="" src="img/jinkou/031.jpg" alt="ZEK芝士鳕鱼肠" style="display: block;"></a>
 									</div>
 									<div class="p-bg"></div>
@@ -1342,7 +1473,7 @@
 									</li>
 									<li>
 										<div class="p-img">
-											<a title="海牌海苔鱿鱼味20g" href="#" target="_blank" >
+											<a title="海牌海苔鱿鱼味20g" href="javascript:void(0)" target="_blank" >
 												<img class="lazy" data-original="" src="img/jinkou/033.jpg" alt="海牌海苔鱿鱼味20g" style="display: block;"></a>
 										</div>
 										<div class="p-bg"></div>
@@ -1357,7 +1488,7 @@
 									</li>
 									<li>
 										<div class="p-img">
-											<a title="ZEK芝士鳕鱼肠" href="#" target="_blank">
+											<a title="ZEK芝士鳕鱼肠" href="javascript:void(0)" target="_blank">
 												<img class="lazy" data-original="" src="img/jinkou/031.jpg" alt="ZEK芝士鳕鱼肠" style="display: block;"></a>
 										</div>
 										<div class="p-bg"></div>
@@ -1429,7 +1560,7 @@
 						<a rel="5241265443009357" href="javascript:;"><i class="icon-paperplane font-color"></i><span>进口食品</span></a>
 					</li>
 				</ul>
-			</div>
+			</div> 
 
 			<div id="Bing">
 			</div>
@@ -1640,65 +1771,74 @@
 			<script src="http://www.lppz.com/resources/shop/js/base.js"></script>
 			<script type="text/javascript" src="http://www.lppz.com/resources/shop/js/o_code.js"></script>
 
-			<!––到达&重定向––>
-			<script type="text/javascript">
-				var _gtc = _gtc || [];
-				_gtc.push(["fnSetAccount", "1009"]);
-				_gtc.push(["v", "1"]);
-				_gtc.push(["fnGeneral", "arrived"]); //到达
-				var nGtc = document.createElement("script");
-				nGtc.type = "text/javascript";
-				nGtc.async = true;
-				nGtc.src = ("https:" == document.location.protocol ? "https://sslcdn.istreamsche.com" : "http://ga.istreamsche.com") + "/stat/gtc.js";
-				document.getElementsByTagName("head")[0].appendChild(nGtc);
-			</script>
+		<script type="text/javascript">
+		//页面加载时初始化购物车中的信息
+			$(".goods").empty();
+			$(".total").empty();
+			$("#goodsnum").text("");
+			var sumgoods = 0;
+			var sumprice = 0;
+			var username = $('.username').text();
+			$.post("${path}GoodsCartServlet",{"op":"queryShopCart","UserName":username},function(listgc,status){
+				$.each(listgc,function(index,data){
+					/* 购物车的的item- */							
+					$(".goods").append("<li><input type='hidden' id='GOODSID' class='goodsiddel' value='"+data.GOODSID+"' /><div class='gd-lft'><a class='pic'><img src='"+data.GOODSPICTURE+"'/></a><p class='tit'>"+data.GOODSNAME+"</p></div><div class='gd-price'><span>￥"
+						+data.GOODSPRICE+"<small>x"+data.GOODSCOUNT+"</small></span><a href='javascript:;' class='delete'>删除</a></div></li>");
+			   	   sumgoods += data.GOODSCOUNT;
+			   	   sumprice += (sumgoods*data.GOODSPRICE);
+				});			
+				$(".total").append("<p>共<span class='red'>"+sumgoods+"</span>件商品，共计<span class='sum+'>￥"+sumprice.toFixed(2)+"</span></p><a class='settle' href='javascript:;'>去购物车结算</a>");
+				$("#goodsnum").text(sumgoods);
+			});	
+			
+			
+		</script>	
 
-			<script type="text/javascript">
-				$(function() {
-					//判断是否弹窗
-					$.ajax({
-						type: "get",
-						cache: false,
-						url: "http://www.lppz.com/sso/qryOpenBinTip.jhtml",
-						success: function(data) {
-							var v = eval("(" + data + ")");
-							if(v.flag == '1') {
-								//查询可绑定的第三方账号
-								$.ajax({
-									type: "get",
-									cache: false,
-									url: "http://www.lppz.com/sso/qryThirdAccountBind.jhtml",
-									success: function(data) {
-										var v = eval("(" + data + ")");
-										if(v.flag == 's') {
-											document.getElementById("ceng").style.display = ""; //显示  
-											document.getElementById("Bing").innerHTML = v.con;
-											var $pupModal = $(".popup-modal");
-											var $pupModalHeight = $pupModal.height();
-											var $pupModalWidth = $pupModal.width();
-											var closePupModal = function() {
-												$pupModal.hide();
-												$(".mask-layer").remove();
-											};
-											$pupModal.css({
-												"margin-top": -$pupModalHeight / 2,
-												"margin-left": -$pupModalWidth / 2
-											});
-											$pupModal.find(".pm-title").on("click", "a", function() {
-												closePupModal();
-											});
-											$pupModal.find(".pm-btn").on("click", ".cancel", function() {
-												closePupModal();
-											});
-										}
-									}
-								});
-							}
-						}
+<script type="text/javascript">
+			//购物车中删除
+			$(document).on("click",'.delete',function(index){
+				var sumgoods = 0;
+				var sumprice = 0;
+				var username = $('.username').text();
+				var goodsiddel=$(this).parent().parent().find("#GOODSID").val();
+				var flag=confirm("是否要删除");
+				if(flag){
+					$(".goods").empty();
+					$(".total").empty();
+					$("#goodsnum").text("");
+					$.post("${path}GoodsCartServlet",{"op":"queryGoodsDelete","UserName":username,"GoodsID":goodsiddel},function(listgc,status){			
+					$.each(listgc,function(index,data){
+					/* 购物车的的item- */							
+					$(".goods").append("<li><input type='hidden' id='GOODSID' class='goodsiddel' value='"+data.GOODSID+"' /><div class='gd-lft'><a class='pic'><img src='"+data.GOODSPICTURE+"'/></a><p class='tit'>"+data.GOODSNAME+"</p></div><div class='gd-price'><span>￥"
+					+data.GOODSPRICE+"<small>x"+data.GOODSCOUNT+"</small></span><a href='javascript:;' class='delete'"+data.GOODSID+"'>删除</a></div></li>");
+					sumgoods += data.GOODSCOUNT;
+					sumprice += (sumgoods*data.GOODSPRICE);
+					});			
+					$(".total").append("<p>共<span class='red'>"+sumgoods+"</span>件商品，共计<span class='sum+'>￥"+sumprice.toFixed(2)+"</span></p><a class='settle' href='javascript:;'>去购物车结算</a>");
+					$("#goodsnum").text(sumgoods);
 					});
-				});
-			</script>
+				}else{
+					
+				}
+			});
 
+		</script>
+
+		<script type="text/javascript">
+		//购物车结算按钮的点击
+		var username = $('.username').text();
+		$(document).on("click",'.settle',function(index){
+							$.post("${path}GoodsCartServlet",{"op":"submitOrder","UserName":username},function(result,status){
+								if(result == true){
+									//如果登录成功,页面跳转
+									location.href="http://localhost:8080/lzxp/myorder2.jsp";
+								}else{
+									//如果失败
+									location.href="http://localhost:8080/lzxp/login.jsp";
+								}
+							});
+						});
+		</script>
 
 </body>
 </html>

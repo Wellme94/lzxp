@@ -27,8 +27,8 @@ public class GetAllGoodsDao {
 	 //查找视图中的数据
 	  public PageData<V_SearchGoods> getGoodsBykeyword(int page, int pageSize, String keyword, int goodsState){
 			
-	    	String sql = "select * from V_SEARCHGOODS where  (STYPENAME =? or GOODSNAME like ?) and  GOODSSTATE = ?";        
-			return BaseDao.getOraclePage(sql, page, pageSize, V_SearchGoods.class,keyword,"%"+keyword+"%",goodsState);
+	    	String sql = "select * from V_SEARCHGOODS where  (STYPENAME =? or LTYPENAME =? or GOODSNAME like ?) and  GOODSSTATE = ?";        
+			return BaseDao.getOraclePage(sql, page, pageSize, V_SearchGoods.class,keyword,keyword,"%"+keyword+"%",goodsState);
 	    	
 	    } 
 }

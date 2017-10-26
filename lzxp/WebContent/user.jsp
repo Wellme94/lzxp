@@ -18,10 +18,19 @@
 		<link rel="stylesheet" href="css/bootstrap.min.css" />
 		<script src="js/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
-		
-		
 		<script type="text/javascript">
 			$(function () {
+				
+				
+				/* 初始化性别 */
+				if(${requestScope.userInfo.USERSEX.equals("男")}){
+					$("#nan").prop("checked",true);
+				}
+				
+				if(${requestScope.userInfo.USERSEX.equals("女")}){
+					$("#nv").prop("checked",true);
+				} 
+				
 				
 				/* 结算点击事件 */
 				$("#countOrder").click(function () {
@@ -114,15 +123,6 @@
 					});
 				});
 				
-				
-				/* 我的订单$$$$$$$$$去付款点击事件 */
-				$(document).on("click",".goPay",function(){
-					//获取订单编号
-					var $orderId = $(this).parents("tr").find("input").val();
-					//页面跳转
-					location.href="http://localhost:8080/lzxp/GoodsOrderServlet?op=myOrder&orderId="+$orderId;
-				});
-				
 					/* 页面内容和分页的显示 */
 				function showContent(pd){
 					//获取订单信息
@@ -133,14 +133,23 @@
 						$(".pagination").find("li").remove()
 						//显示信息
 						 $.each(pd.data,function(index,order){
-							  if (order.USERSTATE=="待付款") {
+							 if (order.USERSTATE=="待付款") {
+								 //待付款
 								  $("#tableContent").append("<tr><td>"+order.ORDERDATE+"<input type='hidden' value='"+order.ORDERID+"'/></td>"+
+											"<td>"+order.ORDERCONTENT+"</td>"+
+											"<td class='orderbalance'>"+order.ORDERBALANCE+"</td>"+
+											"<td>"+order.USERNAME+"</td>"+
+											"<td>"+order.USERSTATE+"</td>"+
+											"<td><a class='btn btn-danger gotoorder'>去付款</a></td></tr>");
+							}else if(order.USERSTATE=="待收货"){
+								//待收货
+								 $("#tableContent").append("<tr><td>"+order.ORDERDATE+"<input type='hidden' value='"+order.ORDERID+"'/></td>"+
 											"<td>"+order.ORDERCONTENT+"</td>"+
 											"<td>"+order.ORDERBALANCE+"</td>"+
 											"<td>"+order.USERNAME+"</td>"+
 											"<td>"+order.USERSTATE+"</td>"+
-											"<td><button class='btn btn-default btn-danger' class='goPay'>去付款</button></td></tr>");
-							}else{
+											"<td><a class='btn btn-danger goReceive-btn'>确认收货</a></td></tr>");
+							}else {
 								 $("#tableContent").append("<tr><td>"+order.ORDERDATE+"<input type='hidden' value='"+order.ORDERID+"'/></td>"+
 											"<td>"+order.ORDERCONTENT+"</td>"+
 											"<td>"+order.ORDERBALANCE+"</td>"+
@@ -148,7 +157,6 @@
 											"<td>"+order.USERSTATE+"</td>"+
 											"<td></td></tr>");
 							} 
-							
 						});
 						
 						//显示分页
@@ -163,20 +171,39 @@
 						}
 						$(".pagination").append('<li><a href="#" id="nextPage">Next</a></li>'); 
 					}		
-				}/* function showContent(pd) */
+				}
+					
 				
-				 $(".sch-btn").click(function(){
-					   alert("模糊查询"); 		   
-					   var keyword = $(".sch-key").val();  
-					 if(keyword!="商品搜索"||keyword=""){
-						 alert("请输入关键字！");			
-					  }else{
-						  location.href = "GetAllGoodsServlet?op=qureyAll&keyword="+keyword;
-					  }
-				  });
 			});
-		
-		</script>		
+		</script>
+		 <script type="text/javascript">
+		 
+		//点击查询按钮 进行商品名查询
+		   $(function(){				   
+			  $("#sch-btn").click(function(){					 
+				  //获取关键字 
+				  var keyword = $("#keyword").val();					  
+				  if(keyword=="商品搜索"||keyword.length == 0 || keyword.match(/^\s+$/g)){
+					alert("请输入关键字！");  
+				  }else{
+					  location.href="stype.jsp?keyword="+keyword;	
+				  }
+			  });
+			   
+		   });		
+		 
+		 </script>
+			
+		<script type="text/javascript">
+		//去付款的点击
+		$(document).on("click",'.gotoorder',function(index){
+			var orderbalance = $(this).parent().parent().find(".orderbalance").text();
+			var username = $('.username').text();
+			var orderid = $(this).parent().parent().find("input").val();
+				location.href="OrderServlet?op=gotoOrder&UserName="+username+"&Orderid="+orderid+"&Orderbalance="+orderbalance;
+		});
+		</script>
+				
 	</head>
 </head>
 <body>
@@ -191,7 +218,7 @@
 							//如果有传递过来用户信息
 							Users user = (Users)request.getSession().getAttribute("user");
 							%>
-								<li>欢迎<span class="log"><%=user.getUSERNAME() %></span>来到零嘴小铺官方商城！</li>
+								<li>欢迎<span class="log username"><%=user.getUSERNAME() %></span>来到零嘴小铺官方商城！</li>
 							<%
 						}else{
 							%>
@@ -203,7 +230,7 @@
 						<a class="log" href="login.jsp">[登录]</a>
 					</li>
 					<li id="headerRegister" class="headerRegister none">
-						<a class="reg" href="register.jsp">[注册]</a>
+						<a class="reg" href="register.html">[注册]</a>
 					</li>
 				</ul>
 			</div>
@@ -211,14 +238,14 @@
 		<div class="header">
 			<div class="head-main wrap clearfix">
 				<div class="logo">
-					<a href="index.jsp">零嘴小铺</a><span>官方商城</span></div>
+					<a >零嘴小铺</a><span>官方商城</span></div>
 
 				<div class="hd-user">
 					<div class="user-search">
-						
-							<input class="sch-key" type="text" name="keyword" id="keyword" value="" onfocus="if (value =='商品搜索'){value =''}" onblur="if (value ==''){value='商品搜索'}">
-							<input class="sch-btn" type="submit" value="">
-					   
+						<!--<form id="productSearchForm" action="#" method="get" target="_blank">-->
+							<input class="sch-key" type="text" name="keyword" id="keyword" value="商品搜索" onfocus="if (value =='商品搜索'){value =''}" onblur="if (value ==''){value='商品搜索'}">
+							<input class="sch-btn" type="button" value="" id="sch-btn">
+					    <!--</form>-->
 					</div>
 					<div class="user-shoping">
 						<a class="us-btn indexcart" href="cartlist.html">购物车</a>
@@ -255,6 +282,9 @@
 								<li data-tab="Security_Center" style="border: 0;">
 									<a href="#panel-3" data-toggle="tab">安全中心</a>
 								</li>
+								<li data-tab="Receiving_address" style="border: 0;">
+									<a href="#panel-4" data-toggle="tab">收货地址</a>
+								</li>
 								<li data-tab="My_comments" style="border: 0;">
 									<a href="#panel-5" data-toggle="tab">我的评论</a>
 								</li>
@@ -276,7 +306,7 @@
 															<div class="ui-avatar">
 																<img id="avatarImg" src="img/avatar.png" alt="用户头像" />
 																<span class="layer"></span>
-																<span class="mask"><a class="edit member-image" href="#">编辑头像</a></span>
+																<span class="mask"><a class="edit member-image">编辑头像</a></span>
 															</div>
 															<div class="ui-mate">
 															</div>
@@ -310,7 +340,7 @@
 															<li>
 
 																<div class="data-submit-btn">
-																	<button class="save" onclick="" id="save">保存</button>
+																	<button class="save" id="save">保存</button>
 
 																</div>
 															</li>
@@ -327,9 +357,9 @@
 										<h3>我的订单</h3></div>
 									<div class="uc-recently-box">
 										<div class="recent-type">
-											<a class="current" href="#" id="noPay">待付款</a>
-											<a class="no-pay" href="#" id="noReceive">待收货</a>
-											<a class="no-pay" href="#" id="hasReceive">已完成</a>
+											<a class="current"  id="noPay" href="#">待付款</a>
+											<a class="no-pay"  id="noReceive" href="#">待收货</a>
+											<a class="no-pay"  id="hasReceive" href="#">已完成</a>
 											
 										</div>
 										<form action="#" name="form1" id="form1" mothed="get">
@@ -368,25 +398,15 @@
 
 	<!--  分页开始 -->
 <div class="row">
-<div class="col-md-4"></div>
-<div class="col-md-4">
+<div class="col-md-2"></div>
+<div class="col-md-8">
 			<ul class="pagination">
-				<li><a href="#" id="prevPage">Prev</a></li>
 					<!-- 由jQuery进行处理 -->
 					
-					<%-- <%-- <c:forEach begin="1" end="${pageData.totalPage}" var="index">
-			       <c:if test="${pageData.page ==index}"> --%>
-			         <%--   <li class="active"> <a href="#" class="pageNo">1</a></li>
-			       </c:if>
-			       <c:if test="${pageData.page !=index}">
-				       <li> <a href="#" class="pageNo">2</a></li>
-				  </c:if>
-				</c:forEach> --%>
 					
-				<!-- <li><a href="#">Next</a></li> -->
 			</ul>
 		</div>
-	<div class="col-md-4"></div>	
+	<div class="col-md-2"></div>	
 </div>
 <!--  分页结束 -->
 											
@@ -402,8 +422,8 @@
 									<div class="uc-recently-box">
 										<div class="recent-wrap">
 											<div class="safe-level clearfix">
-												<div class="sl-txt">安全等级：</div>
-												<div class="sl-state"><span class="rank">低</span><span class="icon"></span><span class="hint">设置支付密码，保障账户安全</span></div>
+												<!-- <div class="sl-txt">安全等级：</div> -->
+												<div class="sl-state"><!-- <span class="rank">低</span><span class="icon"></span> --><span class="hint">设置支付密码，保障账户安全</span></div>
 											</div>
 										</div>
 										<div class="safe-setting">
@@ -411,10 +431,10 @@
 												<li>
 													<div class="sf-info already"><em><i class="icon"></i>登录密码</em><span>登录密码能够保证您的账户安全，让您购物更放心</span></div>
 													<div class="sf-op">
-														<a class="text-btn" href="#">修改密码</a>
+														<a class="text-btn" href="#updatePwd" data-toggle="modal">修改密码</a>
 													</div>
 												</li>
-												<li>
+												<!-- <li>
 													<div class="sf-info already"><em><i class="icon"></i>验证手机</em><span>您验证的手机：180****3375</span></div>
 													<div class="sf-op">
 														<a class="text-btn" href="#">修改手机</a>
@@ -425,13 +445,62 @@
 													<div class="sf-op">
 														<a class="view-btn" href="#">立即设置</a>
 													</div>
-												</li>
+												</li> -->
 
 											</ul>
 										</div>
 									</div>
 								</div>
 							</div>
+							<div data-tab="Receiving_address" class="tab-pane" id="panel-4">
+								<div class="uc-recently">
+									<div class="uc-recently-top">
+										<h3>收货地址</h3></div>
+									<div class="uc-recently-box">
+										<div class="recent-wrap receive-addr-top clearfix">
+											<a class="view-btn add-new-receiver" href="javascript:;">新增收货地址</a>
+											<span class="desc mlt">您已创建<em class="red receiver-nums">1</em>个收货地址，最多可创建<em class="red">5</em>个</span>
+										</div>
+										<div class="receive-addr-list">
+
+											<div class="addr-item" id="0c500d1c6a804694853bbc17c8806117">
+												<div class="addr-info">
+													<dl>
+														<dt>威猛先生<span class="default">默认地址</span></dt>
+														<dd>
+															<div class="lab">收&nbsp;&nbsp;货&nbsp;&nbsp;人：</div>
+															<div class="intr">威猛先生</div>
+														</dd>
+														<dd>
+															<div class="lab">所在地区：</div>
+															<div class="intr">福建省厦门市思明区</div>
+														</dd>
+														<dd>
+															<div class="lab">地　　址：</div>
+															<div class="intr">海怡大厦</div>
+														</dd>
+														<dd>
+															<div class="lab">邮政编码：</div>
+															<div class="intr">350700</div>
+														</dd>
+														<dd>
+															<div class="lab">手　　机：</div>
+															<div class="intr">18039023375</div>
+														</dd>
+													</dl>
+												</div>
+												<div class="addr-op">
+													<a class="view-btn receiver-edit" receiverid="0c500d1c6a804694853bbc17c8806117" href="javascript:;">编辑</a>
+												</div>
+												<a href="javascript:;" receiverid="0c500d1c6a804694853bbc17c8806117" class="addr-del">删除</a>
+											</div>
+
+										</div>
+
+									</div>
+								</div>
+							</div>
+
 							<div data-tab="My_comments" class="tab-pane" id="panel-5">
 
 								<div class="uc-recently">
@@ -439,9 +508,9 @@
 										<h3>我的评价</h3></div>
 									<div class="uc-recently-box">
 										<div class="recent-type">
-											<a class="current" href="#">所有评价</a>
-											<a class="no-pay" href="#">待评价（0）</a>
-											<a class="no-pay" href="#">已评价（0）</a>
+											<a class="current" >所有评价</a>
+											<a class="no-pay" >待评价（0）</a>
+											<a class="no-pay" >已评价（0）</a>
 										</div>
 										<table class="user-comm-tab">
 											<tbody>
@@ -494,9 +563,9 @@
 							<dl>
 								<dt><strong>购物指南</strong></dt>
 								<dd>
-									<a target="_blank" href="#">安全账户</a>
-									<a target="_blank" href="#">购物流程</a>
-									<a target="_blank" href="#">生日礼购物流程</a>
+									<a target="_blank" >安全账户</a>
+									<a target="_blank" >购物流程</a>
+									<a target="_blank" >生日礼购物流程</a>
 									
 								</dd>
 
@@ -504,17 +573,17 @@
 							<dl>
 								<dt><strong>物流配送</strong></dt>
 								<dd>
-									<a target="_blank" href="#">配送说明</a>
-									<a target="_blank" href="#">签收与验货</a>
+									<a target="_blank" >配送说明</a>
+									<a target="_blank" >签收与验货</a>
 								</dd>
 
 							</dl>
 							<dl>
 								<dt><strong>付款说明</strong></dt>
 								<dd>
-									<a target="_blank" href="#">发票制度</a>
-									<a target="_blank" href="#">公司转账</a>
-									<a target="_blank" href="#">在线支付</a>
+									<a target="_blank" >发票制度</a>
+									<a target="_blank">公司转账</a>
+									<a target="_blank" >在线支付</a>
 								</dd>
 
 							</dl>
@@ -583,25 +652,77 @@
 				</div>
 			</div>
 			
-			<input id="fileupload" type="file" style="display:none;" name="file" data-url="http://home.lppz.com/member/editMemberImage.jhtml" multiple>
+		
+		<!-- 修改密码模态窗口 -->
+		<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			
+			<div class="modal fade" id="updatePwd" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+				<div class="modal-dialog" >
+					<div class="modal-content">
+						<div class="modal-header">
+							 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+							<h4 class="modal-title" id="myModalLabel" style="text-align:center">
+								修改密码
+							</h4>
+						</div>
+						<div class="modal-body">
+							
+							<div class="row clearfix">
+							<div class="col-md-1 column"></div>
+			<div class="col-md-10 column">
+				
+				<div class="form-group">
+					<input type="hidden" name="userName" value="${sessionScope.user.USERNAME }" id="userName"/>
+					 <label for="inputPassword3" class="col-sm-3 control-label" name="beforePwd">原密码：</label>
+					<div class="col-sm-9">
+						<input type="password" class="form-control" id="beforePwd" />
+					</div>
+				</div>
+				
+				<div class="form-group" style="margin-top:50px">
+					 <label for="inputPassword3" class="col-sm-3 control-label" name="newPwd">新密码：</label>
+					<div class="col-sm-9">
+						<input type="password" class="form-control" id="newPwd" />
+					</div>
+				</div>
+				
+				<div class="form-group" style="margin-top:100px">
+				<div class=" col-sm-4"></div>
+					<div class=" col-sm-4">
+						 <button id="changePwd-btn" class="btn btn-danger" style="width:140px" data-dismiss="modal" >提交</button>
+					</div>
+				<div class=" col-sm-4"></div>
+				</div>
+			<div class="col-md-1 column"></div>
+		</div>
+	</div>
+							
+							
+						</div>
+						
+					</div>
+					
+				</div>
+				
+			</div>
+			
+		</div>
+	</div>
+</div>
+		
 		
 			<!-- lay外置插件 -->
-			<script src="js/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
-			<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+			
 			<link rel="stylesheet" href="layui/layer.css">
 			<script src="layui/layer.js" type="text/javascript"></script>
-			
 			<!-- lay外置插件 -->
+		
 			<script type="text/javascript">
 			$(function () {
-				/* 初始化性别 */
-				if(${requestScope.userInfo.USERSEX.equals("男")}){
-					$("#nan").prop("checked",true);
-				}
 				
-				if(${requestScope.userInfo.USERSEX.equals("女")}){
-					$("#nv").prop("checked",true);
-				} 
+				
 				
 				/* 保存点击事件 */
 				$("#save").click(function () {
@@ -624,26 +745,85 @@
 						if(data == true){
 							//保存成功
 							console.log("1");
-							  layer.msg('保存成功',{
-								  time: 3000
-								  
-							  });
+							layer.alert('保存成功', {icon: 1});
 								
 						}else{
 							console.log("2");
-							 layer.msg('保存成功',{
-								  time: 3000
-								  
-							  });
+							layer.alert('保存失败', {icon: 1});
 						}
 					});
 					
 				});
 				
 				
+				/* 修改密码点击事件 */
+				$("#changePwd-btn").click(function () {
+					//获取文本信息
+					var $uesrName = $("#userName").val();
+					var $beforePwd= $("#beforePwd").val();
+					var $newPwd = $("#newPwd").val();
+					//ajax
+					$.post("UsersServlet",{"op":"changePwd","beforePwd":$beforePwd,"newPwd":$newPwd,"userName":$uesrName},function(data,status){
+						
+						layer.alert(data, {icon: 1});
+						//清空密码输入框
+						$("#beforePwd").val("");
+						$("#newPwd").val("");
+						if ("操作成功"==data) {
+							alert(data);
+							//页面跳转,到登录页面
+							location.href="login.jsp";
+						}
+						
+					});
+					
+				});
+				
+				
+				
+				/* 待收货点击事件 */
+				$(document).on("click",".goReceive-btn",function(){
+					//获取该订单id
+					var $orderId = $(this).parents("tr").find("input").val();
+					//提示确认要收货吗？
+					layer.confirm('确认收货？', {icon: 3, title:'提示'}, function(index){
+						
+						//获取当前页数
+						var $nowPage = 0;
+						var $li = $(".pagination").find("li");
+						 for(var i = 0;i<$li.size();i++){ 
+							 if($li.eq(i).attr("class") =="active"){
+								//如果页面被触发,获取该页面的页数
+								$nowPage = $li.eq(i).text();
+								break;
+							} 
+						}
+						 
+						//ajax
+					  	$.post("GoodsOrderServlet",{"op":"goReceiver","orderId":$orderId},function(data,status){
+					  		if (data == false) {
+					  			//操作失败
+								layer.alert('操作失败', {icon: 1});
+								
+							}else{
+								//操作成功
+					  			layer.alert('操作成功', {icon: 1});
+					  			/* 显示待收货表格点击事件 */
+								$("#noReceive").click();
+							}
+					  	});
+					  
+					
+					  layer.close(index);
+					});  
+					
+				});
+				
+				
 			});
-		
-			
 		</script>
+		
+		
+		
 		</body>
 </html>

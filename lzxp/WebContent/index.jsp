@@ -75,7 +75,7 @@
 								<a target="_blank" href="GetGoodsServlet?op=queryAllGoods">所有商品</a>
 							</li>
 							<li>
-								<a href="#portfolio">关于我们</a>
+								<a href="#about">关于我们</a>
 							</li>
 							<!--<li><a href="#team">TEAM</a></li>
 						<li><a href="#contact">CONTACT</a></li>-->

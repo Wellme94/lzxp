@@ -47,11 +47,26 @@ public class UsersService {
 	}
 	
 	/**
+	 * 修改密码
+	 * @param userName用户名
+	 * @param beforPwd 原始密码
+	 * @param newPwd 新密码
+	 * @return 结果
+	 */
+	public String updatePwd(String userName,String beforePwd,String newPwd){
+		return ud.updatePwd(userName, beforePwd, newPwd);
+	}
+	
+	/**
 	 * 根据用户详情ID修改用户详情信息表
 	 * @param userInfo 用户详情信息
 	 * @return true false
 	 */
 	public boolean updateUserInfoById(Users_info userInfo){
 		return ud.updateUserInfoById(userInfo);
+	}
+	
+	public int getUserId(String username){
+		return ud.getUserId(username);
 	}
 }

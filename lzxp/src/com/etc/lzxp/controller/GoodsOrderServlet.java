@@ -1,4 +1,4 @@
-package com.etc.lzxp.controller;
+ï»¿package com.etc.lzxp.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,7 +18,7 @@ import com.google.gson.Gson;
 
 /**
  * Servlet implementation class GoodsOrderServlet
- * ¶©µ¥±íµÄServlet
+ * è®¢å•è¡¨çš„Servlet
  */
 @WebServlet("/GoodsOrderServlet")
 public class GoodsOrderServlet extends HttpServlet {
@@ -36,44 +36,44 @@ public class GoodsOrderServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//ÉèÖÃÇëÇó£¬ÏìÓ¦±àÂë
+		//è®¾ç½®è¯·æ±‚ï¼Œå“åº”ç¼–ç 
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
-		//ÉèÖÃjason¸ñÊ½±àÂë
+		//è®¾ç½®jasonæ ¼å¼ç¼–ç 
 		response.setContentType("application/json");
 		PrintWriter out= response.getWriter();
 		PageData<Goods_order> pd = new PageData<>();
 		
-		//³õÊ¼»¯Ò³Âë
+		//åˆå§‹åŒ–é¡µç 
 		int page = 1;
 		int pageSize = 2;
 		
 		GoodsOrderService gos = new GoodsOrderService();
 		
 		if (request.getParameter("op")!=null) {
-			//»ñÈ¡op
+			//è·å–op
 			String op = request.getParameter("op");
 			
 			if ("showAll".equals(op)) {
 				
 				/**
-				 * ÏÔÊ¾ËùÓĞ¶©µ¥,·ÖÒ³ÏÔÊ¾£¬ÉÏÒ»Ò³£¬ÏÂÒ»Ò³
+				 * æ˜¾ç¤ºæ‰€æœ‰è®¢å•,åˆ†é¡µæ˜¾ç¤ºï¼Œä¸Šä¸€é¡µï¼Œä¸‹ä¸€é¡µ
 				 */
-				//»ñÈ¡¶©µ¥×´Ì¬
+				//è·å–è®¢å•çŠ¶æ€
 				if (request.getParameter("userState")!=null) {
-					//Èç¹ûÉÌÆ·×´Ì¬²»Îª¿Õ
+					//å¦‚æœå•†å“çŠ¶æ€ä¸ä¸ºç©º
 					if ("all".equals(request.getParameter("userState"))) {
-						//ËùÓĞ
+						//æ‰€æœ‰
 						UserState.US="%";
 					}else if("noPay".equals(request.getParameter("userState"))){
-						//Î´¸¶¿î×´Ì¬
-						UserState.US = "´ı¸¶¿î";
+						//æœªä»˜æ¬¾çŠ¶æ€
+						UserState.US = "å¾…ä»˜æ¬¾";
 					}else if ("noReceive".equals(request.getParameter("userState"))) {
-						//´ıÊÕ»õ×´Ì¬
-						UserState.US="´ıÊÕ»õ";
+						//å¾…æ”¶è´§çŠ¶æ€
+						UserState.US="å¾…æ”¶è´§";
 					}else if ("hasReceive".equals(request.getParameter("userState"))) {
-						//ÒÑÊÕ»õ×´Ì¬
-						UserState.US="ÒÑÊÕ»õ";
+						//å·²æ”¶è´§çŠ¶æ€
+						UserState.US="å·²æ”¶è´§";
 					}
 				}
 				
@@ -84,57 +84,68 @@ public class GoodsOrderServlet extends HttpServlet {
 					page= Integer.parseInt(request.getParameter("pageSize"));
 				}
 				
-				//»ñÈ¡ÓÃ»§Ãû
+				//è·å–ç”¨æˆ·å
 				String userName = request.getParameter("userName");
 				
-				//µã»÷ÉÏÒ»Ò³
+				//ç‚¹å‡»ä¸Šä¸€é¡µ
 				if (request.getParameter("prevPage")!=null) {
-					//Èç¹ûµ±Ç°Ò³Ãæ²»Îª¿Õ
+					//å¦‚æœå½“å‰é¡µé¢ä¸ä¸ºç©º
 					int nowPage = Integer.parseInt(request.getParameter("prevPage"));
 					if (nowPage >1) {
-						//Èç¹ûµ±Ç°Ò³Ãæ´óÓÚ1£¬ÔòÉÏÒ»Ò³
+						//å¦‚æœå½“å‰é¡µé¢å¤§äº1ï¼Œåˆ™ä¸Šä¸€é¡µ
 						page = nowPage-1;
 					}			
 				}
 				
 				
-				//µã»÷ÉÏÒ»Ò³
+				//ç‚¹å‡»ä¸Šä¸€é¡µ
 				if (request.getParameter("nextPage")!=null) {
-					//Èç¹ûµ±Ç°Ò³Ãæ²»Îª¿Õ
+					//å¦‚æœå½“å‰é¡µé¢ä¸ä¸ºç©º
 					int nowPage = Integer.parseInt(request.getParameter("nextPage"));
-					//»ñÈ¡×ÜÒ³Êı
+					//è·å–æ€»é¡µæ•°
 					pd = gos.getOrder(page, pageSize,userName,UserState.US);
 					int tatalPage = pd.getTotalPage();
 					if (nowPage <tatalPage) {
-						//Èç¹ûµ±Ç°Ò³ÃæĞ¡ÓÚ×ÜÒ³Êı£¬ÔòÏÂÒ»Ò³
+						//å¦‚æœå½“å‰é¡µé¢å°äºæ€»é¡µæ•°ï¼Œåˆ™ä¸‹ä¸€é¡µ
 						page = nowPage+1;
 					}else{
-						//·ñÔò£¬¹Ì¶¨ÔÚ¸ÃÒ³
+						//å¦åˆ™ï¼Œå›ºå®šåœ¨è¯¥é¡µ
 						page = tatalPage;
 					}			
 				}
 				
 				
 				/**
-				 * ¸ù¾İ¶©µ¥µÄÓÃ»§×´Ì¬ËÑË÷
+				 * æ ¹æ®è®¢å•çš„ç”¨æˆ·çŠ¶æ€æœç´¢
 				 */
 			
-				//µ÷ÓÃgosµÄ·½·¨£¬»ñÈ¡ÉÌÆ·Ãû
+				//è°ƒç”¨gosçš„æ–¹æ³•ï¼Œè·å–å•†å“å
 				pd = gos.getOrder(page, pageSize,userName,UserState.US);
-				//ajax´òÓ¡
+				//ajaxæ‰“å°
 				printJson(out, pd);
 				
 			
 			
 			}else if ("myOrder".equals(op)) {
 				/***
-				 * È¥¸¶¿îµã»÷ÊÂ¼ş
+				 * å»ä»˜æ¬¾ç‚¹å‡»äº‹ä»¶
 				 */
-				//»ñÈ¡´«µİ¹ıÀ´µÄ¶©µ¥±àºÅ
+				//è·å–ä¼ é€’è¿‡æ¥çš„è®¢å•ç¼–å·
 				String orderId = request.getParameter("orderId");
-				//²éÑ¯¶ÔÓ¦µÄ¶©µ¥ÒÔ¼°µØÖ·
+				//æŸ¥è¯¢å¯¹åº”çš„è®¢å•ä»¥åŠåœ°å€
+				
+			}else if ("goReceiver".equals(op)) {
+				/**
+				 * ç”¨æˆ·ç¡®è®¤æ”¶è´§
+				 */
+				//è·å–è®¢å•id
+				int orderId = Integer.parseInt(request.getParameter("orderId"));
+				//ajaxæ‰“å°
+				//ç¡®è®¤æ”¶è´§
+				printJson(out, gos.updateOrderUserState(orderId));
 				
 			}
+			
 		
 		
 		
@@ -144,15 +155,15 @@ public class GoodsOrderServlet extends HttpServlet {
 	}
 	
 	
-	//ajax´òÓ¡
+	//ajaxæ‰“å°
 	private void printJson(PrintWriter out,Object result){
-		//´´½¨Json
+		//åˆ›å»ºJson
 		Gson gson = new Gson();
-		//×ª»¯³ÉJson¸ñÊ½
+		//è½¬åŒ–æˆJsonæ ¼å¼
 		String str = gson.toJson(result);
-		//´òÓ¡
+		//æ‰“å°
 		out.print(str);
-		//ÊÍ·Å×ÊÔ´
+		//é‡Šæ”¾èµ„æº
 		out.close();
 	}
 

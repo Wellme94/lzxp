@@ -1,4 +1,4 @@
-(function($){
+﻿(function($){
 	var settings = {
 			e	 		: 'idcode',
 			codeType 	: { name : 'follow', len: 4},

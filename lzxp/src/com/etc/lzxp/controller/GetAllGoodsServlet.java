@@ -45,8 +45,7 @@ public class GetAllGoodsServlet extends HttpServlet {
 		//绝对路径
 		String path = request.getScheme() + "://" + request.getServerName() + ":" + request.getLocalPort()
 		+ request.getContextPath() + "/";
-        response.setContentType("application/json");    
-        System.out.println("哈哈我来访问你了");
+        response.setContentType("application/json");
         PrintWriter out = response.getWriter();
         PageData<V_SearchGoods> pd = null; 
         List<V_SearchGoods> list = null; 
@@ -59,17 +58,14 @@ public class GetAllGoodsServlet extends HttpServlet {
         if(request.getParameter("page")!=null) {
         	if(!request.getParameter("page").equals("")) {
         	page = Integer.parseInt(request.getParameter("page"));
-        	System.out.println("page:"+page);
         	}
         }      
         if(request.getParameter("keyword")!=null) {
-        	keyword = request.getParameter("keyword");       	
-        	System.out.println("keyword:"+keyword);
+        	keyword = request.getParameter("keyword");  
         }      
         if(request.getParameter("goodsId")!=null) {
         	if(request.getParameter("goodsId").length()>0) {
         	goodsId = Integer.parseInt(request.getParameter("goodsId"));
-        	System.out.println("goodsId:"+goodsId);
         	}
         }
         if(request.getParameter("goodsState")!=null){
@@ -82,10 +78,8 @@ public class GetAllGoodsServlet extends HttpServlet {
 			op=request.getParameter("op");
 			if(op.equals("queryAll")) {			      			  
 			    pd = gs.getGoodsBykeyword(page, pageSize, keyword, goodsState);
-			    System.out.println("pd:"+pd);
 		  }else if(op.equals("queryGoodsById")) {
 		    	 list = gs.getGoodsById(goodsId,goodsState);
-		    	 System.out.println("list:"+list);
 		    }
 		}
 		//list不为空
@@ -97,7 +91,6 @@ public class GetAllGoodsServlet extends HttpServlet {
         if(pd!=null) {        	    		
     		Gson g = new Gson();
     		String jsonString = g.toJson(pd);
-    		System.out.println("js："+jsonString);
     		out.print(jsonString);
     		out.close(); 
         }      

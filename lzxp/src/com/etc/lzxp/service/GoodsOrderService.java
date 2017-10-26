@@ -1,4 +1,4 @@
-package com.etc.lzxp.service;
+ï»¿package com.etc.lzxp.service;
 
 import com.etc.lzxp.dao.GoodsOrderDao;
 import com.etc.lzxp.entity.Goods_order;
@@ -6,14 +6,14 @@ import com.etc.util.PageData;
 
 /**
  * @author Administrator
- *Good_order µÄservice
+ *Good_order çš„service
  */
 public class GoodsOrderService {
 	GoodsOrderDao god = new GoodsOrderDao();
 	
 	
 	/**
-	 * ¸ù¾İÓÃ»§ÃûºÍ×´Ì¬ÏÔÊ¾¶©µ¥
+	 * æ ¹æ®ç”¨æˆ·åå’ŒçŠ¶æ€æ˜¾ç¤ºè®¢å•
 	 * @param page
 	 * @param pageSize
 	 * @param userName
@@ -22,5 +22,15 @@ public class GoodsOrderService {
 	 */
 	public PageData<Goods_order> getOrder(int page,int pageSize,String userName,String userState){
 		return god.getOrder(page, pageSize, userName, userState);
+	}
+	
+	
+	/**
+	 * é€šè¿‡è®¢å•id ç”¨æˆ·ç¡®è®¤æ”¶è´§
+	 * @param orderId
+	 * @return
+	 */
+	public boolean updateOrderUserState(int orderId){
+		return god.updateOrderUserState(orderId);
 	}
 }

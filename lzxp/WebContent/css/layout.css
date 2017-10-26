@@ -180,7 +180,7 @@
 	height: 46px;
 	text-indent: -999px;
 	overflow: hidden;
-	background: url(../images/logo.png) no-repeat;
+	background: white;
 }
 
 .head-main .logo span {
@@ -471,7 +471,7 @@
 }
 
 
-/* 列表页 */
+/* 鍒楄〃椤� */
 
 .listpage {
 	background: #fff;
@@ -479,7 +479,7 @@
 }
 
 
-/* 子分类 */
+/* 瀛愬垎绫� */
 
 .subclass {
 	line-height: 24px;
@@ -513,7 +513,7 @@
 }
 
 
-/* 筛选条件 */
+/* 绛涢�夋潯浠� */
 
 .filtrate {
 	margin: 0 auto 20px;
@@ -803,7 +803,7 @@
 }
 
 
-/* 列表AD */
+/* 鍒楄〃AD */
 
 .lp-top-ad {
 	margin: 0 auto;
@@ -829,7 +829,7 @@
 }
 
 
-/* 列表 */
+/* 鍒楄〃 */
 
 .producrt-list {
 	overflow: hidden;
@@ -1563,7 +1563,7 @@ body.product-detail {
 }
 
 
-/* 商品详情 */
+/* 鍟嗗搧璇︽儏 */
 
 .introduce {
 	position: relative;
@@ -1667,7 +1667,7 @@ body.product-detail {
 }
 
 
-/* 商品简介 */
+/* 鍟嗗搧绠�浠� */
 
 .intro-area .param {
 	padding: 15px;
@@ -1691,7 +1691,7 @@ body.product-detail {
 }
 
 
-/* 星级 */
+/* 鏄熺骇 */
 
 .score-star {
 	display: block;
@@ -1728,7 +1728,7 @@ body.product-detail {
 }
 
 
-/* 评论 */
+/* 璇勮 */
 
 .comment-top {
 	padding: 15px;
@@ -1834,7 +1834,7 @@ body.product-detail {
 }
 
 
-/* 评论列表 */
+/* 璇勮鍒楄〃 */
 
 .comment-list {
 	padding: 15px;
@@ -1979,7 +1979,7 @@ body.product-detail {
 }
 
 
-/* 咨询 */
+/* 鍜ㄨ */
 
 .consult {
 	padding: 15px;
@@ -2070,7 +2070,7 @@ body.product-detail {
 }
 
 
-/* 商品侧栏推荐 */
+/* 鍟嗗搧渚ф爮鎺ㄨ崘 */
 
 .recbar {
 	float: right;
@@ -2146,7 +2146,7 @@ body.product-detail {
 }
 
 
-/* 猜你喜欢 */
+/* 鐚滀綘鍠滄 */
 
 .give-like .gl-tit {
 	height: 40px;
@@ -2316,7 +2316,7 @@ body.product-detail {
 }
 
 
-/* 推荐 */
+/* 鎺ㄨ崘 */
 
 .give-rec .rec-tit {
 	height: 40px;
@@ -2399,7 +2399,7 @@ body.product-detail {
 }
 
 
-/* 商品下架 */
+/* 鍟嗗搧涓嬫灦 */
 
 .sold-out {
 	padding: 40px 20px;
@@ -2448,7 +2448,7 @@ body.product-detail {
 }
 
 
-/* 搜索NO结果 */
+/* 鎼滅储NO缁撴灉 */
 
 .no-result {
 	text-align: center;
@@ -2530,7 +2530,7 @@ body.product-detail {
 }
 
 
-/* 分页 */
+/* 鍒嗛〉 */
 
 .pages {
 	text-align: center;

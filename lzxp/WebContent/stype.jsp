@@ -35,18 +35,19 @@
 	
   //函数中使用Ajax局部刷新页面
    function onload(){	  
-	  //先获取从大类传递过来的小类 类型名称
-	 <%--  var ltype='<%=request.getParameter("ltype")%>';
-	  alert(ltype); --%>
-	  var  keyword= '<%=request.getParameter("keyword")%>';
-	   alert(keyword); 
+	  //先获取从大类传递过来的小类 类型名称	
+	  var  keyword= '<%=request.getParameter("keyword")%>';	 
 	  $(".sch-key").val(keyword);
 	   /* alert(keyword);	 */  	     
-		 $.post("GetAllGoodsServlet",{"op":"queryAll","keyword":keyword},function(pd,status){
-			     /*   alert(pd.data);  */
+		 $.post("GetAllGoodsServlet",{"op":"queryAll","keyword":keyword},function(pd,status){ 
+			 //先判断pd.data是否有返回值  
+			 if(pd.data==""){
+   	    	     noResult();
+			    	
+			     }else{
 			     //调用显示商品数据的方法
 					Showgoods(pd,status);		 
-			
+			     }
 	      }); 	 	   
 	   //获取商品名查询的关键字
 	   //获取值时在编码一下
@@ -55,25 +56,25 @@
    $(function(){   
 	   //先获取从大类传递过来的小类 类型Id
 		 var keyword = '<%=request.getParameter("keyword")%>'; 
-		<%--  var gName = '<%=session.getAttribute("gName")%>'; --%>
+		
 	   //获取动态标签的点击事件
 	     $(document).on('click','.pageNoAjax',function(){		  
 		  //获取当前标签的值
 		  var page = $(this).text();	
-		  var keyword = $(".sch-key").val();  
-		  //Ajax请求
-		  $.post("GetAllGoodsServlet",{"op":"queryAll","page":page,"keyword":keyword},function(pd,status){
-			  
-			//调用显示商品数据的方法
-			Showgoods(pd,status);	
-		 
-		  });			  
+		  var keyword = $(".sch-key").val();  		 
+	       //Ajax请求
+			  $.post("GetAllGoodsServlet",{"op":"queryAll","page":page,"keyword":keyword},function(pd,status){		  
+				//调用显示商品数据的方法
+				 Showgoods(pd,status);	
+			 
+			  });	
+		
 	  }); 
 	  //点击确定按钮进行分页页面跳转
 	  $(document).on('click','.pg_btn',function(){
 		  var keyword = $(".sch-key").val();
 		  var page = $(".pg_txt").val();
-		/*  alert("点击确定后："+page); */
+		
 		 $.post("GetAllGoodsServlet",{"op":"queryAll","page":page,"keyword":keyword},function(pd,status){		    
 				//调用显示商品数据的方法
 				Showgoods(pd,status);
@@ -87,8 +88,7 @@
 		var keyword = $(".sch-key").val();
 		var pageStr = $("#page-num li a.on").text();
 		var page = parseInt(pageStr)-1;
-		if(page!=0){
-		
+		if(page!=0){		
 		/* alert("当前页："+page); */
 		 $.post("GetAllGoodsServlet",{"op":"queryAll","page":page,"keyword":keyword},function(pd,status){				
 				//调用显示商品数据的方法
@@ -113,17 +113,46 @@
 				   }
 			 });	
 		 }); 
+	  
 	  //点击搜索按钮进行模糊查询
-	  $(".sch-btn").click(function(){
-		   alert("模糊查询"); 		   
-		   var keyword = $(".sch-key").val();  
-		
+	  $(".sch-btn").click(function(){		  		   
+		   var keyword = $(".sch-key").val();
+		   
+		   if(keyword=="商品搜索"||keyword==" "){
+			   alert("请输入关键字！");
+		   }else{
 			  $.post("GetAllGoodsServlet",{"op":"queryAll","keyword":keyword},function(pd,status){						 
-					//调用显示商品数据的方法
-					Showgoods(pd,status);
+				  //先判断pd.data是否有返回值  
+					 if(pd.data==""){
+		   	    	     noResult();
+					    	
+					     }else{
+					     //调用显示商品数据的方法
+							Showgoods(pd,status);		 
+					     }
 			    });
-		  
+		   }
 	  });
+	  
+	//点击热门 关键字进行商品的模糊查询
+		 $(function(){
+			$(".hot_sh").click(function(){					
+				var hotword = $(this).text();
+				$(".sch-key").val(hotword);
+				/* alert("hotword:"+hotword); */
+				 $.post("GetAllGoodsServlet",{"op":"queryAll","keyword":hotword},function(pd,status){						 
+					  //先判断pd.data是否有返回值  
+						 if(pd.data==""){
+			   	    	     noResult();
+						    	
+						     }else{
+						     //调用显示商品数据的方法
+								Showgoods(pd,status);		 
+						     }
+				    });
+			});
+		 });
+	  
 	  //跳转商品的详情页面
 	  $(document).on('click','.goodsId',function(){
 		  var goodsId = $(this).parent('.pt').children('#goodsId').val();		  
@@ -133,9 +162,11 @@
   
  //封装Ajax请求返回的数据显示的方法  
    function Showgoods(pd,status){
-	  
+	  /*  <div class="no-result" id="no-result">	
+		</div> */
 	 //先将原先的样式删除掉
 		 $('#content_ul').find('li').remove();
+		 $('#content_ul').find('#no-result').remove();
 		 $('#page-num').find('li').remove();
 		//遍历pd中的data
 		 $.each(pd.data,function(index,showgoods){			
@@ -151,21 +182,33 @@
 					 +'</div><input type="hidden" value="'+showgoods.GOODSID+'" id="goodsId"/></li>');  
 		 });/*$.each  */
 		 //显示分页
-		 $("#page-num").append('<li><a  class="pg_prev">上页</a></li>');
+		 $("#page-num").append('<li><a href="javascript:void(0)" class="pg_prev">上页</a></li>');
 		 for(var curPage = 1;curPage<=pd.totalPage;curPage++){   		 
 	    		 if(pd.page==curPage){
 	    			 
-	    			 $("#page-num").append('<li ><a  class=" on pageNoAjax">'+curPage+'</a></li>');
+	    			 $("#page-num").append('<li ><a href="javascript:void(0)" class=" on pageNoAjax">'+curPage+'</a></li>');
 	    			 
 	    		 }else{
 	    			 
-	    			 $("#page-num").append('<li><a class="pageNoAjax">'+curPage+'</a></li>');
+	    			 $("#page-num").append('<li><a href="javascript:void(0)" class="pageNoAjax">'+curPage+'</a></li>');
 	    	   }
 	    	 }
-		 $("#page-num").append('<li><a class="pg_next">下页</a></li>');
+		 $("#page-num").append('<li><a href="javascript:void(0)" class="pg_next">下页</a></li>');
 		
 		 $("#page-num").append('<li><small class="sum">共<b>'+pd.totalPage+'</b>页</small><i>到第</i><input class="pg_txt" type="text" value="1" name="curPage" id="turnPage"><i>页</i><input class="pg_btn" type="button" value="确定" id="pg_btn"></li>');	
  }
+ //商品搜索不存在  调用函数
+   function noResult(){
+	   //刷新之前  先将原来的样式删除掉
+	   $("#content_ul").find('#no-result').remove();   
+	   $('#content_ul').append('<div class="no-result" id="no-result"><div class="nores-cont" id="nores-cont"><div class="nores-tit">'	                                    
+	           +'<strong>抱歉，没有找到与"<span>您搜索的关键字</span>"相关的商品</strong></div>'	           
+	           +'</div>'
+	           +'</div>');
+  	
+   }
+   
+   
 </script>
 <script type="text/javascript">	
 		 //是否显示有货
@@ -255,7 +298,7 @@
 							//如果有传递过来用户信息
 							Users user = (Users)request.getSession().getAttribute("user");
 							%>
-								<li>欢迎<span class="log"><%=user.getUSERNAME() %></span>来到零嘴小铺官方商城！</li>
+								<li>欢迎<span class="log username"><%=user.getUSERNAME() %></span>来到零嘴小铺官方商城！</li>
 							<%
 						}else{
 							%>
@@ -351,12 +394,12 @@
 					<!--该搜索的href应该是我们自己的servlet-->
 					<div class="hot-tag">
 						<span>热门搜索：</span>
-						<a class="red" href="">松子</a>
-						<a href="#">牛肉</a>
-						<a href="#">开心果</a>
-						<a href="#">核桃</a>
-						<a href="#">话梅</a>
-						<a href="#">花生瓜子</a>
+							<a class="red hot_sh" href="javascript:void(0)">饼干</a>
+							<a class = "hot_sh"  href="javascript:void(0)">牛肉</a>
+							<a class = "hot_sh"  href="javascript:void(0)">豆干</a>
+							<a class = "hot_sh"  href="javascript:void(0)">进口</a>
+							<a class = "hot_sh"  href="javascript:void(0)">话梅</a>
+							<a class = "hot_sh"  href="javascript:void(0)">瓜子</a>
 					</div>
 					<!-- 搜索框 -->
 					<div class="search-area">
@@ -376,9 +419,7 @@
 							<div class="cart-roll">
 								<ul class="goods"></ul>
 							</div>
-							<div class="total">
-								<p>共<span class="red">0</span>件商品，共计<span class="sum">￥0.00</span></p>
-								<a class="settle" href="#" id="countOrder">去购物车结算</a>
+							<div class="total">								
 							</div>
 						</div>
 					</div>
@@ -394,7 +435,7 @@
 						</li>
 
 						<li>
-							<a href="#">上新尝鲜</a>
+							<a href="javascript:void(0)">上新尝鲜</a>
 						</li>
 					</ul>
 				</div>
@@ -418,7 +459,7 @@
 					<a class="home" href="GetGoodsServlet?op=queryAllGoods">首页</a><span>&gt;</span>
 				     <!-- 判断是否从小类进入该页面 -->
 				    <%-- <c:if test="${requestScope.ltype!null}"> --%>			      	
-					  <a href="#">商品搜索</a><span>&gt;</span><em></em>
+					  <a href="javascript:void(0)">商品搜索</a><span>&gt;</span><em></em>
 				     <%-- </c:if> --%>
 				</div>
 				<div class="filtrate">
@@ -446,40 +487,40 @@
 							<span class="sort">包装形式：</span>
 							<ul>
 								<li>
-									<a href="#">散装</a>
+									<a href="javascript:void(0)">散装</a>
 								</li>
 								<li>
-									<a href="#">盒装</a>
+									<a href="javascript:void(0)#">盒装</a>
 								</li>
 								<li>
-									<a href="#">罐装</a>
+									<a href="javascript:void(0)">罐装</a>
 								</li>
 								<li>
-									<a href="#">瓶装</a>
+									<a href="javascript:void(0)">瓶装</a>
 								</li>
 								<li>
-									<a href="#">礼盒装</a>
+									<a href="javascript:void(0)">礼盒装</a>
 								</li>
 								<li>
-									<a href="#">趣味装</a>
+									<a href="javascript:void(0)">趣味装</a>
 								</li>
 								<li>
-									<a href="#">手抓包</a>
+									<a href="javascript:void(0)">手抓包</a>
 								</li>
 								<li>
-									<a href="#">小袋装</a>
+									<a href="javascript:void(0)">小袋装</a>
 								</li>
 								<li>
-									<a href="#">大袋装</a>
+									<a href="javascript:void(0)">大袋装</a>
 								</li>
 								<li>
-									<a href="#">单粒装</a>
+									<a href="javascript:void(0)">单粒装</a>
 								</li>
 								<li>
-									<a href="#">单个装</a>
+									<a href="javascript:void(0)">单个装</a>
 								</li>
 								<li>
-									<a href="#">中袋装</a>
+									<a href="javascript:void(0)">中袋装</a>
 								</li>
 							</ul>
 						</div>
@@ -487,13 +528,13 @@
 							<span class="sort">产源：</span>
 							<ul>
 								<li>
-									<a href="#">国产</a>
+									<a href="javascript:void(0)">国产</a>
 								</li>
 								<li>
-									<a href="#">原装进口</a>
+									<a href="javascript:void(0)">原装进口</a>
 								</li>
 								<li>
-									<a href="#">国外原料国内分装</a>
+									<a href="javascript:void(0)">国外原料国内分装</a>
 								</li>
 							</ul>
 						</div>
@@ -501,22 +542,22 @@
 							<span class="sort">价格：</span>
 							<ul>
 								<li>
-									<a href="#">9.9元以下</a>
+									<a href="javascript:void(0)">9.9元以下</a>
 								</li>
 								<li>
-									<a href="#">10-19.9元</a>
+									<a href="javascript:void(0)">10-19.9元</a>
 								</li>
 								<li>
-									<a href="#">20-29.9元</a>
+									<a href="javascript:void(0)">20-29.9元</a>
 								</li>
 								<li>
-									<a href="#">30-50元</a>
+									<a href="javascript:void(0)">30-50元</a>
 								</li>
 								<li>
-									<a href="#">51-100元</a>
+									<a href="javascript:void(0)">51-100元</a>
 								</li>
 								<li>
-									<a href="#">100元以上</a>
+									<a href="javascript:void(0)">100元以上</a>
 								</li>
 							</ul>
 						</div>
@@ -546,15 +587,16 @@
 			</form>
 			<!--商品展示层-->
 			<div class="content">
-  
+    
 				<!-- 异步分页 -->
 				<div id="showControlPage">
 					<ul class="producrt-list clearfix" id="content_ul">
 						
                     </ul>
-				</div><!-- showControlPage -->		
-			<!-- <div id="loadingMessage"></div> -->
-				<!-- 分页层 -->
+				</div>	
+				<!--搜索商品无结果显示  -->	
+					
+				<!--分页显示  -->	
 				<div id="pageBar" class="pages"><!--pages  -->
 					<ul class="page-num" id = "page-num" >
 						
@@ -566,27 +608,27 @@
 		<!-- list page left ad -->
 		<!--广告图片位置-->
 		<div class="lp-lft-ad">
-			<a title="列表页－包邮" href="#" target="_blank"><img src="img/style/adss.jpg" alt="列表页－包邮" /></a>
-			<a href="javascript:;" class="close-ad"><i>关闭</i></a>
+			<a title="列表页－包邮" href="javascript:void(0)" target="_blank"><img src="img/style/adss.jpg" alt="列表页－包邮" /></a>
+			<a href="javascript:void(0)" class="close-ad"><i>关闭</i></a>
 		</div>
 
 		<!-- 右侧功能菜单 -->
 		<div class="right-navbar">
 			<ul class="rnb-list">
 				<li class="kf">
-					<a class="hvr" id="ntkf_chat_entrance" href="#"><span>客服咨询</span><i class="icon">▪</i></a>
+					<a class="hvr" id="ntkf_chat_entrance" href="javascript:void(0)"><span>客服咨询</span><i class="icon">▪</i></a>
 				</li>
 				<li class="gw">
-					<a href="#l"><i class="icon">▪</i><span>购物车</span><small class="sum" id="cartcount">0</small></a>
+					<a href="javascript:void(0)"><i class="icon">▪</i><span>购物车</span><small class="sum" id="cartcount">0</small></a>
 				</li>
 				<li class="hy">
-					<a class="hvr" href="#"><span>会员中心</span><i class="icon">▪</i></a>
+					<a class="hvr" href="javascript:void(0)"><span>会员中心</span><i class="icon">▪</i></a>
 				</li>
 				<li class="yh">
-					<a class="hvr" href="#"><span>我的优惠券</span><i class="icon">▪</i></a>
+					<a class="hvr" href="javascript:void(0)"><span>我的优惠券</span><i class="icon">▪</i></a>
 				</li>
 				<li class="sc">
-					<a class="hvr" href="#"><span>我的关注</span><i class="icon">▪</i></a>
+					<a class="hvr" href="javascript:void(0)"><span>我的关注</span><i class="icon">▪</i></a>
 				</li>
 			
 			</ul>
@@ -595,7 +637,7 @@
 
 				</li>
 				<li class="goback">
-					<a class="hvr" href="#"><span>返回顶部</span><i class="icon">▪</i></a>
+					<a class="hvr" href="javascript:void(0)"><span>返回顶部</span><i class="icon">▪</i></a>
 				</li>
 			</ul>
 		</div>
@@ -1057,101 +1099,74 @@
 			var _ozprm = "keyword=" + $("#word").val();
 		</script>
 
-		<!––到达&重定向––>
-		<script type="text/javascript">
-			var _gtc = _gtc || [];
-			_gtc.push(["fnSetAccount", "1009"]);
-			_gtc.push(["v", "1"]);
-			_gtc.push(["fnGeneral", "arrived"]); //到达
-			var nGtc = document.createElement("script");
-			nGtc.type = "text/javascript";
-			nGtc.async = true;
-			nGtc.src = ("https:" == document.location.protocol ? "https://sslcdn.istreamsche.com" : "http://ga.istreamsche.com") + "/stat/gtc.js";
-			document.getElementsByTagName("head")[0].appendChild(nGtc);
-		</script>
-		<!––到达&重定向 END––>
-
-		<script>
-			!(function($) {
-				$(".lp-lft-ad").on("click", ".close-ad", function() {
-					$(this).parent().hide();
-				});
-				var template = [];
-				template.push('<div class="lp-login-overlay"></div>');
-				template.push('<div class="lp-login-dialog">');
-				template.push('<div class="lld-head">');
-				template.push('<span>您尚未登录</span>');
-				template.push('<span class="close" id="jLldClose" title="关闭"></span>');
-				template.push('</div>');
-				template.push('<div class="lld-main">');
-				template.push('<iframe src="https://login.lppz.com/login?viewType=window&service=http://search.lppz.com/return.jsp" style="border:none; width: 100%; height: 100%;" frameborder="0" scrolling="no"></iframe>');
-				template.push('</div>');
-				template.push('</div>');
-
-				var $window = $(window),
-					resizeTimer = null;
-
-				var setPosition = function() {
-					var winWidth = $window.width(),
-						winHeight = $window.height(),
-						wrap = $('.lp-login-dialog').get(0),
-						width = wrap.offsetWidth,
-						height = wrap.offsetHeight,
-						left = (winWidth - width) / 2,
-						top = (winHeight - height) / 2;
-
-					var cssText = 'left:' + left + 'px;top:' + top + 'px; width: ' +
-						'_left:expression((document.documentElement).scrollLeft+' + left + ');_top:expression((document.documentElement).scrollTop+' + top + ');';
-					wrap.style.cssText = cssText;
-				}
-
-				var winResize = function() {
-					resizeTimer && clearTimeout(resizeTimer);
-					resizeTimer = setTimeout(function() {
-						setPosition();
-					}, 40);
-				};
-
-				$.loginIframe = function(options) {
-					if(this.length === 0) {
-						return false;
-					}
-
-					if(options && options.id) {
-						template[7] = '<iframe src="https://login.lppz.com/login?viewType=window&service=http://search.lppz.com/return.jsp?id=' + options.id + '-' + options.operation + '" style="border:none; width: 100%; height: 100%;" frameborder="0" scrolling="no"></iframe>'
-					}
-					$(template.join('')).appendTo($('body'));
-
-					var $lockMask = $('.lp-login-overlay'),
-						$wrap = $('.lp-login-dialog');
-
-					setPosition();
-
-					// 关闭弹层
-					$wrap.on('click', '.close', function() {
-						var un = function() {
-							$lockMask.html('').attr({
-								"style": ""
-							}).remove();
-						};
-						$window.off('resize');
-						$wrap.off().html('').attr({
-							'style': ''
-						}).remove();
-						$lockMask.animate({
-							opacity: 0
-						}, 300, un);
-					});
-
-					$window.on('resize', winResize);
-				}
-			}(jQuery));
-
-			// 关闭弹层
-			function closeLldDialog() {
-				$('.lp-login-dialog .close').trigger('click');
-			}
-		</script>
 		<script type="text/javascript" src="js/o_code.js"></script>
+		
+				<script type="text/javascript">
+		//页面加载时初始化购物车中的信息
+			$(".goods").empty();
+			$(".total").empty();
+			$("#goodsnum").text("");
+			var sumgoods = 0;
+			var sumprice = 0;
+			var username = $('.username').text();
+			$.post("${path}GoodsCartServlet",{"op":"queryShopCart","UserName":username},function(listgc,status){
+				$.each(listgc,function(index,data){
+					/* 购物车的的item- */							
+					$(".goods").append("<li><input type='hidden' id='GOODSID' class='goodsiddel' value='"+data.GOODSID+"' /><div class='gd-lft'><a class='pic'><img src='"+data.GOODSPICTURE+"'/></a><p class='tit'>"+data.GOODSNAME+"</p></div><div class='gd-price'><span>￥"
+						+data.GOODSPRICE+"<small>x"+data.GOODSCOUNT+"</small></span><a href='javascript:;' class='delete'>删除</a></div></li>");
+			   	   sumgoods += data.GOODSCOUNT;
+			   	   sumprice += (sumgoods*data.GOODSPRICE);
+				});			
+				$(".total").append("<p>共<span class='red'>"+sumgoods+"</span>件商品，共计<span class='sum+'>￥"+sumprice.toFixed(2)+"</span></p><a class='settle' href='javascript:;'>去购物车结算</a>");
+				$("#goodsnum").text(sumgoods);
+			});	
+
+			
+		</script>	
+		
+				<script type="text/javascript">
+			//购物车中删除
+			$(document).on("click",'.delete',function(index){
+				var sumgoods = 0;
+				var sumprice = 0;
+				var username = $('.username').text();
+				var goodsiddel=$(this).parent().parent().find("#GOODSID").val();
+				var flag=confirm("是否要删除");
+				if(flag){
+					$(".goods").empty();
+					$(".total").empty();
+					$("#goodsnum").text("");
+					$.post("${path}GoodsCartServlet",{"op":"queryGoodsDelete","UserName":username,"GoodsID":goodsiddel},function(listgc,status){			
+					$.each(listgc,function(index,data){
+					/* 购物车的的item- */							
+					$(".goods").append("<li><input type='hidden' id='GOODSID' class='goodsiddel' value='"+data.GOODSID+"' /><div class='gd-lft'><a class='pic'><img src='"+data.GOODSPICTURE+"'/></a><p class='tit'>"+data.GOODSNAME+"</p></div><div class='gd-price'><span>￥"
+					+data.GOODSPRICE+"<small>x"+data.GOODSCOUNT+"</small></span><a href='javascript:;' class='delete'"+data.GOODSID+"'>删除</a></div></li>");
+					sumgoods += data.GOODSCOUNT;
+					sumprice += (sumgoods*data.GOODSPRICE);
+					});			
+					$(".total").append("<p>共<span class='red'>"+sumgoods+"</span>件商品，共计<span class='sum+'>￥"+sumprice.toFixed(2)+"</span></p><a class='settle' href='javascript:;'>去购物车结算</a>");
+					$("#goodsnum").text(sumgoods);
+					});
+				}else{
+					
+				}
+			});
+
+		</script>
+		<script type="text/javascript">
+		//购物车结算按钮的点击
+		var username = $('.username').text();
+		$(document).on("click",'.settle',function(index){
+							$.post("${path}GoodsCartServlet",{"op":"submitOrder","UserName":username},function(result,status){
+								if(result == true){
+									//如果登录成功,页面跳转
+									location.href="http://localhost:8080/lzxp/myorder2.jsp";
+								}else{
+									//如果失败
+									location.href="http://localhost:8080/lzxp/login.jsp";
+								}
+							});
+						});
+		</script>
 	</body>
 </html>

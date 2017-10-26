@@ -1,15 +1,35 @@
 package com.etc.lzxp.entity;
 
-public class V_SearchGoods {
+import java.io.Serializable;
 
+public class V_SearchGoods implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4261997915233516668L;
+	private int LTYPEID;
+	private String LTYPENAME;
 	private int STYPEID;
+	private String STYPENAME;
 	private int GOODSID;
 	private String GOODSNAME;
 	private double GOODSPRICE;
 	private String GOODSCONTENT;
 	private int GOODSSTATE;
-	private String STYPENAME;
 	private String PICTUREADDRESS;
+	
+	public int getLTYPEID() {
+		return LTYPEID;
+	}
+	public void setLTYPEID(int lTYPEID) {
+		LTYPEID = lTYPEID;
+	}
+	public String getLTYPENAME() {
+		return LTYPENAME;
+	}
+	public void setLTYPENAME(String lTYPENAME) {
+		LTYPENAME = lTYPENAME;
+	}
 	public int getSTYPEID() {
 		return STYPEID;
 	}
@@ -58,25 +78,31 @@ public class V_SearchGoods {
 	public void setPICTUREADDRESS(String pICTUREADDRESS) {
 		PICTUREADDRESS = pICTUREADDRESS;
 	}
-	public V_SearchGoods(int sTYPEID, int gOODSID, String gOODSNAME, double gOODSPRICE, String gOODSCONTENT,
-			int gOODSSTATE, String sTYPENAME, String pICTUREADDRESS) {
+	
+	
+	
+	public V_SearchGoods(int lTYPEID, String lTYPENAME, int sTYPEID, String sTYPENAME, int gOODSID, String gOODSNAME,
+			double gOODSPRICE, String gOODSCONTENT, int gOODSSTATE, String pICTUREADDRESS) {
 		super();
+		LTYPEID = lTYPEID;
+		LTYPENAME = lTYPENAME;
 		STYPEID = sTYPEID;
+		STYPENAME = sTYPENAME;
 		GOODSID = gOODSID;
 		GOODSNAME = gOODSNAME;
 		GOODSPRICE = gOODSPRICE;
 		GOODSCONTENT = gOODSCONTENT;
 		GOODSSTATE = gOODSSTATE;
-		STYPENAME = sTYPENAME;
 		PICTUREADDRESS = pICTUREADDRESS;
 	}
+	
 	@Override
 	public String toString() {
-		return "V_SearchGoods [STYPEID=" + STYPEID + ", GOODSID=" + GOODSID + ", GOODSNAME=" + GOODSNAME
-				+ ", GOODSPRICE=" + GOODSPRICE + ", GOODSCONTENT=" + GOODSCONTENT + ", GOODSSTATE=" + GOODSSTATE
-				+ ", STYPENAME=" + STYPENAME + ", PICTUREADDRESS=" + PICTUREADDRESS + "]";
-	} 
-	
+		return "V_SearchGoods [LTYPEID=" + LTYPEID + ", LTYPENAME=" + LTYPENAME + ", STYPEID=" + STYPEID
+				+ ", STYPENAME=" + STYPENAME + ", GOODSID=" + GOODSID + ", GOODSNAME=" + GOODSNAME + ", GOODSPRICE="
+				+ GOODSPRICE + ", GOODSCONTENT=" + GOODSCONTENT + ", GOODSSTATE=" + GOODSSTATE + ", PICTUREADDRESS="
+				+ PICTUREADDRESS + "]";
+	}
 	public V_SearchGoods() {
 		// TODO Auto-generated constructor stub
 	}

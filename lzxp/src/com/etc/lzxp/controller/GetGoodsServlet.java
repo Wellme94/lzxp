@@ -1,4 +1,4 @@
-package com.etc.lzxp.controller;
+﻿package com.etc.lzxp.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,19 +44,16 @@ public class GetGoodsServlet extends HttpServlet {
         GetGoodsService gs = new GetGoodsService();
         List<V_AllGoods> list = new ArrayList<V_AllGoods>();
         HttpSession session = request.getSession();
-        System.out.println("哈哈小傻瓜");
 		int goodsState = 1;
         String op = null;
         if(request.getParameter("op")!=null) {
         	op= request.getParameter("op");
         	if(op.equals("queryAllGoods")) {
-        		System.out.println("op:"+op);
-        	    list = gs.getAllGoodsByLtype(goodsState); 
-        	    System.out.println(list);
+        	    list = gs.getAllGoodsByLtype(goodsState);
         	}
         	
-        }
-        session.setAttribute("flag", 1);
+        }   
+        session.setAttribute("flag",1);
         request.setAttribute("list", list);
         //转发
         request.getRequestDispatcher("ltype.jsp").forward(request,response);

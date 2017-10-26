@@ -1,4 +1,4 @@
-package com.etc.lzxp.controller;
+ï»¿package com.etc.lzxp.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 
 /**
  * Servlet implementation class GoodsServlet
- * Goods²Ù×÷
+ * Goodsæ“ä½œ
  */
 @WebServlet("/GoodsServlet")
 public class GoodsServlet extends HttpServlet {
@@ -30,24 +30,24 @@ public class GoodsServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//ÉèÖÃÇëÇó£¬ÏìÓ¦±àÂë
+		//è®¾ç½®è¯·æ±‚ï¼Œå“åº”ç¼–ç 
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
-		//ÉèÖÃjason¸ñÊ½±àÂë
+		//è®¾ç½®jasonæ ¼å¼ç¼–ç 
 		response.setContentType("application/json");
 		PrintWriter out= response.getWriter();
 		
 
 		if (request.getParameter("op")!=null) {
-			//»ñÈ¡op
+			//è·å–op
 			String op = request.getParameter("op");
 			
 			if ("Goods".equals(op)) {
 				
 				/**
-				 * ËÑË÷ÉÌÆ·
+				 * æœç´¢å•†å“
 				 */
-				//»ñÈ¡ÉÌÆ·Ãû
+				//è·å–å•†å“å
 				String goodsName = request.getParameter("keyword");
 				
 			}
@@ -59,15 +59,15 @@ public class GoodsServlet extends HttpServlet {
 	}
 	
 	
-	//ajax´òÓ¡
+	//ajaxæ‰“å°
 		private void printJson(PrintWriter out,Object result){
-			//´´½¨Json
+			//åˆ›å»ºJson
 			Gson gson = new Gson();
-			//×ª»¯³ÉJson¸ñÊ½
+			//è½¬åŒ–æˆJsonæ ¼å¼
 			String str = gson.toJson(result);
-			//´òÓ¡
+			//æ‰“å°
 			out.print(str);
-			//ÊÍ·Å×ÊÔ´
+			//é‡Šæ”¾èµ„æº
 			out.close();
 		}
 
